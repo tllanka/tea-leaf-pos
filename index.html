@@ -13,9 +13,8 @@
 
 <style>
 :root{
-  --tea-dark:#113d2f;--tea:#0f766e;--tea-light:#14b8a6;--leaf:#22c55e;--leaf-soft:#dcfce7;
-  --cream:#fffdf5;--paper:#ffffff;--line:#dbe7df;--text:#13251f;--muted:#64756f;
-  --red:#dc2626;--yellow:#f59e0b;--blue:#2563eb;
+  --tea-dark:#113d2f;--tea:#0f766e;--tea-light:#14b8a6;--leaf:#22c55e;--line:#dbe7df;
+  --text:#13251f;--muted:#64756f;--red:#dc2626;--yellow:#f59e0b;--blue:#2563eb;
   --shadow:0 18px 45px rgba(17,61,47,.13);--soft-shadow:0 8px 22px rgba(17,61,47,.10);
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}
@@ -25,9 +24,9 @@ body{margin:0;font-family:Inter,Arial,"Noto Sans Sinhala",sans-serif;color:var(-
 .topbar:after{content:"";position:absolute;right:-40px;bottom:-65px;width:210px;height:210px;border-radius:50%;background:rgba(255,255,255,.10)}
 .brand{display:flex;align-items:center;gap:13px;position:relative;z-index:1}.logo{width:58px;height:58px;border-radius:20px;display:grid;place-items:center;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);font-size:29px;box-shadow:inset 0 1px 0 rgba(255,255,255,.26)}
 .brand h1{margin:0;font-size:24px;font-weight:900;letter-spacing:.2px}.brand p{margin:4px 0 0;color:#d9fff1;font-size:13px;line-height:1.35}.top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;position:relative;z-index:1}
-.btn{border:0;border-radius:16px;padding:12px 15px;min-height:46px;font-weight:800;cursor:pointer;color:#123127;background:linear-gradient(180deg,#ffffff,#edf5f0);box-shadow:0 4px 0 rgba(17,61,47,.13),0 10px 18px rgba(17,61,47,.11),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;-webkit-tap-highlight-color:transparent}
+.btn{border:0;border-radius:16px;padding:12px 15px;min-height:46px;font-weight:800;cursor:pointer;color:#123127;background:linear-gradient(180deg,#fff,#edf5f0);box-shadow:0 4px 0 rgba(17,61,47,.13),0 10px 18px rgba(17,61,47,.11),inset 0 1px 0 rgba(255,255,255,.9);transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;-webkit-tap-highlight-color:transparent}
 .btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(17,61,47,.13),0 5px 10px rgba(17,61,47,.12),inset 0 1px 2px rgba(17,61,47,.12)}.btn:hover{filter:brightness(1.02)}
-.btn.primary{background:linear-gradient(180deg,#ffffff,#e8fff6);color:var(--tea)}.btn.green{background:linear-gradient(180deg,#20c997,#0f766e);color:white;box-shadow:0 4px 0 #0b5c54,0 12px 18px rgba(15,118,110,.22),inset 0 1px 0 rgba(255,255,255,.28)}.btn.red{background:linear-gradient(180deg,#ef4444,#c81e1e);color:white;box-shadow:0 4px 0 #991b1b,0 12px 18px rgba(220,38,38,.18),inset 0 1px 0 rgba(255,255,255,.22)}.btn.yellow{background:linear-gradient(180deg,#facc15,#f59e0b);color:#3f2b00;box-shadow:0 4px 0 #b45309,0 12px 18px rgba(245,158,11,.18),inset 0 1px 0 rgba(255,255,255,.35)}.btn.blue{background:linear-gradient(180deg,#3b82f6,#2563eb);color:white;box-shadow:0 4px 0 #1d4ed8,0 12px 18px rgba(37,99,235,.18),inset 0 1px 0 rgba(255,255,255,.22)}.btn.block{width:100%;margin-top:9px}
+.btn.primary{background:linear-gradient(180deg,#fff,#e8fff6);color:var(--tea)}.btn.green{background:linear-gradient(180deg,#20c997,#0f766e);color:white;box-shadow:0 4px 0 #0b5c54,0 12px 18px rgba(15,118,110,.22),inset 0 1px 0 rgba(255,255,255,.28)}.btn.red{background:linear-gradient(180deg,#ef4444,#c81e1e);color:white;box-shadow:0 4px 0 #991b1b,0 12px 18px rgba(220,38,38,.18),inset 0 1px 0 rgba(255,255,255,.22)}.btn.yellow{background:linear-gradient(180deg,#facc15,#f59e0b);color:#3f2b00;box-shadow:0 4px 0 #b45309,0 12px 18px rgba(245,158,11,.18),inset 0 1px 0 rgba(255,255,255,.35)}.btn.blue{background:linear-gradient(180deg,#3b82f6,#2563eb);color:white;box-shadow:0 4px 0 #1d4ed8,0 12px 18px rgba(37,99,235,.18),inset 0 1px 0 rgba(255,255,255,.22)}.btn.block{width:100%;margin-top:9px}
 .nav{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:15px 0;padding:9px;border-radius:24px;background:rgba(255,255,255,.74);backdrop-filter:blur(18px);border:1px solid rgba(219,231,223,.9);box-shadow:var(--soft-shadow)}.nav button{border:0;border-radius:17px;padding:13px 10px;background:transparent;color:#38534b;font-weight:900;cursor:pointer}.nav button.active{color:white;background:linear-gradient(135deg,#0f766e,#14b8a6);box-shadow:0 8px 18px rgba(15,118,110,.24)}
 .page{display:none}.page.active{display:block}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:15px}.stat{background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:24px;padding:16px;box-shadow:var(--soft-shadow);backdrop-filter:blur(14px)}.stat span{display:block;font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.55px}.stat b{display:block;font-size:22px;margin-top:7px}.stat small{color:var(--tea);font-weight:800}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(285px,1fr));gap:15px}.card{background:rgba(255,255,255,.82);border:1px solid var(--line);border-radius:28px;padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}.card h2,.card h3{margin:0 0 14px;font-size:18px}label{display:block;margin-top:7px;font-size:12px;font-weight:900;color:#46635b;text-transform:uppercase;letter-spacing:.3px}
@@ -56,7 +55,10 @@ table{width:100%;border-collapse:collapse;font-size:13px;background:white;border
 </div>
 <script>
 const ADMIN_PASSWORD="1990",MANAGER_PASSWORD="199002";
+
+/* ඔබගේ Google OAuth Client ID එක මෙතන දාන්න */
 const GOOGLE_CLIENT_ID="458733588827-lmphjs7bb1k8b4vkbteff2nd53epv2c1.apps.googleusercontent.com";
+
 const DRIVE_SCOPE="https://www.googleapis.com/auth/drive.file";
 let customers=JSON.parse(localStorage.getItem("customers")||"[]"),roots=JSON.parse(localStorage.getItem("roots")||"[]"),activeRoot=localStorage.getItem("activeRoot")||"",records=JSON.parse(localStorage.getItem("records")||"[]");
 let currentWeight=0,selectedCustomer=null,qrScanner=null,deferredPrompt=null,accessToken=null,tokenClient=null;
@@ -88,17 +90,144 @@ function getTodayRecords(){return records.filter(r=>r.businessDay===businessDay(
 function renderReports(){const tb=document.getElementById("reportTable");tb.innerHTML="";records.slice().reverse().forEach(r=>{const s=r.sync||"Pending",cls=s==="Synced"?"synced":s==="Failed"?"failed":"pending";tb.innerHTML+=`<tr><td>${r.businessDay}</td><td>${r.time}</td><td>${r.customerId}</td><td>${r.name}</td><td>${r.root}</td><td>${r.phone}</td><td>${Number(r.weight).toFixed(3)}</td><td><span class="badge ${cls}">${s}</span></td></tr>`});updateDashboard()}
 function buildWorkbookBlob(day=businessDay()){const rows=records.filter(r=>r.businessDay===day);if(!rows.length)throw new Error("Today records නැහැ");const data=rows.map(r=>({"Business Day":r.businessDay,"Date":r.date,"Time":r.time,"Customer ID":r.customerId,"Customer Name":r.name,"Address":r.address,"Root Name":r.root,"Phone":r.phone,"Weight KG":Number(r.weight),"Sync Status":r.sync||"Pending"}));const ws=XLSX.utils.json_to_sheet(data);ws["!cols"]=[{wch:14},{wch:12},{wch:12},{wch:14},{wch:22},{wch:28},{wch:20},{wch:14},{wch:12},{wch:12}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Tea Leaf Report");return new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})}
 function exportTodayXlsx(){try{const day=businessDay(),blob=buildWorkbookBlob(day),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`tea_leaf_report_${day}.xlsx`;a.click();URL.revokeObjectURL(a.href)}catch(e){alert(e.message)}}
-function initGoogleAuth(){if(!window.google||!google.accounts){alert("Google Identity script load වෙලා නැහැ. Internet connection check කරන්න.");return false}tokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:DRIVE_SCOPE,callback:t=>{if(t.error)return alert("Google login error: "+t.error);accessToken=t.access_token;document.getElementById("driveStatus").innerText="Google Drive connected";document.getElementById("driveStatus").className="status ok";document.getElementById("dashDrive").innerText="Connected"}});return true}
-function connectGoogleDrive(){if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR"))return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");if(!tokenClient){if(!initGoogleAuth())return}tokenClient.requestAccessToken({prompt:"consent"})}
-async function driveJsonRequest(url,opt={}){if(!accessToken)throw new Error("Google Drive not connected");const res=await fetch(url,{...opt,headers:{Authorization:"Bearer "+accessToken,...(opt.headers||{})}});if(!res.ok)throw new Error(await res.text());return await res.json()}function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
-async function findDriveFolder(name,parentId=null){let q=`name='${esc(name)}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;if(parentId)q+=` and '${parentId}' in parents`;const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name)");return data.files&&data.files.length?data.files[0]:null}
-async function createDriveFolder(name,parentId=null){const meta={name,mimeType:"application/vnd.google-apps.folder"};if(parentId)meta.parents=[parentId];return await driveJsonRequest("https://www.googleapis.com/drive/v3/files?fields=id,name",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(meta)})}
+
+/* ================= GOOGLE DRIVE FIXED VERSION ================= */
+function initGoogleAuth(){
+  if(!window.google||!google.accounts){alert("Google Identity script load වෙලා නැහැ. Internet connection check කරන්න.");return false}
+  tokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:GOOGLE_CLIENT_ID,
+    scope:DRIVE_SCOPE,
+    callback:t=>{
+      if(t.error)return alert("Google login error: "+t.error);
+      accessToken=t.access_token;
+      document.getElementById("driveStatus").innerText="Google Drive connected";
+      document.getElementById("driveStatus").className="status ok";
+      document.getElementById("dashDrive").innerText="Connected";
+    }
+  });
+  return true;
+}
+function connectGoogleDrive(){
+  if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR"))return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");
+  if(!tokenClient){if(!initGoogleAuth())return}
+  tokenClient.requestAccessToken({prompt:"consent"});
+}
+async function driveJsonRequest(url,opt={}){
+  if(!accessToken)throw new Error("Google Drive not connected");
+  const res=await fetch(url,{...opt,headers:{Authorization:"Bearer "+accessToken,...(opt.headers||{})}});
+  if(!res.ok)throw new Error(await res.text());
+  return await res.json();
+}
+function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
+async function findDriveFolder(name,parentId=null){
+  let q=`name='${esc(name)}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  if(parentId)q+=` and '${parentId}' in parents`;
+  const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
+  return data.files&&data.files.length?data.files[0]:null;
+}
+async function createDriveFolder(name,parentId=null){
+  const meta={name,mimeType:"application/vnd.google-apps.folder"};
+  if(parentId)meta.parents=[parentId];
+  return await driveJsonRequest("https://www.googleapis.com/drive/v3/files?fields=id,name,parents",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(meta)});
+}
 async function getOrCreateFolder(name,parentId=null){return await findDriveFolder(name,parentId)||await createDriveFolder(name,parentId)}
-async function findDriveFile(name,parentId){const q=`name='${esc(name)}' and '${parentId}' in parents and trashed=false`;const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name)");return data.files&&data.files.length?data.files[0]:null}
-async function uploadNewXlsxToDrive(fileName,folderId,blob){const meta={name:fileName,parents:[folderId],mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",blob);const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name",{method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form});if(!res.ok)throw new Error(await res.text());return await res.json()}
-async function updateXlsxOnDrive(fileId,blob){const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&fields=id,name`,{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},body:blob});if(!res.ok)throw new Error(await res.text());return await res.json()}
-async function syncTodayToDrive(){try{if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR"))return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");if(!accessToken)return alert("මුලින් Reports page එකෙන් Connect Google Drive කරන්න.");const day=businessDay(),today=records.filter(r=>r.businessDay===day);if(!today.length)return alert("Today records නැහැ");document.getElementById("driveStatus").innerText="Syncing...";document.getElementById("driveStatus").className="status warn";document.getElementById("dashDrive").innerText="Syncing";const main=await getOrCreateFolder("LK WEighing-TEA LEAF"),dateFolder=await getOrCreateFolder(day,main.id),fileName=`tea_leaf_report_${day}.xlsx`,blob=buildWorkbookBlob(day),existing=await findDriveFile(fileName,dateFolder.id);if(existing)await updateXlsxOnDrive(existing.id,blob);else await uploadNewXlsxToDrive(fileName,dateFolder.id,blob);records=records.map(r=>r.businessDay===day?{...r,sync:"Synced"}:r);saveAll();renderReports();document.getElementById("driveStatus").innerText="Synced to Google Drive";document.getElementById("driveStatus").className="status ok";document.getElementById("dashDrive").innerText="Synced";alert("Google Drive sync complete.")}catch(err){console.error(err);document.getElementById("driveStatus").innerText="Drive sync failed";document.getElementById("driveStatus").className="status bad";document.getElementById("dashDrive").innerText="Failed";const day=businessDay();records=records.map(r=>r.businessDay===day&&(r.sync||"Pending")!=="Synced"?{...r,sync:"Failed"}:r);saveAll();renderReports();alert("Drive sync failed: "+err.message)}}
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hide")});document.getElementById("installBtn").addEventListener("click",async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hide")}else alert("Android Chrome menu එකෙන් Add to Home screen තෝරන්න. GitHub Pages/HTTPS මත upload කළාම Install button එක active වේ.")});
+async function findDriveFileInFolder(name,parentId){
+  const q=`name='${esc(name)}' and '${parentId}' in parents and trashed=false`;
+  const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
+  return data.files&&data.files.length?data.files[0]:null;
+}
+async function findDriveFileAnywhere(name){
+  const q=`name='${esc(name)}' and trashed=false`;
+  const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
+  return data.files&&data.files.length?data.files[0]:null;
+}
+async function uploadNewXlsxToDrive(fileName,folderId,blob){
+  const meta={
+    name:fileName,
+    parents:[folderId],
+    mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  };
+  const form=new FormData();
+  form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));
+  form.append("file",blob,fileName);
+
+  const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,parents",{
+    method:"POST",
+    headers:{Authorization:"Bearer "+accessToken},
+    body:form
+  });
+  if(!res.ok)throw new Error(await res.text());
+  return await res.json();
+}
+async function updateXlsxOnDrive(fileId,blob){
+  const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&fields=id,name,parents`,{
+    method:"PATCH",
+    headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+    body:blob
+  });
+  if(!res.ok)throw new Error(await res.text());
+  return await res.json();
+}
+async function moveFileToFolder(fileId,targetFolderId,currentParents=[]){
+  const oldParents=(currentParents||[]).filter(p=>p!==targetFolderId).join(",");
+  let url=`https://www.googleapis.com/drive/v3/files/${fileId}?addParents=${encodeURIComponent(targetFolderId)}&fields=id,name,parents`;
+  if(oldParents)url+=`&removeParents=${encodeURIComponent(oldParents)}`;
+  return await driveJsonRequest(url,{method:"PATCH"});
+}
+async function syncTodayToDrive(){
+  try{
+    if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR"))return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");
+    if(!accessToken)return alert("මුලින් Reports page එකෙන් Connect Google Drive කරන්න.");
+
+    const day=businessDay();
+    const today=records.filter(r=>r.businessDay===day);
+    if(!today.length)return alert("Today records නැහැ");
+
+    document.getElementById("driveStatus").innerText="Syncing...";
+    document.getElementById("driveStatus").className="status warn";
+    document.getElementById("dashDrive").innerText="Syncing";
+
+    const main=await getOrCreateFolder("LK WEighing-TEA LEAF");
+    const dateFolder=await getOrCreateFolder(day,main.id);
+    const fileName=`tea_leaf_report_${day}.xlsx`;
+    const blob=buildWorkbookBlob(day);
+
+    let file=await findDriveFileInFolder(fileName,dateFolder.id);
+
+    if(file){
+      await updateXlsxOnDrive(file.id,blob);
+    }else{
+      /* root එකේ හෝ වෙන තැනක කලින් වැරදිව save වුන file එකක් තිබුණොත් එය date folder එකට move කරලා update කරනවා */
+      const anywhere=await findDriveFileAnywhere(fileName);
+      if(anywhere){
+        await updateXlsxOnDrive(anywhere.id,blob);
+        await moveFileToFolder(anywhere.id,dateFolder.id,anywhere.parents||[]);
+      }else{
+        await uploadNewXlsxToDrive(fileName,dateFolder.id,blob);
+      }
+    }
+
+    records=records.map(r=>r.businessDay===day?{...r,sync:"Synced"}:r);
+    saveAll();renderReports();
+
+    document.getElementById("driveStatus").innerText="Synced to Google Drive";
+    document.getElementById("driveStatus").className="status ok";
+    document.getElementById("dashDrive").innerText="Synced";
+    alert("Google Drive sync complete. File එක date folder එක ඇතුළේ save/update වුණා.");
+  }catch(err){
+    console.error(err);
+    document.getElementById("driveStatus").innerText="Drive sync failed";
+    document.getElementById("driveStatus").className="status bad";
+    document.getElementById("dashDrive").innerText="Failed";
+    const day=businessDay();
+    records=records.map(r=>r.businessDay===day&&(r.sync||"Pending")!=="Synced"?{...r,sync:"Failed"}:r);
+    saveAll();renderReports();
+    alert("Drive sync failed: "+err.message);
+  }
+}
+
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hide")});
+document.getElementById("installBtn").addEventListener("click",async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hide")}else alert("Android Chrome menu එකෙන් Add to Home screen තෝරන්න. GitHub Pages/HTTPS මත upload කළාම Install button එක active වේ.")});
 renderReports();renderRoots();prepareCustomerForm();resetReaderPlaceholder();
 </script>
 </body>
