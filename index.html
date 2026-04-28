@@ -33,104 +33,452 @@ body{margin:0;font-family:Inter,Arial,"Noto Sans Sinhala",sans-serif;color:var(-
 input,select,textarea{width:100%;padding:13px 14px;border-radius:15px;border:1px solid #cadbd4;background:#fbfffc;margin:6px 0 10px;font-size:15px;color:var(--text);font-family:inherit;outline:none;transition:.15s}input:focus,select:focus,textarea:focus{border-color:var(--tea-light);box-shadow:0 0 0 3px rgba(20,184,166,.18)}textarea{min-height:88px;resize:vertical}
 .scanbox,#reader{width:100%;min-height:250px;border-radius:24px;background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(20,184,166,.14)),#fff;border:2px dashed rgba(15,118,110,.32);display:grid;place-items:center;overflow:hidden}.qr-placeholder{text-align:center;color:var(--tea)}.qr-placeholder .mark{font-size:55px;margin-bottom:8px}
 .weightBox{text-align:center;color:white;border-radius:28px;padding:25px 18px;background:linear-gradient(145deg,#103d31,#0f766e 58%,#14b8a6);position:relative;overflow:hidden}.weightBox:after{content:"";position:absolute;right:-55px;bottom:-70px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.12)}.weight-label{color:#d6fff2;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.7px}.weight{position:relative;z-index:1;font-size:60px;font-weight:950;letter-spacing:-1.5px;margin:8px 0}.weight small{font-size:24px;color:#d6fff2}
-.status{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:900;background:#e2e8f0;color:#475569}.ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#dbeafe;color:#1e40af}.summaryBox{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}.summaryItem{background:#f8fffb;border:1px solid var(--line);border-radius:19px;padding:13px}.summaryItem span{font-size:12px;color:var(--muted);font-weight:800}.summaryItem b{display:block;font-size:21px;margin-top:5px}
+.status{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:900;background:#e2e8f0;color:#475569}.ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}.warn{background:#fef3c7;color:#92400e}.info{background:#dbeafe;color:#1e40af}.summaryBox{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}.summaryItem{background:#f8fffb;border:1px solid var(--line);border-radius:19px;padding:13px}.summaryItem span{font-size:12px;color:var(--muted);font-weight:800}.summaryItem b{display:block;font-size:21px;margin-top:5px}
 table{width:100%;border-collapse:collapse;font-size:13px;background:white;border-radius:17px;overflow:hidden}th,td{padding:11px;border-bottom:1px solid #e2ebe6;text-align:left}th{background:#f4fbf7;color:#4b635b;font-size:12px;text-transform:uppercase}.badge{display:inline-block;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:900}.badge.synced{background:#dcfce7;color:#166534}.badge.pending{background:#fef3c7;color:#92400e}.badge.failed{background:#fee2e2;color:#991b1b}.printSticker{width:60mm;min-height:40mm;border:2px solid #123127;padding:8px;background:#fff;color:#123127;text-align:center}.small{font-size:12px;color:var(--muted);line-height:1.45}.hide{display:none!important}.tableWrap{overflow:auto;margin-top:15px}
 @media(max-width:900px){.app{padding-bottom:96px}.topbar{border-radius:0 0 28px 28px;margin:-16px -16px 0;align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(2,1fr)}.nav{position:fixed;left:10px;right:10px;bottom:10px;z-index:100;margin:0;grid-template-columns:repeat(5,1fr);box-shadow:0 18px 45px rgba(17,61,47,.24)}.nav button{font-size:11px;padding:10px 6px;border-radius:15px}}
-@media(max-width:540px){.app{padding:12px 12px 96px}.topbar{margin:-12px -12px 0;padding:16px 13px}.brand{gap:10px}.logo{width:48px;height:48px;border-radius:17px;font-size:24px}.brand h1{font-size:19px}.brand p{font-size:12px}.top-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.top-actions .btn{width:100%}.stats{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:13px;border-radius:20px}.stat b{font-size:17px}.card{border-radius:24px;padding:15px}.weight{font-size:43px}.weight small{font-size:18px}.btn{width:100%;min-height:50px;font-size:14px}.scanbox,#reader{min-height:215px}table{min-width:720px}}
+@media(max-width:540px){.app{padding:12px 12px 96px}.topbar{margin:-12px -12px 0;padding:16px 13px}.brand{gap:10px}.logo{width:48px;height:48px;border-radius:17px;font-size:24px}.brand h1{font-size:19px}.brand p{font-size:12px}.top-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.top-actions .btn{width:100%}.stats{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:13px;border-radius:20px}.stat b{font-size:17px}.card{border-radius:24px;padding:15px}.weight{font-size:43px}.weight small{font-size:18px}.btn{width:100%;min-height:50px;font-size:14px}.scanbox,#reader{min-height:215px}table{min-width:780px}}
 @media print{body *{visibility:hidden}#stickerPreview,#stickerPreview *{visibility:visible}#stickerPreview{position:absolute;top:0;left:0}}
 </style>
 </head>
+
 <body>
 <div class="app">
-  <section class="topbar"><div class="brand"><div class="logo">🍃</div><div><h1>LK Weighing - TEA LEAF</h1><p>Tea Factory Weighing POS • QR Scan • Bluetooth Scale • Google Drive XLSX Sync</p></div></div><div class="top-actions"><button id="installBtn" class="btn primary hide">Install App</button><button class="btn yellow" onclick="syncTodayToDrive()">Drive Sync</button></div></section>
-  <nav class="nav"><button onclick="showPage('weigh', this)" class="active">⚖️ Weigh</button><button onclick="showPage('bluetooth', this)">🔵 Scale</button><button onclick="showPage('reports', this)">📊 Reports</button><button onclick="adminLogin()">👤 Admin</button><button onclick="managerLogin()">🌿 Routes</button></nav>
-  <section class="stats"><div class="stat"><span>Business Day</span><b id="dashDay">-</b><small>6AM cycle</small></div><div class="stat"><span>Today Records</span><b id="dashRecords">0</b><small>current day</small></div><div class="stat"><span>Total Weight</span><b id="dashKg">0.000 kg</b><small>today</small></div><div class="stat"><span>Drive Status</span><b id="dashDrive">Offline</b><small>Google Drive</small></div></section>
+  <section class="topbar">
+    <div class="brand">
+      <div class="logo">🍃</div>
+      <div>
+        <h1>LK Weighing - TEA LEAF</h1>
+        <p>Tea Factory Weighing POS • QR Scan • Bluetooth Scale • Google Drive XLSX Sync</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="installBtn" class="btn primary hide">Install App</button>
+      <button class="btn yellow" onclick="syncAllPendingDays(true)">Auto Sync</button>
+    </div>
+  </section>
+
+  <nav class="nav">
+    <button onclick="showPage('weigh', this)" class="active">⚖️ Weigh</button>
+    <button onclick="showPage('bluetooth', this)">🔵 Scale</button>
+    <button onclick="showPage('reports', this)">📊 Reports</button>
+    <button onclick="adminLogin()">👤 Admin</button>
+    <button onclick="managerLogin()">🌿 Routes</button>
+  </nav>
+
+  <section class="stats">
+    <div class="stat"><span>Business Day</span><b id="dashDay">-</b><small>6AM cycle</small></div>
+    <div class="stat"><span>Today Records</span><b id="dashRecords">0</b><small>current day</small></div>
+    <div class="stat"><span>Total Weight</span><b id="dashKg">0.000 kg</b><small>today</small></div>
+    <div class="stat"><span>Drive Status</span><b id="dashDrive">Offline</b><small id="networkText">Checking</small></div>
+  </section>
+
   <main>
-    <section id="weigh" class="page active"><div class="grid"><div class="card"><h2>QR Customer Scan</h2><div id="reader"><div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR එක scan කරන්න</small></div></div><button class="btn green block" onclick="startScanner()">Start QR Scanner</button><button class="btn red block" onclick="stopScanner()">Stop Scanner</button></div><div class="card"><h2>Customer Details</h2><label>Customer ID</label><input id="wCustomerId" readonly><label>Name</label><input id="wName" readonly><label>Address</label><input id="wAddress" readonly><label>Root Name</label><input id="wRoot" readonly><label>Phone</label><input id="wPhone" readonly></div><div class="card"><div class="weightBox"><div class="weight-label">Current Scale Weight</div><div class="weight"><span id="liveWeight">0.000</span> <small>kg</small></div><div id="scaleStatus" class="status warn">Scale not connected</div></div><button class="btn green block" onclick="finishWeighing()">Finish Weighing</button><button class="btn yellow block" onclick="quickSyncAfterWeighing()">Save + Sync Today</button><button class="btn block" onclick="manualWeight()">Manual Weight</button></div></div></section>
-    <section id="bluetooth" class="page"><div class="grid"><div class="card"><h2>Bluetooth Scale 1</h2><p id="bt1Status" class="status bad">Disconnected</p><button class="btn green block" onclick="connectBluetooth(1)">Connect Device 1</button></div><div class="card"><h2>Bluetooth Scale 2</h2><p id="bt2Status" class="status bad">Disconnected</p><button class="btn green block" onclick="connectBluetooth(2)">Connect Device 2</button></div><div class="card"><h2>Test Scale Data</h2><input id="testScale" placeholder="Example: ST,GS,+00025.450kg"><button class="btn block" onclick="testScaleData()">Test Read</button><p class="small">Scale output එක මෙතන paste කරලා weight extract වෙනවද test කරන්න.</p></div></div></section>
-    <section id="reports" class="page"><div class="card"><h2>Reports & Google Drive Sync</h2><div class="summaryBox"><div class="summaryItem"><span>Business Day</span><b id="sumBusinessDay">-</b></div><div class="summaryItem"><span>Today Records</span><b id="sumRecords">0</b></div><div class="summaryItem"><span>Total KG</span><b id="sumKg">0.000</b></div><div class="summaryItem"><span>Pending</span><b id="sumPending">0</b></div></div><button class="btn green" onclick="exportTodayXlsx()">Export Today XLSX</button> <button class="btn blue" onclick="connectGoogleDrive()">Connect Google Drive</button> <button class="btn yellow" onclick="syncTodayToDrive()">Sync Today to Drive</button> <button class="btn" onclick="renderReports()">Refresh</button><br><br><p id="driveStatus" class="status warn">Drive not connected</p><p class="small">Drive structure: LK WEighing-TEA LEAF / Business Date / tea_leaf_report_DATE.xlsx</p><div class="tableWrap"><table><thead><tr><th>Business Day</th><th>Time</th><th>ID</th><th>Name</th><th>Root</th><th>Phone</th><th>Weight</th><th>Sync</th></tr></thead><tbody id="reportTable"></tbody></table></div></div></section>
-    <section id="admin" class="page"><div class="grid"><div class="card"><h2>New Customer Register</h2><label>Customer ID</label><input id="cId" readonly><label>Name</label><input id="cName"><label>Address</label><textarea id="cAddress"></textarea><label>Root Name</label><input id="cRoot" readonly><label>Phone Number</label><input id="cPhone"><button class="btn green block" onclick="saveCustomer()">Register & Generate QR</button></div><div class="card"><h2>QR Sticker</h2><div id="stickerPreview" class="printSticker"><b>LK Weighing - TEA LEAF</b><div id="qrBox"></div><div id="stickerText" class="small">Register customer first</div></div><button class="btn block" onclick="window.print()">Print Sticker</button></div></div><div class="card" style="margin-top:15px"><h2>Customers</h2><div class="tableWrap"><table><thead><tr><th>ID</th><th>Name</th><th>Address</th><th>Root</th><th>Phone</th><th>Action</th></tr></thead><tbody id="customerTable"></tbody></table></div></div></section>
-    <section id="manager" class="page"><div class="grid"><div class="card"><h2>Root / Route Register</h2><label>New Root Name</label><input id="rootName" placeholder="Example: Route A - Pelmadulla"><button class="btn green block" onclick="saveRoot()">Save Root</button></div><div class="card"><h2>Active Root</h2><select id="activeRootSelect"></select><button class="btn green block" onclick="setActiveRoot()">Set Active Root</button><p>Current: <b id="currentRootText">None</b></p></div></div><div class="card" style="margin-top:15px"><h2>Root List</h2><table><tbody id="rootTable"></tbody></table></div></section>
+    <section id="weigh" class="page active">
+      <div class="grid">
+        <div class="card">
+          <h2>QR Customer Scan</h2>
+          <div id="reader"><div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR එක scan කරන්න</small></div></div>
+          <button class="btn green block" onclick="startScanner()">Start QR Scanner</button>
+          <button class="btn red block" onclick="stopScanner()">Stop Scanner</button>
+        </div>
+        <div class="card">
+          <h2>Customer Details</h2>
+          <label>Customer ID</label><input id="wCustomerId" readonly>
+          <label>Name</label><input id="wName" readonly>
+          <label>Address</label><input id="wAddress" readonly>
+          <label>Root Name</label><input id="wRoot" readonly>
+          <label>Phone</label><input id="wPhone" readonly>
+        </div>
+        <div class="card">
+          <div class="weightBox">
+            <div class="weight-label">Current Scale Weight</div>
+            <div class="weight"><span id="liveWeight">0.000</span> <small>kg</small></div>
+            <div id="scaleStatus" class="status warn">Scale not connected</div>
+          </div>
+          <button class="btn green block" onclick="finishWeighing()">Finish Weighing</button>
+          <button class="btn yellow block" onclick="quickSyncAfterWeighing()">Save + Auto Sync</button>
+          <button class="btn block" onclick="manualWeight()">Manual Weight</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="bluetooth" class="page">
+      <div class="grid">
+        <div class="card"><h2>Bluetooth Scale 1</h2><p id="bt1Status" class="status bad">Disconnected</p><button class="btn green block" onclick="connectBluetooth(1)">Connect Device 1</button></div>
+        <div class="card"><h2>Bluetooth Scale 2</h2><p id="bt2Status" class="status bad">Disconnected</p><button class="btn green block" onclick="connectBluetooth(2)">Connect Device 2</button></div>
+        <div class="card"><h2>Test Scale Data</h2><input id="testScale" placeholder="Example: ST,GS,+00025.450kg"><button class="btn block" onclick="testScaleData()">Test Read</button><p class="small">Scale output එක මෙතන paste කරලා weight extract වෙනවද test කරන්න.</p></div>
+      </div>
+    </section>
+
+    <section id="reports" class="page">
+      <div class="card">
+        <h2>Reports & Google Drive Auto Sync</h2>
+        <div class="summaryBox">
+          <div class="summaryItem"><span>Business Day</span><b id="sumBusinessDay">-</b></div>
+          <div class="summaryItem"><span>Today Records</span><b id="sumRecords">0</b></div>
+          <div class="summaryItem"><span>Total KG</span><b id="sumKg">0.000</b></div>
+          <div class="summaryItem"><span>Pending</span><b id="sumPending">0</b></div>
+          <div class="summaryItem"><span>Failed</span><b id="sumFailed">0</b></div>
+        </div>
+        <button class="btn green" onclick="exportTodayXlsx()">Export Today XLSX</button>
+        <button class="btn blue" onclick="connectGoogleDrive()">Connect Google Drive</button>
+        <button class="btn yellow" onclick="syncAllPendingDays(true)">Sync Pending / Offline Data</button>
+        <button class="btn" onclick="renderReports()">Refresh</button>
+        <br><br>
+        <p id="driveStatus" class="status warn">Drive not connected</p>
+        <p class="small">Auto sync: internet ආවම pending/failed records Google Drive folder එකට sync වෙයි.</p>
+        <div class="tableWrap">
+          <table>
+            <thead><tr><th>Business Day</th><th>Time</th><th>ID</th><th>Name</th><th>Root</th><th>Phone</th><th>Weight</th><th>Sync</th></tr></thead>
+            <tbody id="reportTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="admin" class="page">
+      <div class="grid">
+        <div class="card">
+          <h2>New Customer Register</h2>
+          <label>Customer ID</label><input id="cId" readonly>
+          <label>Name</label><input id="cName">
+          <label>Address</label><textarea id="cAddress"></textarea>
+          <label>Root Name</label><input id="cRoot" readonly>
+          <label>Phone Number</label><input id="cPhone">
+          <button class="btn green block" onclick="saveCustomer()">Register & Generate QR</button>
+        </div>
+        <div class="card">
+          <h2>QR Sticker</h2>
+          <div id="stickerPreview" class="printSticker"><b>LK Weighing - TEA LEAF</b><div id="qrBox"></div><div id="stickerText" class="small">Register customer first</div></div>
+          <button class="btn block" onclick="window.print()">Print Sticker</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:15px"><h2>Customers</h2><div class="tableWrap"><table><thead><tr><th>ID</th><th>Name</th><th>Address</th><th>Root</th><th>Phone</th><th>Action</th></tr></thead><tbody id="customerTable"></tbody></table></div></div>
+    </section>
+
+    <section id="manager" class="page">
+      <div class="grid">
+        <div class="card"><h2>Root / Route Register</h2><label>New Root Name</label><input id="rootName" placeholder="Example: Route A - Pelmadulla"><button class="btn green block" onclick="saveRoot()">Save Root</button></div>
+        <div class="card"><h2>Active Root</h2><select id="activeRootSelect"></select><button class="btn green block" onclick="setActiveRoot()">Set Active Root</button><p>Current: <b id="currentRootText">None</b></p></div>
+      </div>
+      <div class="card" style="margin-top:15px"><h2>Root List</h2><table><tbody id="rootTable"></tbody></table></div>
+    </section>
   </main>
 </div>
+
 <script>
-const ADMIN_PASSWORD="1990",MANAGER_PASSWORD="199002";
+/* ================= CONFIG ================= */
+const ADMIN_PASSWORD = "1990";
+const MANAGER_PASSWORD = "199002";
 
-/* ඔබගේ Google OAuth Client ID එක මෙතන දාන්න */
-const GOOGLE_CLIENT_ID="458733588827-lmphjs7bb1k8b4vkbteff2nd53epv2c1.apps.googleusercontent.com";
+/* Google Cloud Console OAuth Web Client ID එක මෙතන දාන්න */
+const GOOGLE_CLIENT_ID = "458733588827-lmphjs7bb1k8b4vkbteff2nd53epv2c1.apps.googleusercontent.com";
 
-const DRIVE_SCOPE="https://www.googleapis.com/auth/drive.file";
-let customers=JSON.parse(localStorage.getItem("customers")||"[]"),roots=JSON.parse(localStorage.getItem("roots")||"[]"),activeRoot=localStorage.getItem("activeRoot")||"",records=JSON.parse(localStorage.getItem("records")||"[]");
-let currentWeight=0,selectedCustomer=null,qrScanner=null,deferredPrompt=null,accessToken=null,tokenClient=null;
-function saveAll(){localStorage.setItem("customers",JSON.stringify(customers));localStorage.setItem("roots",JSON.stringify(roots));localStorage.setItem("activeRoot",activeRoot);localStorage.setItem("records",JSON.stringify(records))}
-function showPage(id,btn=null){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");if(id==="admin")prepareCustomerForm();if(id==="reports")renderReports();if(id==="manager")renderRoots()}
-function adminLogin(){const p=prompt("Admin Password:");if(p===ADMIN_PASSWORD){showPage("admin");prepareCustomerForm()}else alert("Wrong admin password")}
-function managerLogin(){const p=prompt("Manager Password:");if(p===MANAGER_PASSWORD){showPage("manager");renderRoots()}else alert("Wrong manager password")}
-function newCustomerId(){const max=customers.reduce((m,c)=>Math.max(m,parseInt(String(c.id||"").replace(/\D/g,""))||0),0);return"CUS-"+String(max+1).padStart(4,"0")}
-function prepareCustomerForm(){document.getElementById("cId").value=newCustomerId();document.getElementById("cRoot").value=activeRoot||"";renderCustomers()}
-function saveCustomer(){const c={id:document.getElementById("cId").value,name:document.getElementById("cName").value.trim(),address:document.getElementById("cAddress").value.trim(),root:document.getElementById("cRoot").value.trim(),phone:document.getElementById("cPhone").value.trim()};if(!c.name||!c.phone)return alert("Name සහ Phone අවශ්‍යයි");if(!c.root)return alert("Manager page එකෙන් Active Root එක set කරන්න");customers.push(c);saveAll();generateSticker(c);document.getElementById("cName").value="";document.getElementById("cAddress").value="";document.getElementById("cPhone").value="";prepareCustomerForm();alert("Customer registered")}
-function renderCustomers(){const tb=document.getElementById("customerTable");tb.innerHTML="";customers.forEach((c,i)=>{tb.innerHTML+=`<tr><td>${c.id}</td><td>${c.name}</td><td>${c.address}</td><td>${c.root}</td><td>${c.phone}</td><td><button class="btn red" onclick="deleteCustomer(${i})">Delete</button></td></tr>`})}
-function deleteCustomer(i){if(confirm("Delete customer?")){customers.splice(i,1);saveAll();renderCustomers();updateDashboard()}}
-function saveRoot(){const r=document.getElementById("rootName").value.trim();if(!r)return alert("Root name enter කරන්න");if(roots.includes(r))return alert("මෙම Root name එක already තියෙනවා");roots.push(r);if(!activeRoot)activeRoot=r;saveAll();document.getElementById("rootName").value="";renderRoots()}
-function renderRoots(){document.getElementById("currentRootText").innerText=activeRoot||"None";const sel=document.getElementById("activeRootSelect");sel.innerHTML=roots.map(r=>`<option ${r===activeRoot?"selected":""}>${r}</option>`).join("");const tb=document.getElementById("rootTable");tb.innerHTML="";roots.forEach((r,i)=>{tb.innerHTML+=`<tr><td>${r}</td><td><button class="btn red" onclick="deleteRoot(${i})">Delete</button></td></tr>`})}
-function setActiveRoot(){activeRoot=document.getElementById("activeRootSelect").value;saveAll();renderRoots();alert("Active root updated")}
-function deleteRoot(i){if(!confirm("Delete root?"))return;roots.splice(i,1);if(activeRoot&&!roots.includes(activeRoot))activeRoot=roots[0]||"";saveAll();renderRoots()}
-function generateSticker(c){document.getElementById("qrBox").innerHTML="";new QRCode(document.getElementById("qrBox"),{text:c.id,width:100,height:100});document.getElementById("stickerText").innerHTML=`<b>${c.name}</b><br>ID: ${c.id}<br>Root: ${c.root}<br>Tel: ${c.phone}`}
-function resetReaderPlaceholder(){const r=document.getElementById("reader");if(r&&!qrScanner)r.innerHTML=`<div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR එක scan කරන්න</small></div>`}
-function startScanner(){if(qrScanner)return;document.getElementById("reader").innerHTML="";qrScanner=new Html5Qrcode("reader");qrScanner.start({facingMode:"environment"},{fps:10,qrbox:250},txt=>{loadCustomerByQr(txt);stopScanner()}).catch(err=>{qrScanner=null;resetReaderPlaceholder();alert("Camera error: "+err)})}
-function stopScanner(){if(qrScanner){qrScanner.stop().then(()=>{qrScanner.clear();qrScanner=null;resetReaderPlaceholder()})}}
-function loadCustomerByQr(text){let id=text;try{const obj=JSON.parse(text);id=obj.customerId||obj.id||text}catch(e){}const c=customers.find(x=>x.id===String(id).trim());if(!c)return alert("Customer not found: "+id);selectedCustomer=c;document.getElementById("wCustomerId").value=c.id;document.getElementById("wName").value=c.name;document.getElementById("wAddress").value=c.address;document.getElementById("wRoot").value=c.root;document.getElementById("wPhone").value=c.phone}
-function extractWeight(data){const m=String(data).match(/[-+]?\d+(\.\d+)?/g);if(!m)return null;return parseFloat(m[m.length-1])}function setWeight(w){currentWeight=Number(w||0);document.getElementById("liveWeight").innerText=currentWeight.toFixed(3);document.getElementById("scaleStatus").innerText="Stable weight received";document.getElementById("scaleStatus").className="status ok"}
-function testScaleData(){const w=extractWeight(document.getElementById("testScale").value);if(w===null)alert("Weight not found");else setWeight(w)}function manualWeight(){const w=prompt("Weight kg:");if(w&&!isNaN(w))setWeight(parseFloat(w))}
-async function connectBluetooth(n){if(!navigator.bluetooth)return alert("මෙම browser එකේ Web Bluetooth support නැහැ. Android Chrome/Edge භාවිතා කරන්න.");try{const d=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:["battery_service"]});document.getElementById(`bt${n}Status`).innerText="Connected: "+(d.name||"Unknown Device");document.getElementById(`bt${n}Status`).className="status ok";document.getElementById("scaleStatus").innerText="Bluetooth connected";document.getElementById("scaleStatus").className="status ok";alert("Device connected. Real weight auto-read කිරීමට scale model එකේ service/characteristic UUID අවශ්‍යයි.")}catch(e){alert("Bluetooth error: "+e.message)}}
-function businessDay(date=new Date()){const d=new Date(date);if(d.getHours()<6)d.setDate(d.getDate()-1);return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
-function finishWeighing(){if(!selectedCustomer){alert("මුලින් QR scan කර customer තෝරන්න");return false}if(currentWeight<=0){alert("Valid weight එකක් නැහැ");return false}const now=new Date();const rec={businessDay:businessDay(now),date:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`,time:now.toLocaleTimeString(),customerId:selectedCustomer.id,name:selectedCustomer.name,address:selectedCustomer.address,root:selectedCustomer.root,phone:selectedCustomer.phone,weight:currentWeight,sync:"Pending"};records.push(rec);saveAll();renderReports();alert("Weighing saved: "+currentWeight.toFixed(3)+" kg");return true}
-async function quickSyncAfterWeighing(){const saved=finishWeighing();if(saved)await syncTodayToDrive()}
-function getTodayRecords(){return records.filter(r=>r.businessDay===businessDay())}function updateDashboard(){const t=getTodayRecords(),kg=t.reduce((s,r)=>s+Number(r.weight||0),0),p=t.filter(r=>(r.sync||"Pending")!=="Synced").length;document.getElementById("dashDay").innerText=businessDay();document.getElementById("dashRecords").innerText=t.length;document.getElementById("dashKg").innerText=kg.toFixed(3)+" kg";document.getElementById("sumBusinessDay").innerText=businessDay();document.getElementById("sumRecords").innerText=t.length;document.getElementById("sumKg").innerText=kg.toFixed(3);document.getElementById("sumPending").innerText=p}
-function renderReports(){const tb=document.getElementById("reportTable");tb.innerHTML="";records.slice().reverse().forEach(r=>{const s=r.sync||"Pending",cls=s==="Synced"?"synced":s==="Failed"?"failed":"pending";tb.innerHTML+=`<tr><td>${r.businessDay}</td><td>${r.time}</td><td>${r.customerId}</td><td>${r.name}</td><td>${r.root}</td><td>${r.phone}</td><td>${Number(r.weight).toFixed(3)}</td><td><span class="badge ${cls}">${s}</span></td></tr>`});updateDashboard()}
-function buildWorkbookBlob(day=businessDay()){const rows=records.filter(r=>r.businessDay===day);if(!rows.length)throw new Error("Today records නැහැ");const data=rows.map(r=>({"Business Day":r.businessDay,"Date":r.date,"Time":r.time,"Customer ID":r.customerId,"Customer Name":r.name,"Address":r.address,"Root Name":r.root,"Phone":r.phone,"Weight KG":Number(r.weight),"Sync Status":r.sync||"Pending"}));const ws=XLSX.utils.json_to_sheet(data);ws["!cols"]=[{wch:14},{wch:12},{wch:12},{wch:14},{wch:22},{wch:28},{wch:20},{wch:14},{wch:12},{wch:12}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Tea Leaf Report");return new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})}
-function exportTodayXlsx(){try{const day=businessDay(),blob=buildWorkbookBlob(day),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`tea_leaf_report_${day}.xlsx`;a.click();URL.revokeObjectURL(a.href)}catch(e){alert(e.message)}}
+const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.file";
+const MAIN_FOLDER_NAME = "LK WEighing-TEA LEAF";
 
-/* ================= GOOGLE DRIVE FIXED VERSION ================= */
+/* ================= DATA ================= */
+let customers = JSON.parse(localStorage.getItem("customers") || "[]");
+let roots = JSON.parse(localStorage.getItem("roots") || "[]");
+let activeRoot = localStorage.getItem("activeRoot") || "";
+let records = JSON.parse(localStorage.getItem("records") || "[]");
+
+let currentWeight = 0;
+let selectedCustomer = null;
+let qrScanner = null;
+let deferredPrompt = null;
+let accessToken = localStorage.getItem("googleAccessToken") || null;
+let tokenClient = null;
+let autoSyncRunning = false;
+
+/* ================= BASIC ================= */
+function saveAll(){
+  localStorage.setItem("customers", JSON.stringify(customers));
+  localStorage.setItem("roots", JSON.stringify(roots));
+  localStorage.setItem("activeRoot", activeRoot);
+  localStorage.setItem("records", JSON.stringify(records));
+}
+
+function showPage(id, btn=null){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  if(id==="admin") prepareCustomerForm();
+  if(id==="reports") renderReports();
+  if(id==="manager") renderRoots();
+}
+
+function adminLogin(){
+  const p=prompt("Admin Password:");
+  if(p===ADMIN_PASSWORD){showPage("admin");prepareCustomerForm()}else alert("Wrong admin password");
+}
+
+function managerLogin(){
+  const p=prompt("Manager Password:");
+  if(p===MANAGER_PASSWORD){showPage("manager");renderRoots()}else alert("Wrong manager password");
+}
+
+/* ================= CUSTOMER / ROOT ================= */
+function newCustomerId(){
+  const max=customers.reduce((m,c)=>Math.max(m,parseInt(String(c.id||"").replace(/\D/g,""))||0),0);
+  return "CUS-"+String(max+1).padStart(4,"0");
+}
+function prepareCustomerForm(){
+  document.getElementById("cId").value=newCustomerId();
+  document.getElementById("cRoot").value=activeRoot||"";
+  renderCustomers();
+}
+function saveCustomer(){
+  const c={id:document.getElementById("cId").value,name:document.getElementById("cName").value.trim(),address:document.getElementById("cAddress").value.trim(),root:document.getElementById("cRoot").value.trim(),phone:document.getElementById("cPhone").value.trim()};
+  if(!c.name||!c.phone) return alert("Name සහ Phone අවශ්‍යයි");
+  if(!c.root) return alert("Manager page එකෙන් Active Root එක set කරන්න");
+  customers.push(c); saveAll(); generateSticker(c);
+  document.getElementById("cName").value="";document.getElementById("cAddress").value="";document.getElementById("cPhone").value="";
+  prepareCustomerForm(); alert("Customer registered");
+}
+function renderCustomers(){
+  const tb=document.getElementById("customerTable"); tb.innerHTML="";
+  customers.forEach((c,i)=>tb.innerHTML+=`<tr><td>${c.id}</td><td>${c.name}</td><td>${c.address}</td><td>${c.root}</td><td>${c.phone}</td><td><button class="btn red" onclick="deleteCustomer(${i})">Delete</button></td></tr>`);
+}
+function deleteCustomer(i){if(confirm("Delete customer?")){customers.splice(i,1);saveAll();renderCustomers();updateDashboard();}}
+function saveRoot(){
+  const r=document.getElementById("rootName").value.trim();
+  if(!r) return alert("Root name enter කරන්න");
+  if(roots.includes(r)) return alert("මෙම Root name එක already තියෙනවා");
+  roots.push(r); if(!activeRoot) activeRoot=r; saveAll();
+  document.getElementById("rootName").value=""; renderRoots();
+}
+function renderRoots(){
+  document.getElementById("currentRootText").innerText=activeRoot||"None";
+  const sel=document.getElementById("activeRootSelect");
+  sel.innerHTML=roots.map(r=>`<option ${r===activeRoot?"selected":""}>${r}</option>`).join("");
+  const tb=document.getElementById("rootTable"); tb.innerHTML="";
+  roots.forEach((r,i)=>tb.innerHTML+=`<tr><td>${r}</td><td><button class="btn red" onclick="deleteRoot(${i})">Delete</button></td></tr>`);
+}
+function setActiveRoot(){activeRoot=document.getElementById("activeRootSelect").value;saveAll();renderRoots();alert("Active root updated");}
+function deleteRoot(i){if(!confirm("Delete root?"))return;roots.splice(i,1);if(activeRoot&&!roots.includes(activeRoot))activeRoot=roots[0]||"";saveAll();renderRoots();}
+
+/* ================= QR ================= */
+function generateSticker(c){
+  document.getElementById("qrBox").innerHTML="";
+  new QRCode(document.getElementById("qrBox"),{text:c.id,width:100,height:100});
+  document.getElementById("stickerText").innerHTML=`<b>${c.name}</b><br>ID: ${c.id}<br>Root: ${c.root}<br>Tel: ${c.phone}`;
+}
+function resetReaderPlaceholder(){
+  const r=document.getElementById("reader");
+  if(r&&!qrScanner) r.innerHTML=`<div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR එක scan කරන්න</small></div>`;
+}
+function startScanner(){
+  if(qrScanner) return;
+  document.getElementById("reader").innerHTML="";
+  qrScanner=new Html5Qrcode("reader");
+  qrScanner.start({facingMode:"environment"},{fps:10,qrbox:250},txt=>{loadCustomerByQr(txt);stopScanner();}).catch(err=>{qrScanner=null;resetReaderPlaceholder();alert("Camera error: "+err);});
+}
+function stopScanner(){
+  if(qrScanner){qrScanner.stop().then(()=>{qrScanner.clear();qrScanner=null;resetReaderPlaceholder();});}
+}
+function loadCustomerByQr(text){
+  let id=text;
+  try{const obj=JSON.parse(text);id=obj.customerId||obj.id||text;}catch(e){}
+  const c=customers.find(x=>x.id===String(id).trim());
+  if(!c) return alert("Customer not found: "+id);
+  selectedCustomer=c;
+  document.getElementById("wCustomerId").value=c.id;
+  document.getElementById("wName").value=c.name;
+  document.getElementById("wAddress").value=c.address;
+  document.getElementById("wRoot").value=c.root;
+  document.getElementById("wPhone").value=c.phone;
+}
+
+/* ================= WEIGHT ================= */
+function extractWeight(data){
+  const m=String(data).match(/[-+]?\d+(\.\d+)?/g);
+  if(!m) return null;
+  return parseFloat(m[m.length-1]);
+}
+function setWeight(w){
+  currentWeight=Number(w||0);
+  document.getElementById("liveWeight").innerText=currentWeight.toFixed(3);
+  document.getElementById("scaleStatus").innerText="Stable weight received";
+  document.getElementById("scaleStatus").className="status ok";
+}
+function testScaleData(){
+  const w=extractWeight(document.getElementById("testScale").value);
+  if(w===null) alert("Weight not found"); else setWeight(w);
+}
+function manualWeight(){
+  const w=prompt("Weight kg:");
+  if(w&&!isNaN(w)) setWeight(parseFloat(w));
+}
+async function connectBluetooth(n){
+  if(!navigator.bluetooth) return alert("මෙම browser එකේ Web Bluetooth support නැහැ. Android Chrome/Edge භාවිතා කරන්න.");
+  try{
+    const d=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:["battery_service"]});
+    document.getElementById(`bt${n}Status`).innerText="Connected: "+(d.name||"Unknown Device");
+    document.getElementById(`bt${n}Status`).className="status ok";
+    document.getElementById("scaleStatus").innerText="Bluetooth connected";
+    document.getElementById("scaleStatus").className="status ok";
+    alert("Device connected. Real weight auto-read කිරීමට scale model එකේ service/characteristic UUID අවශ්‍යයි.");
+  }catch(e){alert("Bluetooth error: "+e.message);}
+}
+
+/* ================= BUSINESS DAY / RECORD ================= */
+function businessDay(date=new Date()){
+  const d=new Date(date);
+  if(d.getHours()<6) d.setDate(d.getDate()-1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+function finishWeighing(){
+  if(!selectedCustomer){alert("මුලින් QR scan කර customer තෝරන්න");return false;}
+  if(currentWeight<=0){alert("Valid weight එකක් නැහැ");return false;}
+  const now=new Date();
+  const rec={
+    id:"REC-"+Date.now()+"-"+Math.floor(Math.random()*9999),
+    businessDay:businessDay(now),
+    date:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`,
+    time:now.toLocaleTimeString(),
+    timestamp:now.toISOString(),
+    customerId:selectedCustomer.id,
+    name:selectedCustomer.name,
+    address:selectedCustomer.address,
+    root:selectedCustomer.root,
+    phone:selectedCustomer.phone,
+    weight:currentWeight,
+    sync:"Pending"
+  };
+  records.push(rec); saveAll(); renderReports();
+  autoSyncSoon();
+  alert("Weighing saved offline/pending: "+currentWeight.toFixed(3)+" kg");
+  return true;
+}
+async function quickSyncAfterWeighing(){
+  const saved=finishWeighing();
+  if(saved) await syncAllPendingDays(false);
+}
+
+/* ================= REPORTS ================= */
+function getTodayRecords(){return records.filter(r=>r.businessDay===businessDay());}
+function getPendingRecords(){return records.filter(r=>(r.sync||"Pending")!=="Synced");}
+function getPendingDays(){
+  return [...new Set(records.filter(r=>(r.sync||"Pending")!=="Synced").map(r=>r.businessDay))].sort();
+}
+function updateDashboard(){
+  const t=getTodayRecords(),kg=t.reduce((s,r)=>s+Number(r.weight||0),0);
+  const p=records.filter(r=>(r.sync||"Pending")==="Pending").length;
+  const f=records.filter(r=>(r.sync||"Pending")==="Failed").length;
+  document.getElementById("dashDay").innerText=businessDay();
+  document.getElementById("dashRecords").innerText=t.length;
+  document.getElementById("dashKg").innerText=kg.toFixed(3)+" kg";
+  document.getElementById("sumBusinessDay").innerText=businessDay();
+  document.getElementById("sumRecords").innerText=t.length;
+  document.getElementById("sumKg").innerText=kg.toFixed(3);
+  document.getElementById("sumPending").innerText=p;
+  document.getElementById("sumFailed").innerText=f;
+  document.getElementById("networkText").innerText=navigator.onLine?"Online":"Offline";
+}
+function renderReports(){
+  const tb=document.getElementById("reportTable"); tb.innerHTML="";
+  records.slice().reverse().forEach(r=>{
+    const s=r.sync||"Pending",cls=s==="Synced"?"synced":s==="Failed"?"failed":"pending";
+    tb.innerHTML+=`<tr><td>${r.businessDay}</td><td>${r.time}</td><td>${r.customerId}</td><td>${r.name}</td><td>${r.root}</td><td>${r.phone}</td><td>${Number(r.weight).toFixed(3)}</td><td><span class="badge ${cls}">${s}</span></td></tr>`;
+  });
+  updateDashboard();
+}
+function buildWorkbookBlob(day){
+  const rows=records.filter(r=>r.businessDay===day);
+  if(!rows.length) throw new Error(day+" records නැහැ");
+  const data=rows.map(r=>({
+    "Record ID":r.id||"",
+    "Business Day":r.businessDay,
+    "Date":r.date,
+    "Time":r.time,
+    "Customer ID":r.customerId,
+    "Customer Name":r.name,
+    "Address":r.address,
+    "Root Name":r.root,
+    "Phone":r.phone,
+    "Weight KG":Number(r.weight),
+    "Sync Status":r.sync||"Pending"
+  }));
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws["!cols"]=[{wch:24},{wch:14},{wch:12},{wch:12},{wch:14},{wch:22},{wch:28},{wch:20},{wch:14},{wch:12},{wch:12}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Tea Leaf Report");
+  return new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function exportTodayXlsx(){
+  try{
+    const day=businessDay(),blob=buildWorkbookBlob(day),a=document.createElement("a");
+    a.href=URL.createObjectURL(blob); a.download=`tea_leaf_report_${day}.xlsx`; a.click(); URL.revokeObjectURL(a.href);
+  }catch(e){alert(e.message);}
+}
+
+/* ================= GOOGLE DRIVE + FOLDER FIX + OFFLINE AUTO SYNC ================= */
+function setDriveStatus(text, cls="warn", dash=""){
+  const el=document.getElementById("driveStatus");
+  if(el){el.innerText=text;el.className="status "+cls;}
+  if(dash) document.getElementById("dashDrive").innerText=dash;
+}
 function initGoogleAuth(){
-  if(!window.google||!google.accounts){alert("Google Identity script load වෙලා නැහැ. Internet connection check කරන්න.");return false}
+  if(!window.google||!google.accounts){alert("Google Identity script load වෙලා නැහැ. Internet connection check කරන්න.");return false;}
   tokenClient=google.accounts.oauth2.initTokenClient({
     client_id:GOOGLE_CLIENT_ID,
     scope:DRIVE_SCOPE,
     callback:t=>{
-      if(t.error)return alert("Google login error: "+t.error);
+      if(t.error) return alert("Google login error: "+t.error);
       accessToken=t.access_token;
-      document.getElementById("driveStatus").innerText="Google Drive connected";
-      document.getElementById("driveStatus").className="status ok";
-      document.getElementById("dashDrive").innerText="Connected";
+      localStorage.setItem("googleAccessToken", accessToken);
+      setDriveStatus("Google Drive connected","ok","Connected");
+      autoSyncSoon();
     }
   });
   return true;
 }
 function connectGoogleDrive(){
-  if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR"))return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");
-  if(!tokenClient){if(!initGoogleAuth())return}
+  if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR")) return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");
+  if(!tokenClient){if(!initGoogleAuth())return;}
   tokenClient.requestAccessToken({prompt:"consent"});
 }
+async function ensureDriveTokenSilent(){
+  if(accessToken) return true;
+  if(!navigator.onLine) return false;
+  if(!tokenClient){if(!initGoogleAuth()) return false;}
+  return new Promise(resolve=>{
+    tokenClient.callback=t=>{
+      if(t.error){resolve(false);return;}
+      accessToken=t.access_token;
+      localStorage.setItem("googleAccessToken", accessToken);
+      setDriveStatus("Google Drive connected","ok","Connected");
+      resolve(true);
+    };
+    try{ tokenClient.requestAccessToken({prompt:""}); }
+    catch(e){ resolve(false); }
+  });
+}
 async function driveJsonRequest(url,opt={}){
-  if(!accessToken)throw new Error("Google Drive not connected");
+  if(!accessToken) throw new Error("Google Drive not connected");
   const res=await fetch(url,{...opt,headers:{Authorization:"Bearer "+accessToken,...(opt.headers||{})}});
-  if(!res.ok)throw new Error(await res.text());
+  if(res.status===401){
+    accessToken=null;localStorage.removeItem("googleAccessToken");
+    throw new Error("Google login expired. Connect Google Drive again.");
+  }
+  if(!res.ok) throw new Error(await res.text());
   return await res.json();
 }
-function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
+function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
 async function findDriveFolder(name,parentId=null){
   let q=`name='${esc(name)}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
-  if(parentId)q+=` and '${parentId}' in parents`;
+  if(parentId) q+=` and '${parentId}' in parents`;
   const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
   return data.files&&data.files.length?data.files[0]:null;
 }
 async function createDriveFolder(name,parentId=null){
   const meta={name,mimeType:"application/vnd.google-apps.folder"};
-  if(parentId)meta.parents=[parentId];
+  if(parentId) meta.parents=[parentId];
   return await driveJsonRequest("https://www.googleapis.com/drive/v3/files?fields=id,name,parents",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(meta)});
 }
-async function getOrCreateFolder(name,parentId=null){return await findDriveFolder(name,parentId)||await createDriveFolder(name,parentId)}
+async function getOrCreateFolder(name,parentId=null){return await findDriveFolder(name,parentId)||await createDriveFolder(name,parentId);}
 async function findDriveFileInFolder(name,parentId){
   const q=`name='${esc(name)}' and '${parentId}' in parents and trashed=false`;
   const data=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
@@ -142,93 +490,133 @@ async function findDriveFileAnywhere(name){
   return data.files&&data.files.length?data.files[0]:null;
 }
 async function uploadNewXlsxToDrive(fileName,folderId,blob){
-  const meta={
-    name:fileName,
-    parents:[folderId],
-    mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-  };
+  const meta={name:fileName,parents:[folderId],mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
   const form=new FormData();
   form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));
   form.append("file",blob,fileName);
-
   const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,parents",{
-    method:"POST",
-    headers:{Authorization:"Bearer "+accessToken},
-    body:form
+    method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form
   });
-  if(!res.ok)throw new Error(await res.text());
+  if(!res.ok) throw new Error(await res.text());
   return await res.json();
 }
 async function updateXlsxOnDrive(fileId,blob){
   const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&fields=id,name,parents`,{
-    method:"PATCH",
-    headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
-    body:blob
+    method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},body:blob
   });
-  if(!res.ok)throw new Error(await res.text());
+  if(!res.ok) throw new Error(await res.text());
   return await res.json();
 }
 async function moveFileToFolder(fileId,targetFolderId,currentParents=[]){
   const oldParents=(currentParents||[]).filter(p=>p!==targetFolderId).join(",");
   let url=`https://www.googleapis.com/drive/v3/files/${fileId}?addParents=${encodeURIComponent(targetFolderId)}&fields=id,name,parents`;
-  if(oldParents)url+=`&removeParents=${encodeURIComponent(oldParents)}`;
+  if(oldParents) url+=`&removeParents=${encodeURIComponent(oldParents)}`;
   return await driveJsonRequest(url,{method:"PATCH"});
 }
-async function syncTodayToDrive(){
-  try{
-    if(GOOGLE_CLIENT_ID.includes("PASTE_YOUR"))return alert("මුලින් GOOGLE_CLIENT_ID එක code එකට දාන්න.");
-    if(!accessToken)return alert("මුලින් Reports page එකෙන් Connect Google Drive කරන්න.");
+function markDay(day,status){
+  records=records.map(r=>r.businessDay===day?{...r,sync:status}:r);
+  saveAll(); renderReports();
+}
+async function syncOneBusinessDay(day){
+  const rows=records.filter(r=>r.businessDay===day);
+  if(!rows.length) return;
+  const main=await getOrCreateFolder(MAIN_FOLDER_NAME);
+  const dateFolder=await getOrCreateFolder(day,main.id);
+  const fileName=`tea_leaf_report_${day}.xlsx`;
+  const blob=buildWorkbookBlob(day);
 
-    const day=businessDay();
-    const today=records.filter(r=>r.businessDay===day);
-    if(!today.length)return alert("Today records නැහැ");
-
-    document.getElementById("driveStatus").innerText="Syncing...";
-    document.getElementById("driveStatus").className="status warn";
-    document.getElementById("dashDrive").innerText="Syncing";
-
-    const main=await getOrCreateFolder("LK WEighing-TEA LEAF");
-    const dateFolder=await getOrCreateFolder(day,main.id);
-    const fileName=`tea_leaf_report_${day}.xlsx`;
-    const blob=buildWorkbookBlob(day);
-
-    let file=await findDriveFileInFolder(fileName,dateFolder.id);
-
-    if(file){
-      await updateXlsxOnDrive(file.id,blob);
+  let file=await findDriveFileInFolder(fileName,dateFolder.id);
+  if(file){
+    await updateXlsxOnDrive(file.id,blob);
+  }else{
+    const anywhere=await findDriveFileAnywhere(fileName);
+    if(anywhere){
+      await updateXlsxOnDrive(anywhere.id,blob);
+      await moveFileToFolder(anywhere.id,dateFolder.id,anywhere.parents||[]);
     }else{
-      /* root එකේ හෝ වෙන තැනක කලින් වැරදිව save වුන file එකක් තිබුණොත් එය date folder එකට move කරලා update කරනවා */
-      const anywhere=await findDriveFileAnywhere(fileName);
-      if(anywhere){
-        await updateXlsxOnDrive(anywhere.id,blob);
-        await moveFileToFolder(anywhere.id,dateFolder.id,anywhere.parents||[]);
-      }else{
-        await uploadNewXlsxToDrive(fileName,dateFolder.id,blob);
-      }
+      await uploadNewXlsxToDrive(fileName,dateFolder.id,blob);
     }
+  }
+  markDay(day,"Synced");
+}
+async function syncAllPendingDays(showAlert=false){
+  if(autoSyncRunning) return;
+  if(!navigator.onLine){
+    setDriveStatus("Offline - data saved locally","warn","Offline");
+    if(showAlert) alert("Internet නැහැ. Data local save වෙලා තියෙනවා. Online වුණාම auto sync වෙයි.");
+    return;
+  }
+  const tokenOk=await ensureDriveTokenSilent();
+  if(!tokenOk){
+    if(showAlert) alert("මුලින් Connect Google Drive කරන්න.");
+    return;
+  }
 
-    records=records.map(r=>r.businessDay===day?{...r,sync:"Synced"}:r);
-    saveAll();renderReports();
+  const days=getPendingDays();
+  if(days.length===0){
+    setDriveStatus("No pending records","ok","Synced");
+    if(showAlert) alert("Pending records නැහැ.");
+    return;
+  }
 
-    document.getElementById("driveStatus").innerText="Synced to Google Drive";
-    document.getElementById("driveStatus").className="status ok";
-    document.getElementById("dashDrive").innerText="Synced";
-    alert("Google Drive sync complete. File එක date folder එක ඇතුළේ save/update වුණා.");
+  autoSyncRunning=true;
+  setDriveStatus("Auto syncing pending data...","warn","Syncing");
+
+  try{
+    for(const day of days){
+      await syncOneBusinessDay(day);
+    }
+    setDriveStatus("All pending data synced","ok","Synced");
+    if(showAlert) alert("Offline/Pending data සියල්ල Google Drive folder වලට sync වුණා.");
   }catch(err){
     console.error(err);
-    document.getElementById("driveStatus").innerText="Drive sync failed";
-    document.getElementById("driveStatus").className="status bad";
-    document.getElementById("dashDrive").innerText="Failed";
-    const day=businessDay();
-    records=records.map(r=>r.businessDay===day&&(r.sync||"Pending")!=="Synced"?{...r,sync:"Failed"}:r);
-    saveAll();renderReports();
-    alert("Drive sync failed: "+err.message);
+    for(const day of days){
+      records=records.map(r=>r.businessDay===day && (r.sync||"Pending")!=="Synced"?{...r,sync:"Failed"}:r);
+    }
+    saveAll(); renderReports();
+    setDriveStatus("Auto sync failed","bad","Failed");
+    if(showAlert) alert("Sync failed: "+err.message);
+  }finally{
+    autoSyncRunning=false;
   }
 }
+function autoSyncSoon(){
+  setTimeout(()=>syncAllPendingDays(false),1200);
+}
 
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hide")});
-document.getElementById("installBtn").addEventListener("click",async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hide")}else alert("Android Chrome menu එකෙන් Add to Home screen තෝරන්න. GitHub Pages/HTTPS මත upload කළාම Install button එක active වේ.")});
-renderReports();renderRoots();prepareCustomerForm();resetReaderPlaceholder();
+/* ================= ONLINE / OFFLINE EVENTS ================= */
+window.addEventListener("online",()=>{
+  setDriveStatus("Online - auto sync starting","warn","Online");
+  updateDashboard();
+  autoSyncSoon();
+});
+window.addEventListener("offline",()=>{
+  setDriveStatus("Offline - data will sync later","warn","Offline");
+  updateDashboard();
+});
+
+/* ================= PWA INSTALL ================= */
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  document.getElementById("installBtn").classList.remove("hide");
+});
+document.getElementById("installBtn").addEventListener("click",async()=>{
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+    document.getElementById("installBtn").classList.add("hide");
+  }else alert("Android Chrome menu එකෙන් Add to Home screen තෝරන්න. GitHub Pages/HTTPS මත upload කළාම Install button එක active වේ.");
+});
+
+/* ================= INIT ================= */
+renderReports();
+renderRoots();
+prepareCustomerForm();
+resetReaderPlaceholder();
+setDriveStatus(navigator.onLine ? (accessToken ? "Ready for auto sync" : "Drive not connected") : "Offline - local save mode", navigator.onLine ? "warn" : "warn", navigator.onLine ? (accessToken ? "Ready" : "Offline") : "Offline");
+if(navigator.onLine && accessToken) autoSyncSoon();
 </script>
 </body>
 </html>
