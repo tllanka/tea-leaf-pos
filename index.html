@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LK Weighing - Tea Leaf System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&display=swap');
+
+        * { font-family: 'Noto Sans Sinhala', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 50%, #1e3d2f 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tea-gradient {
+            background: linear-gradient(135deg, #4ade80 0%, #16a34a 50%, #15803d 100%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(22, 163, 74, 0.3); }
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(220, 38, 38, 0.3); }
+
+        .weight-display {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1a472a, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .scanner-container {
+            border: 3px solid #16a34a;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+        .input-field:focus {
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+            outline: none;
+        }
+
+        .status-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+        .status-dot.connected { background: #22c55e; }
+        .status-dot.disconnected { background: #ef4444; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .sticker-print {
+            width: 80mm;
+            height: 50mm;
+            border: 1px dashed #333;
+            padding: 10px;
+            text-align: center;
+            background: white;
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 9999;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { background: linear-gradient(135deg, #16a34a, #15803d); }
+        .toast.error { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+        .toast.info { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+        .toast.warning { background: linear-gradient(135deg, #d97706, #b45309); }
+
+        /* Network Status Bar */
+        .network-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 9998;
+            padding: 6px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .network-bar.online {
+            background: #16a34a;
+            color: white;
+            transform: translateY(-100%);
+        }
+        .network-bar.offline {
+            background: #dc2626;
+            color: white;
+            transform: translateY(0);
+        }
+        .network-bar.syncing {
+            background: #2563eb;
+            color: white;
+            transform: translateY(0);
+        }
+
+        /* Pending badge */
+        .pending-badge {
+            position: absolute;
+            top: -8px; right: -8px;
+            background: #dc2626;
+            color: white;
+            font-size: 11px;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .sync-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body class="text-gray-800">
+
+    <!-- Network Status Bar -->
+    <div id="network-bar" class="network-bar online">
+        <span id="network-text"><i class="fas fa-wifi mr-1"></i> Online</span>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- ==================== MAIN WEIGHING PAGE ==================== -->
+    <div id="page-main" class="page active">
+        <div class="min-h-screen p-4 pt-8">
+            <!-- Header -->
+            <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 tea-gradient rounded-xl flex items-center justify-center text-white text-xl">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-green-900">LK Weighing</h1>
+                        <p class="text-xs text-green-700">Tea Leaf Factory System</p>
+                    </div>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <!-- Pending Sync Badge -->
+                    <button onclick="syncPendingData()" id="sync-btn" class="relative bg-blue-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-700 transition hidden">
+                        <i class="fas fa-cloud-upload-alt mr-1"></i> Sync
+                        <span id="pending-count" class="pending-badge">0</span>
+                    </button>
+                    <button onclick="showPage('admin-login')" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition">
+                        <i class="fas fa-lock mr-1"></i> Admin
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <!-- Left Column: QR & Customer -->
+                <div class="space-y-4">
+                    <!-- QR Scanner -->
+                    <div class="glass-panel rounded-2xl p-4 shadow-lg">
+                        <h2 class="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
+                            <i class="fas fa-qrcode text-green-600"></i> QR Scan කරන්න
+                        </h2>
+                        <div id="qr-reader" class="scanner-container w-full h-64 bg-black"></div>
+                        <div class="mt-3 flex gap-2">
+                            <button id="btn-start-qr" onclick="startQrScanner()" class="btn-primary text-white px-4 py-2 rounded-lg flex-1">
+                                <i class="fas fa-camera mr-1"></i> Scanner On කරන්න
+                            </button>
+                            <button id="btn-stop-qr" onclick="stopQrScanner()" class="btn-danger text-white px-4 py-2 rounded-lg hidden">
+                                <i class="fas fa-stop mr-1"></i> Stop
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Customer Info -->
+                    <div class="glass-panel rounded-2xl p-4 shadow-lg">
+                        <h2 class="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
+                            <i class="fas fa-user text-green-600"></i> ග්‍රාහක තොරතුරු
+                        </h2>
+                        <div id="customer-info" class="space-y-2">
+                            <div class="p-3 bg-gray-50 rounded-lg text-center text-gray-500">
+                                <i class="fas fa-info-circle mb-1"></i><br>
+                                QR code එක scan කරන්න
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Bluetooth & Weighing -->
+                <div class="space-y-4">
+                    <!-- Bluetooth Scales -->
+                    <div class="glass-panel rounded-2xl p-4 shadow-lg">
+                        <h2 class="text-lg font-bold text-green-900 mb-3 flex items-center gap-2">
+                            <i class="fas fa-bluetooth-b text-blue-600"></i> Bluetooth Scales
+                        </h2>
+
+                        <!-- Scale 1 -->
+                        <div class="bg-white rounded-xl p-3 mb-2 border-2 border-gray-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-700">Scale 1</span>
+                                <span id="scale1-status" class="status-dot disconnected"></span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="connectBluetooth(1)" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm flex-1 hover:bg-blue-700">
+                                    <i class="fas fa-link mr-1"></i> Connect
+                                </button>
+                                <button onclick="disconnectBluetooth(1)" class="bg-gray-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-gray-600">
+                                    <i class="fas fa-unlink"></i>
+                                </button>
+                            </div>
+                            <div id="scale1-value" class="mt-2 text-2xl font-bold text-center text-gray-400">0.00 kg</div>
+                        </div>
+
+                        <!-- Scale 2 -->
+                        <div class="bg-white rounded-xl p-3 border-2 border-gray-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold text-gray-700">Scale 2</span>
+                                <span id="scale2-status" class="status-dot disconnected"></span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="connectBluetooth(2)" class="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm flex-1 hover:bg-blue-700">
+                                    <i class="fas fa-link mr-1"></i> Connect
+                                </button>
+                                <button onclick="disconnectBluetooth(2)" class="bg-gray-500 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-gray-600">
+                                    <i class="fas fa-unlink"></i>
+                                </button>
+                            </div>
+                            <div id="scale2-value" class="mt-2 text-2xl font-bold text-center text-gray-400">0.00 kg</div>
+                        </div>
+                    </div>
+
+                    <!-- Weight Display -->
+                    <div class="glass-panel rounded-2xl p-6 shadow-lg text-center">
+                        <h2 class="text-lg font-bold text-green-900 mb-2">වර්තමාන බර</h2>
+                        <div class="weight-display" id="current-weight">0.00</div>
+                        <div class="text-xl text-gray-600 font-semibold">kg</div>
+
+                        <!-- Manual Input Fallback -->
+                        <div class="mt-4 flex gap-2">
+                            <input type="number" id="manual-weight" step="0.01" placeholder="Manual weight" 
+                                class="input-field flex-1 px-4 py-2 rounded-lg text-center text-lg">
+                            <button onclick="setManualWeight()" class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="tareWeight()" class="bg-amber-500 text-white py-3 rounded-xl font-bold text-lg hover:bg-amber-600 transition shadow-lg">
+                            <i class="fas fa-balance-scale mr-1"></i> TARE
+                        </button>
+                        <button onclick="captureWeight()" class="bg-blue-600 text-white py-3 rounded-xl font-bold text-lg hover:bg-blue-700 transition shadow-lg">
+                            <i class="fas fa-save mr-1"></i> CAPTURE
+                        </button>
+                    </div>
+
+                    <button onclick="finishWeighing()" class="w-full btn-primary text-white py-4 rounded-xl font-bold text-xl shadow-lg">
+                        <i class="fas fa-check-circle mr-2"></i> FINISH & SAVE
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Records -->
+            <div class="glass-panel rounded-2xl p-4 mt-4 shadow-lg">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-bold text-green-900">අද වාර්තා (<span id="business-date-display"></span>)</h2>
+                    <div class="flex gap-2">
+                        <span id="sync-status-badge" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                            <i class="fas fa-check mr-1"></i> Synced
+                        </span>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-green-50 text-green-900">
+                            <tr>
+                                <th class="p-2 text-left rounded-tl-lg">වේලාව</th>
+                                <th class="p-2 text-left">ග්‍රාහකයා</th>
+                                <th class="p-2 text-left">Root</th>
+                                <th class="p-2 text-right">බර (kg)</th>
+                                <th class="p-2 text-center rounded-tr-lg">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="records-table" class="divide-y divide-gray-100">
+                            <tr><td colspan="5" class="p-4 text-center text-gray-400">අද දත්ත නැත</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN LOGIN ==================== -->
+    <div id="page-admin-login" class="page">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="glass-panel rounded-2xl p-8 w-full max-w-md shadow-2xl">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 tea-gradient rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-3">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-green-900">Admin Login</h2>
+                    <p class="text-gray-600">අවසර ලබා ගැනීම</p>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                        <input type="password" id="admin-password" class="input-field w-full px-4 py-3 rounded-lg text-lg" placeholder="Enter password">
+                    </div>
+                    <button onclick="loginAdmin()" class="w-full btn-primary text-white py-3 rounded-lg font-bold text-lg">
+                        <i class="fas fa-sign-in-alt mr-1"></i> Login
+                    </button>
+                    <button onclick="showPage('main')" class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition">
+                        <i class="fas fa-arrow-left mr-1"></i> ආපසු
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN DASHBOARD ==================== -->
+    <div id="page-admin" class="page">
+        <div class="min-h-screen p-4 pt-8">
+            <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">Admin Dashboard</h1>
+                </div>
+                <button onclick="logoutAdmin()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Register Customer -->
+                <div onclick="showPage('register')" class="glass-panel rounded-2xl p-6 card-hover cursor-pointer shadow-lg">
+                    <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center text-green-600 text-2xl mb-3">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">නව ග්‍රාහක ලියාපදිංචිය</h3>
+                    <p class="text-sm text-gray-600 mt-1">QR code සමඟ ග්‍රාහකයෙකු එකතු කරන්න</p>
+                </div>
+
+                <!-- View Customers -->
+                <div onclick="showPage('customers')" class="glass-panel rounded-2xl p-6 card-hover cursor-pointer shadow-lg">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl mb-3">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">ග්‍රාහක ලැයිස්තුව</h3>
+                    <p class="text-sm text-gray-600 mt-1">සියලුම ග්‍රාහකයන් බලන්න</p>
+                </div>
+
+                <!-- Manager Page -->
+                <div onclick="showPage('manager-login')" class="glass-panel rounded-2xl p-6 card-hover cursor-pointer shadow-lg">
+                    <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600 text-2xl mb-3">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">Manager Page</h3>
+                    <p class="text-sm text-gray-600 mt-1">Root names manage කරන්න</p>
+                </div>
+
+                <!-- Google Drive Settings -->
+                <div onclick="showPage('drive-settings')" class="glass-panel rounded-2xl p-6 card-hover cursor-pointer shadow-lg">
+                    <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center text-yellow-600 text-2xl mb-3">
+                        <i class="fab fa-google-drive"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">Google Drive Setup</h3>
+                    <p class="text-sm text-gray-600 mt-1">Auto-upload සැකසුම්</p>
+                </div>
+
+                <!-- Export Excel -->
+                <div onclick="exportLocalExcel()" class="glass-panel rounded-2xl p-6 card-hover cursor-pointer shadow-lg">
+                    <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 text-2xl mb-3">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">Excel Export</h3>
+                    <p class="text-sm text-gray-600 mt-1">දත්ත Excel ලෙස බාගන්න</p>
+                </div>
+
+                <!-- Back to Main -->
+                <div onclick="showPage('main')" class="glass-panel rounded-2xl p-6 card-hover cursor-pointer shadow-lg">
+                    <div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center text-gray-600 text-2xl mb-3">
+                        <i class="fas fa-weight-hanging"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800">Weighing Page</h3>
+                    <p class="text-sm text-gray-600 mt-1">ප්‍රධාන පිටුවට යන්න</p>
+                </div>
+            </div>
+
+            <!-- Offline Status Card -->
+            <div class="glass-panel rounded-2xl p-6 shadow-lg mt-4">
+                <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fas fa-sync-alt mr-2"></i> Sync Status</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
+                        <div class="text-2xl font-bold text-blue-600" id="stat-total">0</div>
+                        <div class="text-xs text-gray-500">Total Records</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
+                        <div class="text-2xl font-bold text-green-600" id="stat-synced">0</div>
+                        <div class="text-xs text-gray-500">Synced</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
+                        <div class="text-2xl font-bold text-red-600" id="stat-pending">0</div>
+                        <div class="text-xs text-gray-500">Pending</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
+                        <div class="text-2xl font-bold text-purple-600" id="stat-customers">0</div>
+                        <div class="text-xs text-gray-500">Customers</div>
+                    </div>
+                </div>
+                <button onclick="syncPendingData()" id="admin-sync-btn" class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700">
+                    <i class="fas fa-cloud-upload-alt mr-2"></i> Sync Pending Data Now
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CUSTOMER REGISTRATION ==================== -->
+    <div id="page-register" class="page">
+        <div class="min-h-screen p-4 pt-8">
+            <div class="max-w-2xl mx-auto">
+                <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
+                    <h1 class="text-xl font-bold text-green-900 flex items-center gap-2">
+                        <i class="fas fa-user-plus text-green-600"></i> නව ග්‍රාහක ලියාපදිංචිය
+                    </h1>
+                    <button onclick="showPage('admin')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                        <i class="fas fa-arrow-left mr-1"></i> ආපසු
+                    </button>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 shadow-lg">
+                    <form id="register-form" onsubmit="event.preventDefault(); registerCustomer();" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">නම (Name) *</label>
+                            <input type="text" id="reg-name" required class="input-field w-full px-4 py-3 rounded-lg">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">ලිපිනය (Address) *</label>
+                            <textarea id="reg-address" required rows="2" class="input-field w-full px-4 py-3 rounded-lg"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Root Name *</label>
+                            <select id="reg-root" required class="input-field w-full px-4 py-3 rounded-lg bg-white">
+                                <option value="">Root එක තෝරන්න</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-1">Manager page එකෙන් roots add කරන්න</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">දුරකථන අංකය (Phone) *</label>
+                            <input type="tel" id="reg-phone" required class="input-field w-full px-4 py-3 rounded-lg" placeholder="07X XXX XXXX">
+                        </div>
+
+                        <button type="submit" class="w-full btn-primary text-white py-3 rounded-lg font-bold text-lg">
+                            <i class="fas fa-save mr-1"></i> ලියාපදිංචි කර QR Generate කරන්න
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== QR PRINT PAGE ==================== -->
+    <div id="page-qr-print" class="page">
+        <div class="min-h-screen p-4 pt-8">
+            <div class="max-w-md mx-auto">
+                <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg no-print">
+                    <h1 class="text-xl font-bold text-green-900">QR Sticker Print</h1>
+                    <div class="flex gap-2">
+                        <button onclick="window.print()" class="btn-primary text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-print mr-1"></i> Print
+                        </button>
+                        <button onclick="showPage('admin')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg">
+                            <i class="fas fa-home mr-1"></i> Dashboard
+                        </button>
+                    </div>
+                </div>
+
+                <div id="print-area" class="flex justify-center">
+                    <div class="sticker-print">
+                        <div class="text-xs font-bold text-green-800 mb-1">LK WEIGHING - TEA LEAF</div>
+                        <div id="sticker-qr" class="flex justify-center my-1"></div>
+                        <div id="sticker-id" class="text-xs font-mono text-gray-600"></div>
+                        <div id="sticker-name" class="text-sm font-bold text-gray-800 truncate"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CUSTOMER LIST ==================== -->
+    <div id="page-customers" class="page">
+        <div class="min-h-screen p-4 pt-8">
+            <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
+                <h1 class="text-xl font-bold text-green-900 flex items-center gap-2">
+                    <i class="fas fa-users text-green-600"></i> ග්‍රාහක ලැයිස්තුව
+                </h1>
+                <button onclick="showPage('admin')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                    <i class="fas fa-arrow-left mr-1"></i> ආපසු
+                </button>
+            </div>
+            <div class="glass-panel rounded-2xl p-4 shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="bg-green-50 text-green-900">
+                            <tr>
+                                <th class="p-3 text-left">ID</th>
+                                <th class="p-3 text-left">නම</th>
+                                <th class="p-3 text-left">Root</th>
+                                <th class="p-3 text-left">Phone</th>
+                                <th class="p-3 text-center">QR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-table" class="divide-y divide-gray-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MANAGER LOGIN ==================== -->
+    <div id="page-manager-login" class="page">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="glass-panel rounded-2xl p-8 w-full max-w-md shadow-2xl">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center text-white text-2xl mx-auto mb-3">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-purple-900">Manager Login</h2>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Password</label>
+                        <input type="password" id="manager-password" class="input-field w-full px-4 py-3 rounded-lg text-lg" placeholder="Enter password">
+                    </div>
+                    <button onclick="loginManager()" class="w-full bg-purple-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-purple-700">
+                        <i class="fas fa-sign-in-alt mr-1"></i> Login
+                    </button>
+                    <button onclick="showPage('admin')" class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">
+                        <i class="fas fa-arrow-left mr-1"></i> ආපසු
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MANAGER DASHBOARD ==================== -->
+    <div id="page-manager" class="page">
+        <div class="min-h-screen p-4 pt-8">
+            <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-white">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">Manager Dashboard</h1>
+                </div>
+                <button onclick="logoutManager()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
+                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                </button>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <!-- Add Root -->
+                <div class="glass-panel rounded-2xl p-6 shadow-lg mb-4">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3">නව Root Name එකතු කරන්න</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="new-root-name" class="input-field flex-1 px-4 py-3 rounded-lg" placeholder="Root name ඇතුළත් කරන්න">
+                        <button onclick="addRootName()" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-purple-700">
+                            <i class="fas fa-plus mr-1"></i> Add
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Root List -->
+                <div class="glass-panel rounded-2xl p-6 shadow-lg">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3">Root Names</h3>
+                    <div id="root-list" class="space-y-2">
+                        <div class="text-center text-gray-400 py-4">Roots නැත. ඉහතින් එකතු කරන්න.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GOOGLE DRIVE SETTINGS ==================== -->
+    <div id="page-drive-settings" class="page">
+        <div class="min-h-screen p-4 pt-8">
+            <div class="max-w-2xl mx-auto">
+                <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
+                    <h1 class="text-xl font-bold text-green-900 flex items-center gap-2">
+                        <i class="fab fa-google-drive text-yellow-600"></i> Google Drive Setup
+                    </h1>
+                    <button onclick="showPage('admin')" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300">
+                        <i class="fas fa-arrow-left mr-1"></i> ආපසු
+                    </button>
+                </div>
+
+                <div class="glass-panel rounded-2xl p-6 shadow-lg space-y-4">
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                        <p class="text-sm text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <strong>Setup Guide:</strong> Google Drive auto-upload karanna me steps follow karanna:
+                        </p>
+                        <ol class="text-sm text-yellow-800 mt-2 ml-4 list-decimal space-y-1">
+                            <li>Google Cloud Console (console.cloud.google.com) yanna</li>
+                            <li>New project ekak hadanna</li>
+                            <li>Google Drive API enable karanna</li>
+                            <li>OAuth 2.0 Client ID create karanna (Web application)</li>
+                            <li>Authorized redirect URI: <code class="bg-white px-1 rounded">https://your-domain.com</code></li>
+                            <li>Client ID eka pahala paste karanna</li>
+                        </ol>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Google Client ID</label>
+                        <input type="text" id="drive-client-id" class="input-field w-full px-4 py-3 rounded-lg" placeholder="xxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Folder Name</label>
+                        <input type="text" id="drive-folder-name" value="LK WEighing-TEA LEAF" class="input-field w-full px-4 py-3 rounded-lg">
+                    </div>
+
+                    <button onclick="saveDriveSettings()" class="w-full btn-primary text-white py-3 rounded-lg font-bold">
+                        <i class="fas fa-save mr-1"></i> Settings Save කරන්න
+                    </button>
+
+                    <button onclick="authenticateGoogleDrive()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700">
+                        <i class="fab fa-google mr-1"></i> Google Drive සමඟ Connect වන්න
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== SERVICE WORKER REGISTRATION ====================
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', event => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', event => {
+                    event.waitUntil(self.clients.claim());
+                });
+                self.addEventListener('fetch', event => {
+                    event.respondWith(fetch(event.request).catch(() => {
+                        return new Response('Offline mode active');
+                    }));
+                });
+                self.addEventListener('sync', event => {
+                    if (event.tag === 'sync-pending-data') {
+                        event.waitUntil(
+                            self.clients.matchAll().then(clients => {
+                                clients.forEach(client => client.postMessage({type: 'SYNC_NOW'}));
+                            })
+                        );
+                    }
+                });
+            `;
+
+            const blob = new Blob([swCode], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).then(reg => {
+                console.log('Service Worker registered');
+            }).catch(err => {
+                console.log('SW registration failed:', err);
+            });
+        }
+
+        // ==================== STATE MANAGEMENT ====================
+        const state = {
+            currentCustomer: null,
+            currentWeight: 0,
+            tareWeight: 0,
+            bluetoothDevices: { 1: null, 2: null },
+            qrScanner: null,
+            isScanning: false,
+            googleAuthToken: localStorage.getItem('gdrive_token') || null,
+            driveFolderId: localStorage.getItem('gdrive_folder_id') || null,
+            isOnline: navigator.onLine,
+            isSyncing: false
+        };
+
+        // ==================== DATA STORAGE ====================
+        function getData(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+        function setData(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
+        }
+
+        // ==================== NETWORK STATUS ====================
+        function updateNetworkStatus() {
+            const bar = document.getElementById('network-bar');
+            const text = document.getElementById('network-text');
+            state.isOnline = navigator.onLine;
+
+            if (state.isOnline) {
+                bar.className = 'network-bar online';
+                text.innerHTML = '<i class="fas fa-wifi mr-1"></i> Online - Auto Sync Active';
+                // Try auto sync when coming online
+                setTimeout(() => syncPendingData(), 2000);
+            } else {
+                bar.className = 'network-bar offline';
+                text.innerHTML = '<i class="fas fa-wifi-slash mr-1"></i> Offline Mode - Data Saved Locally';
+            }
+            updatePendingBadge();
+        }
+
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+
+        // Listen for SW messages
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data && event.data.type === 'SYNC_NOW') {
+                    syncPendingData();
+                }
+            });
+        }
+
+        // ==================== PAGE ROUTING ====================
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+
+            if (pageId === 'main') {
+                updateRecordsTable();
+                updateBusinessDate();
+                updatePendingBadge();
+            } else if (pageId === 'register') {
+                loadRootDropdown();
+            } else if (pageId === 'customers') {
+                loadCustomersTable();
+            } else if (pageId === 'manager') {
+                loadRootList();
+            } else if (pageId === 'drive-settings') {
+                loadDriveSettings();
+            } else if (pageId === 'admin') {
+                updateSyncStats();
+            }
+        }
+
+        // ==================== TOAST NOTIFICATIONS ====================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ==================== BUSINESS DATE LOGIC ====================
+        function getBusinessDate() {
+            const now = new Date();
+            const hour = now.getHours();
+            let date = new Date(now);
+            if (hour < 6) {
+                date.setDate(date.getDate() - 1);
+            }
+            return date.toISOString().split('T')[0];
+        }
+
+        function getBusinessDateDisplay() {
+            const date = getBusinessDate();
+            const d = new Date(date);
+            return d.toLocaleDateString('si-LK', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function updateBusinessDate() {
+            const el = document.getElementById('business-date-display');
+            if (el) el.textContent = getBusinessDateDisplay();
+        }
+
+        // ==================== PENDING SYNC BADGE ====================
+        function updatePendingBadge() {
+            const records = getData('records');
+            const pending = records.filter(r => !r.synced).length;
+
+            const btn = document.getElementById('sync-btn');
+            const count = document.getElementById('pending-count');
+            const badge = document.getElementById('sync-status-badge');
+
+            if (pending > 0) {
+                btn.classList.remove('hidden');
+                count.textContent = pending;
+                if (badge) {
+                    badge.className = 'text-xs px-2 py-1 rounded-full bg-red-100 text-red-600';
+                    badge.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> ' + pending + ' Pending';
+                }
+            } else {
+                btn.classList.add('hidden');
+                if (badge) {
+                    badge.className = 'text-xs px-2 py-1 rounded-full bg-green-100 text-green-600';
+                    badge.innerHTML = '<i class="fas fa-check mr-1"></i> All Synced';
+                }
+            }
+
+            // Update admin stats if visible
+            updateSyncStats();
+        }
+
+        function updateSyncStats() {
+            const records = getData('records');
+            const customers = getData('customers');
+            const total = records.length;
+            const synced = records.filter(r => r.synced).length;
+            const pending = total - synced;
+
+            const statTotal = document.getElementById('stat-total');
+            const statSynced = document.getElementById('stat-synced');
+            const statPending = document.getElementById('stat-pending');
+            const statCustomers = document.getElementById('stat-customers');
+
+            if (statTotal) statTotal.textContent = total;
+            if (statSynced) statSynced.textContent = synced;
+            if (statPending) statPending.textContent = pending;
+            if (statCustomers) statCustomers.textContent = customers.length;
+        }
+
+        // ==================== SYNC PENDING DATA ====================
+        async function syncPendingData() {
+            if (state.isSyncing) return;
+            if (!state.googleAuthToken) {
+                showToast('Google Drive connect කර නැත. Settings වලින් connect වන්න.', 'warning');
+                return;
+            }
+            if (!navigator.onLine) {
+                showToast('Internet connection නැත. Data local save වෙමින්.', 'warning');
+                return;
+            }
+
+            state.isSyncing = true;
+            const bar = document.getElementById('network-bar');
+            const text = document.getElementById('network-text');
+            bar.className = 'network-bar syncing';
+            text.innerHTML = '<i class="fas fa-sync-alt sync-spinner mr-1"></i> Syncing to Google Drive...';
+
+            const records = getData('records');
+            const pendingRecords = records.filter(r => !r.synced);
+
+            if (pendingRecords.length === 0) {
+                showToast('Sync කරන්න දත්ත නැත', 'info');
+                state.isSyncing = false;
+                updateNetworkStatus();
+                return;
+            }
+
+            let successCount = 0;
+            let failCount = 0;
+
+            for (const record of pendingRecords) {
+                try {
+                    await uploadSingleRecord(record);
+                    successCount++;
+                } catch (err) {
+                    console.error('Sync failed for record:', record.id, err);
+                    failCount++;
+                }
+            }
+
+            state.isSyncing = false;
+            updateNetworkStatus();
+            updatePendingBadge();
+            updateRecordsTable();
+
+            if (successCount > 0) {
+                showToast(successCount + ' records Google Drive ට sync වුණා!', 'success');
+            }
+            if (failCount > 0) {
+                showToast(failCount + ' records sync වුණේ නැත. නැවත උත්සාහ කරනු ලැබේ.', 'error');
+            }
+        }
+
+        // ==================== QR SCANNER ====================
+        async function startQrScanner() {
+            if (state.isScanning) return;
+
+            try {
+                state.qrScanner = new Html5Qrcode("qr-reader");
+                await state.qrScanner.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    onQrSuccess,
+                    onQrFailure
+                );
+                state.isScanning = true;
+                document.getElementById('btn-start-qr').classList.add('hidden');
+                document.getElementById('btn-stop-qr').classList.remove('hidden');
+                showToast('QR Scanner on කරන ලදී', 'info');
+            } catch (err) {
+                showToast('Camera access failed: ' + err.message, 'error');
+            }
+        }
+
+        async function stopQrScanner() {
+            if (state.qrScanner && state.isScanning) {
+                await state.qrScanner.stop();
+                state.isScanning = false;
+                document.getElementById('btn-start-qr').classList.remove('hidden');
+                document.getElementById('btn-stop-qr').classList.add('hidden');
+            }
+        }
+
+        function onQrSuccess(decodedText) {
+            const customers = getData('customers');
+            const customer = customers.find(c => c.id === decodedText || c.phone === decodedText);
+
+            if (customer) {
+                state.currentCustomer = customer;
+                displayCustomerInfo(customer);
+                showToast('ග්‍රාහකයා හඳුනාගත්තා: ' + customer.name, 'success');
+                if (navigator.vibrate) navigator.vibrate(200);
+            } else {
+                showToast('QR code එක හමුවුණේ නැත', 'error');
+            }
+        }
+
+        function onQrFailure(error) {
+            // Normal during scanning
+        }
+
+        function displayCustomerInfo(customer) {
+            const div = document.getElementById('customer-info');
+            div.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-4 space-y-2">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-lg font-bold text-green-900">${customer.name}</h3>
+                            <p class="text-sm text-gray-600">${customer.address}</p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-bold">${customer.rootName}</span>
+                    </div>
+                    <div class="flex gap-4 text-sm">
+                        <span class="text-gray-600"><i class="fas fa-phone text-green-600 mr-1"></i> ${customer.phone}</span>
+                        <span class="text-gray-600"><i class="fas fa-id-card text-green-600 mr-1"></i> ${customer.id}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== BLUETOOTH ====================
+        async function connectBluetooth(deviceIndex) {
+            try {
+                if (!navigator.bluetooth) {
+                    showToast('Bluetooth API not supported. Chrome/Android use කරන්න.', 'error');
+                    return;
+                }
+
+                showToast('Bluetooth device එක තෝරන්න...', 'info');
+
+                const device = await navigator.bluetooth.requestDevice({
+                    acceptAllDevices: true,
+                    optionalServices: ['battery_service', 'device_information', '0000181d-0000-1000-8000-00805f9b34fb']
+                });
+
+                const server = await device.gatt.connect();
+                state.bluetoothDevices[deviceIndex] = { device, server };
+
+                document.getElementById('scale' + deviceIndex + '-status').classList.remove('disconnected');
+                document.getElementById('scale' + deviceIndex + '-status').classList.add('connected');
+
+                showToast('Scale ' + deviceIndex + ' connect වුණා', 'success');
+                startReadingWeight(deviceIndex, server);
+
+                device.addEventListener('gattserverdisconnected', () => {
+                    document.getElementById('scale' + deviceIndex + '-status').classList.remove('connected');
+                    document.getElementById('scale' + deviceIndex + '-status').classList.add('disconnected');
+                    state.bluetoothDevices[deviceIndex] = null;
+                    showToast('Scale ' + deviceIndex + ' disconnect වුණා', 'error');
+                });
+
+            } catch (err) {
+                showToast('Bluetooth error: ' + err.message, 'error');
+            }
+        }
+
+        async function startReadingWeight(deviceIndex, server) {
+            try {
+                const services = await server.getPrimaryServices();
+                for (const service of services) {
+                    const characteristics = await service.getCharacteristics();
+                    for (const char of characteristics) {
+                        if (char.properties.notify || char.properties.read) {
+                            try {
+                                if (char.properties.notify) {
+                                    await char.startNotifications();
+                                    char.addEventListener('characteristicvaluechanged', (e) => {
+                                        const value = parseWeightData(e.target.value);
+                                        if (value !== null) {
+                                            updateScaleDisplay(deviceIndex, value);
+                                        }
+                                    });
+                                }
+                            } catch (e) { /* ignore */ }
+                        }
+                    }
+                }
+            } catch (err) {
+                console.log('Weight reading setup failed:', err);
+            }
+        }
+
+        function parseWeightData(dataView) {
+            try {
+                if (dataView.byteLength >= 4) {
+                    const floatVal = dataView.getFloat32(0, true);
+                    if (floatVal > 0 && floatVal < 500) return floatVal;
+                }
+                if (dataView.byteLength >= 2) {
+                    const intVal = dataView.getInt16(0, true);
+                    if (intVal > 0 && intVal < 50000) return intVal / 100;
+                }
+                const decoder = new TextDecoder('utf-8');
+                const str = decoder.decode(dataView).trim();
+                const match = str.match(/(\d+\.?\d*)/);
+                if (match) return parseFloat(match[1]);
+            } catch (e) {}
+            return null;
+        }
+
+        function updateScaleDisplay(deviceIndex, weight) {
+            const el = document.getElementById('scale' + deviceIndex + '-value');
+            el.textContent = weight.toFixed(2) + ' kg';
+            el.classList.remove('text-gray-400');
+            el.classList.add('text-green-600');
+
+            state.currentWeight = weight - state.tareWeight;
+            document.getElementById('current-weight').textContent = Math.max(0, state.currentWeight).toFixed(2);
+        }
+
+        function disconnectBluetooth(deviceIndex) {
+            if (state.bluetoothDevices[deviceIndex]) {
+                state.bluetoothDevices[deviceIndex].device.gatt.disconnect();
+            }
+        }
+
+        function setManualWeight() {
+            const val = parseFloat(document.getElementById('manual-weight').value);
+            if (!isNaN(val) && val >= 0) {
+                state.currentWeight = val;
+                document.getElementById('current-weight').textContent = val.toFixed(2);
+                showToast('Manual weight set: ' + val + ' kg', 'success');
+            }
+        }
+
+        function tareWeight() {
+            state.tareWeight = state.currentWeight + state.tareWeight;
+            state.currentWeight = 0;
+            document.getElementById('current-weight').textContent = '0.00';
+            showToast('Tare කරන ලදී', 'success');
+        }
+
+        function captureWeight() {
+            if (state.currentWeight <= 0) {
+                showToast('බර 0 ට වඩා වැඩි විය යුතුයි', 'error');
+                return;
+            }
+            showToast('බර capture කරන ලදී: ' + state.currentWeight.toFixed(2) + ' kg', 'success');
+        }
+
+        // ==================== WEIGHING FINISH & SAVE ====================
+        async function finishWeighing() {
+            if (!state.currentCustomer) {
+                showToast('පළමුව QR code එක scan කරන්න', 'error');
+                return;
+            }
+            if (state.currentWeight <= 0) {
+                showToast('බර 0 ට වඩා වැඩි විය යුතුයි', 'error');
+                return;
+            }
+
+            const record = {
+                id: Date.now().toString(),
+                customerId: state.currentCustomer.id,
+                customerName: state.currentCustomer.name,
+                rootName: state.currentCustomer.rootName,
+                weight: state.currentWeight,
+                date: getBusinessDate(),
+                timestamp: new Date().toISOString(),
+                synced: false
+            };
+
+            const records = getData('records');
+            records.push(record);
+            setData('records', records);
+
+            showToast('වාර්තාව save කරන ලදී!', 'success');
+
+            // Reset
+            state.currentCustomer = null;
+            state.currentWeight = 0;
+            state.tareWeight = 0;
+            document.getElementById('current-weight').textContent = '0.00';
+            document.getElementById('customer-info').innerHTML = `
+                <div class="p-3 bg-gray-50 rounded-lg text-center text-gray-500">
+                    <i class="fas fa-info-circle mb-1"></i><br>QR code එක scan කරන්න
+                </div>
+            `;
+            document.getElementById('manual-weight').value = '';
+
+            updateRecordsTable();
+            updatePendingBadge();
+
+            // Auto sync if online
+            if (navigator.onLine && state.googleAuthToken) {
+                showToast('Google Drive ට auto upload වෙමින්...', 'info');
+                await syncPendingData();
+            } else if (!navigator.onLine) {
+                showToast('Offline mode. Internet awillama auto sync වෙනු ඇත.', 'warning');
+                // Register background sync if supported
+                if ('serviceWorker' in navigator && 'SyncManager' in window) {
+                    navigator.serviceWorker.ready.then(reg => {
+                        reg.sync.register('sync-pending-data').catch(() => {});
+                    });
+                }
+            }
+        }
+
+        function updateRecordsTable() {
+            const records = getData('records').filter(r => r.date === getBusinessDate());
+            const tbody = document.getElementById('records-table');
+
+            if (records.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">අද දත්ත නැත</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = records.reverse().map(r => {
+                const time = new Date(r.timestamp).toLocaleTimeString('si-LK');
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-2">${time}</td>
+                        <td class="p-2 font-semibold">${r.customerName}</td>
+                        <td class="p-2"><span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">${r.rootName}</span></td>
+                        <td class="p-2 text-right font-bold">${r.weight.toFixed(2)}</td>
+                        <td class="p-2 text-center">
+                            ${r.synced ? '<i class="fas fa-check-circle text-green-500" title="Synced"></i>' : '<i class="fas fa-clock text-amber-500" title="Pending Sync"></i>'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ==================== AUTHENTICATION ====================
+        function loginAdmin() {
+            const pwd = document.getElementById('admin-password').value;
+            if (pwd === '1990') {
+                showPage('admin');
+                document.getElementById('admin-password').value = '';
+                showToast('Admin login සාර්ථකයි', 'success');
+            } else {
+                showToast('Password වැරදියි', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            showPage('main');
+        }
+
+        function loginManager() {
+            const pwd = document.getElementById('manager-password').value;
+            if (pwd === '199002') {
+                showPage('manager');
+                document.getElementById('manager-password').value = '';
+                showToast('Manager login සාර්ථකයි', 'success');
+            } else {
+                showToast('Password වැරදියි', 'error');
+            }
+        }
+
+        function logoutManager() {
+            showPage('admin');
+        }
+
+        // ==================== CUSTOMER REGISTRATION ====================
+        function loadRootDropdown() {
+            const roots = getData('roots');
+            const select = document.getElementById('reg-root');
+            select.innerHTML = '<option value="">Root එක තෝරන්න</option>';
+            roots.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r.name;
+                opt.textContent = r.name;
+                select.appendChild(opt);
+            });
+        }
+
+        function registerCustomer() {
+            const name = document.getElementById('reg-name').value.trim();
+            const address = document.getElementById('reg-address').value.trim();
+            const rootName = document.getElementById('reg-root').value;
+            const phone = document.getElementById('reg-phone').value.trim();
+
+            if (!name || !address || !rootName || !phone) {
+                showToast('සියලුම fields පුරවන්න', 'error');
+                return;
+            }
+
+            const id = 'TEA-' + Date.now().toString(36).toUpperCase();
+            const customer = { id, name, address, rootName, phone, createdAt: new Date().toISOString() };
+
+            const customers = getData('customers');
+            customers.push(customer);
+            setData('customers', customers);
+
+            showToast('ග්‍රාහකයා ලියාපදිංචි වුණා: ' + name, 'success');
+            document.getElementById('register-form').reset();
+
+            prepareQrSticker(customer);
+            showPage('qr-print');
+        }
+
+        function prepareQrSticker(customer) {
+            const container = document.getElementById('sticker-qr');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: customer.id,
+                width: 80,
+                height: 80,
+                colorDark: '#1a472a',
+                colorLight: '#ffffff'
+            });
+            document.getElementById('sticker-id').textContent = customer.id;
+            document.getElementById('sticker-name').textContent = customer.name;
+        }
+
+        function loadCustomersTable() {
+            const customers = getData('customers');
+            const tbody = document.getElementById('customers-table');
+
+            if (customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-400">ග්‍රාහකයන් නැත</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = customers.map(c => `
+                <tr class="hover:bg-gray-50 border-b">
+                    <td class="p-3 font-mono text-xs">${c.id}</td>
+                    <td class="p-3 font-semibold">${c.name}</td>
+                    <td class="p-3"><span class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded">${c.rootName}</span></td>
+                    <td class="p-3">${c.phone}</td>
+                    <td class="p-3 text-center">
+                        <button onclick='showQrForCustomer("${c.id}")' class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-qrcode text-lg"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showQrForCustomer(customerId) {
+            const customers = getData('customers');
+            const customer = customers.find(c => c.id === customerId);
+            if (customer) {
+                prepareQrSticker(customer);
+                showPage('qr-print');
+            }
+        }
+
+        // ==================== MANAGER ROOT MANAGEMENT ====================
+        function addRootName() {
+            const name = document.getElementById('new-root-name').value.trim();
+            if (!name) {
+                showToast('Root name ඇතුළත් කරන්න', 'error');
+                return;
+            }
+
+            const roots = getData('roots');
+            if (roots.some(r => r.name.toLowerCase() === name.toLowerCase())) {
+                showToast('මෙම Root name දැනටමත් ඇත', 'error');
+                return;
+            }
+
+            roots.push({ id: Date.now().toString(), name, createdAt: new Date().toISOString() });
+            setData('roots', roots);
+            document.getElementById('new-root-name').value = '';
+            loadRootList();
+            showToast('Root name එකතු වුණා', 'success');
+        }
+
+        function deleteRootName(id) {
+            let roots = getData('roots');
+            roots = roots.filter(r => r.id !== id);
+            setData('roots', roots);
+            loadRootList();
+            showToast('Root name මකා දමන ලදී', 'info');
+        }
+
+        function loadRootList() {
+            const roots = getData('roots');
+            const container = document.getElementById('root-list');
+
+            if (roots.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 py-4">Roots නැත. ඉහතින් එකතු කරන්න.</div>';
+                return;
+            }
+
+            container.innerHTML = roots.map(r => `
+                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-200">
+                    <span class="font-semibold text-gray-800">${r.name}</span>
+                    <button onclick="deleteRootName('${r.id}')" class="text-red-500 hover:text-red-700 px-2">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // ==================== GOOGLE DRIVE INTEGRATION ====================
+        function loadDriveSettings() {
+            const clientId = localStorage.getItem('gdrive_client_id') || '';
+            const folderName = localStorage.getItem('gdrive_folder_name') || 'LK WEighing-TEA LEAF';
+            document.getElementById('drive-client-id').value = clientId;
+            document.getElementById('drive-folder-name').value = folderName;
+        }
+
+        function saveDriveSettings() {
+            localStorage.setItem('gdrive_client_id', document.getElementById('drive-client-id').value.trim());
+            localStorage.setItem('gdrive_folder_name', document.getElementById('drive-folder-name').value.trim());
+            showToast('Drive settings save වුණා', 'success');
+        }
+
+        function authenticateGoogleDrive() {
+            const clientId = localStorage.getItem('gdrive_client_id');
+            if (!clientId) {
+                showToast('පළමුව Client ID save කරන්න', 'error');
+                return;
+            }
+
+            if (window.google && google.accounts) {
+                const client = google.accounts.oauth2.initTokenClient({
+                    client_id: clientId,
+                    scope: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive',
+                    callback: (tokenResponse) => {
+                        state.googleAuthToken = tokenResponse.access_token;
+                        localStorage.setItem('gdrive_token', state.googleAuthToken);
+                        showToast('Google Drive connect වුණා!', 'success');
+                        ensureDriveFolder();
+                    }
+                });
+                client.requestAccessToken();
+            } else {
+                showToast('Google API load වෙමින්. Refresh කර නැවත උත්සාහ කරන්න.', 'info');
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.onload = () => showToast('Google API load වුණා. නැවත උත්සාහ කරන්න.', 'success');
+                document.head.appendChild(script);
+            }
+        }
+
+        async function ensureDriveFolder() {
+            const folderName = localStorage.getItem('gdrive_folder_name') || 'LK WEighing-TEA LEAF';
+
+            const searchRes = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q=name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
+            );
+            const searchData = await searchRes.json();
+
+            if (searchData.files && searchData.files.length > 0) {
+                state.driveFolderId = searchData.files[0].id;
+                localStorage.setItem('gdrive_folder_id', state.driveFolderId);
+                return state.driveFolderId;
+            }
+
+            const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + state.googleAuthToken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: folderName,
+                    mimeType: 'application/vnd.google-apps.folder'
+                })
+            });
+            const createData = await createRes.json();
+            state.driveFolderId = createData.id;
+            localStorage.setItem('gdrive_folder_id', state.driveFolderId);
+            return state.driveFolderId;
+        }
+
+        // Upload a single record (used by batch sync)
+        async function uploadSingleRecord(record) {
+            if (!state.driveFolderId) {
+                await ensureDriveFolder();
+            }
+
+            const businessDate = record.date;
+
+            // Check if date folder exists
+            const dateFolderSearch = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q=name='${businessDate}' and '${state.driveFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
+            );
+            const dateSearchData = await dateFolderSearch.json();
+
+            let dateFolderId;
+            if (dateSearchData.files && dateSearchData.files.length > 0) {
+                dateFolderId = dateSearchData.files[0].id;
+            } else {
+                const createDateFolder = await fetch('https://www.googleapis.com/drive/v3/files', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + state.googleAuthToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: businessDate,
+                        mimeType: 'application/vnd.google-apps.folder',
+                        parents: [state.driveFolderId]
+                    })
+                });
+                const dateFolderData = await createDateFolder.json();
+                dateFolderId = dateFolderData.id;
+            }
+
+            // Check if Excel file exists for this date
+            const fileName = businessDate + '_tea_records.xlsx';
+            const fileSearch = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and '${dateFolderId}' in parents and trashed=false`,
+                { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
+            );
+            const fileSearchData = await fileSearch.json();
+
+            let existingData = [];
+            let fileId = null;
+
+            if (fileSearchData.files && fileSearchData.files.length > 0) {
+                fileId = fileSearchData.files[0].id;
+                const downloadRes = await fetch(
+                    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+                    { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
+                );
+                const blob = await downloadRes.blob();
+                const arrayBuffer = await blob.arrayBuffer();
+                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                existingData = XLSX.utils.sheet_to_json(firstSheet);
+            }
+
+            // Append new record
+            existingData.push({
+                'Date': businessDate,
+                'Time': new Date(record.timestamp).toLocaleTimeString('si-LK'),
+                'Customer ID': record.customerId,
+                'Customer Name': record.customerName,
+                'Root Name': record.rootName,
+                'Weight (kg)': record.weight,
+                'Synced At': new Date().toLocaleString('si-LK')
+            });
+
+            // Create new workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(existingData);
+            XLSX.utils.book_append_sheet(wb, ws, 'Records');
+            const excelBlob = new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], 
+                { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+            const metadata = {
+                name: fileName,
+                mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                parents: fileId ? undefined : [dateFolderId]
+            };
+
+            const form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', excelBlob);
+
+            let uploadUrl = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+            if (fileId) {
+                uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
+            }
+
+            const uploadRes = await fetch(uploadUrl, {
+                method: fileId ? 'PATCH' : 'POST',
+                headers: { 'Authorization': 'Bearer ' + state.googleAuthToken },
+                body: form
+            });
+
+            if (uploadRes.ok) {
+                // Mark as synced in local storage
+                const records = getData('records');
+                const rec = records.find(r => r.id === record.id);
+                if (rec) rec.synced = true;
+                setData('records', records);
+                return true;
+            } else {
+                throw new Error('Upload failed');
+            }
+        }
+
+        // ==================== EXCEL EXPORT ====================
+        function exportLocalExcel() {
+            const records = getData('records');
+            if (records.length === 0) {
+                showToast('දත්ත නැත', 'error');
+                return;
+            }
+
+            const data = records.map(r => ({
+                'Date': r.date,
+                'Time': new Date(r.timestamp).toLocaleTimeString('si-LK'),
+                'Customer ID': r.customerId,
+                'Customer Name': r.customerName,
+                'Root Name': r.rootName,
+                'Weight (kg)': r.weight,
+                'Synced': r.synced ? 'Yes' : 'No'
+            }));
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'All Records');
+
+            const dateStr = getBusinessDate();
+            XLSX.writeFile(wb, `LK_Weighing_TeaLeaf_${dateStr}.xlsx`);
+            showToast('Excel file download වුණා', 'success');
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            updateBusinessDate();
+            updateRecordsTable();
+            updateNetworkStatus();
+            updatePendingBadge();
+
+            // Periodic sync check every 30 seconds when online
+            setInterval(() => {
+                if (navigator.onLine && state.googleAuthToken) {
+                    const pending = getData('records').filter(r => !r.synced).length;
+                    if (pending > 0) {
+                        syncPendingData();
+                    }
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+</html>
