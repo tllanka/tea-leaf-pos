@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&display=swap');
@@ -57,6 +58,13 @@
             border-radius: 16px;
             overflow: hidden;
             position: relative;
+        }
+
+        .scanner-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border: 2px solid rgba(74, 222, 128, 0.5);
+            pointer-events: none;
         }
 
         .page { display: none; animation: fadeIn 0.4s ease; }
@@ -115,6 +123,14 @@
             .no-print { display: none !important; }
         }
 
+        .bluetooth-device {
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         .toast {
             position: fixed;
             bottom: 20px;
@@ -131,73 +147,17 @@
         .toast.success { background: linear-gradient(135deg, #16a34a, #15803d); }
         .toast.error { background: linear-gradient(135deg, #dc2626, #b91c1c); }
         .toast.info { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
-        .toast.warning { background: linear-gradient(135deg, #d97706, #b45309); }
-
-        /* Network Status Bar */
-        .network-bar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 9998;
-            padding: 6px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .network-bar.online {
-            background: #16a34a;
-            color: white;
-            transform: translateY(-100%);
-        }
-        .network-bar.offline {
-            background: #dc2626;
-            color: white;
-            transform: translateY(0);
-        }
-        .network-bar.syncing {
-            background: #2563eb;
-            color: white;
-            transform: translateY(0);
-        }
-
-        /* Pending badge */
-        .pending-badge {
-            position: absolute;
-            top: -8px; right: -8px;
-            background: #dc2626;
-            color: white;
-            font-size: 11px;
-            width: 20px; height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .sync-spinner {
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
     </style>
 <base target="_blank">
 </head>
 <body class="text-gray-800">
-
-    <!-- Network Status Bar -->
-    <div id="network-bar" class="network-bar online">
-        <span id="network-text"><i class="fas fa-wifi mr-1"></i> Online</span>
-    </div>
 
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
     <!-- ==================== MAIN WEIGHING PAGE ==================== -->
     <div id="page-main" class="page active">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <!-- Header -->
             <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3">
@@ -209,12 +169,7 @@
                         <p class="text-xs text-green-700">Tea Leaf Factory System</p>
                     </div>
                 </div>
-                <div class="flex gap-2 items-center">
-                    <!-- Pending Sync Badge -->
-                    <button onclick="syncPendingData()" id="sync-btn" class="relative bg-blue-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-700 transition hidden">
-                        <i class="fas fa-cloud-upload-alt mr-1"></i> Sync
-                        <span id="pending-count" class="pending-badge">0</span>
-                    </button>
+                <div class="flex gap-2">
                     <button onclick="showPage('admin-login')" class="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition">
                         <i class="fas fa-lock mr-1"></i> Admin
                     </button>
@@ -331,14 +286,7 @@
 
             <!-- Recent Records -->
             <div class="glass-panel rounded-2xl p-4 mt-4 shadow-lg">
-                <div class="flex justify-between items-center mb-3">
-                    <h2 class="text-lg font-bold text-green-900">අද වාර්තා (<span id="business-date-display"></span>)</h2>
-                    <div class="flex gap-2">
-                        <span id="sync-status-badge" class="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
-                            <i class="fas fa-check mr-1"></i> Synced
-                        </span>
-                    </div>
-                </div>
+                <h2 class="text-lg font-bold text-green-900 mb-3">අද වාර්තා (<span id="business-date-display"></span>)</h2>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead class="bg-green-50 text-green-900">
@@ -388,7 +336,7 @@
 
     <!-- ==================== ADMIN DASHBOARD ==================== -->
     <div id="page-admin" class="page">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center text-white">
@@ -456,38 +404,12 @@
                     <p class="text-sm text-gray-600 mt-1">ප්‍රධාන පිටුවට යන්න</p>
                 </div>
             </div>
-
-            <!-- Offline Status Card -->
-            <div class="glass-panel rounded-2xl p-6 shadow-lg mt-4">
-                <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fas fa-sync-alt mr-2"></i> Sync Status</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
-                        <div class="text-2xl font-bold text-blue-600" id="stat-total">0</div>
-                        <div class="text-xs text-gray-500">Total Records</div>
-                    </div>
-                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
-                        <div class="text-2xl font-bold text-green-600" id="stat-synced">0</div>
-                        <div class="text-xs text-gray-500">Synced</div>
-                    </div>
-                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
-                        <div class="text-2xl font-bold text-red-600" id="stat-pending">0</div>
-                        <div class="text-xs text-gray-500">Pending</div>
-                    </div>
-                    <div class="bg-white rounded-lg p-3 text-center border border-gray-200">
-                        <div class="text-2xl font-bold text-purple-600" id="stat-customers">0</div>
-                        <div class="text-xs text-gray-500">Customers</div>
-                    </div>
-                </div>
-                <button onclick="syncPendingData()" id="admin-sync-btn" class="mt-4 w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700">
-                    <i class="fas fa-cloud-upload-alt mr-2"></i> Sync Pending Data Now
-                </button>
-            </div>
         </div>
     </div>
 
     <!-- ==================== CUSTOMER REGISTRATION ==================== -->
     <div id="page-register" class="page">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <div class="max-w-2xl mx-auto">
                 <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
                     <h1 class="text-xl font-bold text-green-900 flex items-center gap-2">
@@ -534,7 +456,7 @@
 
     <!-- ==================== QR PRINT PAGE ==================== -->
     <div id="page-qr-print" class="page">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <div class="max-w-md mx-auto">
                 <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg no-print">
                     <h1 class="text-xl font-bold text-green-900">QR Sticker Print</h1>
@@ -562,7 +484,7 @@
 
     <!-- ==================== CUSTOMER LIST ==================== -->
     <div id="page-customers" class="page">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
                 <h1 class="text-xl font-bold text-green-900 flex items-center gap-2">
                     <i class="fas fa-users text-green-600"></i> ග්‍රාහක ලැයිස්තුව
@@ -618,7 +540,7 @@
 
     <!-- ==================== MANAGER DASHBOARD ==================== -->
     <div id="page-manager" class="page">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-white">
@@ -656,7 +578,7 @@
 
     <!-- ==================== GOOGLE DRIVE SETTINGS ==================== -->
     <div id="page-drive-settings" class="page">
-        <div class="min-h-screen p-4 pt-8">
+        <div class="min-h-screen p-4">
             <div class="max-w-2xl mx-auto">
                 <div class="glass-panel rounded-2xl p-4 mb-4 flex justify-between items-center shadow-lg">
                     <h1 class="text-xl font-bold text-green-900 flex items-center gap-2">
@@ -706,40 +628,6 @@
     </div>
 
     <script>
-        // ==================== SERVICE WORKER REGISTRATION ====================
-        if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', event => {
-                    self.skipWaiting();
-                });
-                self.addEventListener('activate', event => {
-                    event.waitUntil(self.clients.claim());
-                });
-                self.addEventListener('fetch', event => {
-                    event.respondWith(fetch(event.request).catch(() => {
-                        return new Response('Offline mode active');
-                    }));
-                });
-                self.addEventListener('sync', event => {
-                    if (event.tag === 'sync-pending-data') {
-                        event.waitUntil(
-                            self.clients.matchAll().then(clients => {
-                                clients.forEach(client => client.postMessage({type: 'SYNC_NOW'}));
-                            })
-                        );
-                    }
-                });
-            `;
-
-            const blob = new Blob([swCode], {type: 'application/javascript'});
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).then(reg => {
-                console.log('Service Worker registered');
-            }).catch(err => {
-                console.log('SW registration failed:', err);
-            });
-        }
-
         // ==================== STATE MANAGEMENT ====================
         const state = {
             currentCustomer: null,
@@ -749,9 +637,7 @@
             qrScanner: null,
             isScanning: false,
             googleAuthToken: localStorage.getItem('gdrive_token') || null,
-            driveFolderId: localStorage.getItem('gdrive_folder_id') || null,
-            isOnline: navigator.onLine,
-            isSyncing: false
+            driveFolderId: localStorage.getItem('gdrive_folder_id') || null
         };
 
         // ==================== DATA STORAGE ====================
@@ -763,36 +649,6 @@
             localStorage.setItem(key, JSON.stringify(value));
         }
 
-        // ==================== NETWORK STATUS ====================
-        function updateNetworkStatus() {
-            const bar = document.getElementById('network-bar');
-            const text = document.getElementById('network-text');
-            state.isOnline = navigator.onLine;
-
-            if (state.isOnline) {
-                bar.className = 'network-bar online';
-                text.innerHTML = '<i class="fas fa-wifi mr-1"></i> Online - Auto Sync Active';
-                // Try auto sync when coming online
-                setTimeout(() => syncPendingData(), 2000);
-            } else {
-                bar.className = 'network-bar offline';
-                text.innerHTML = '<i class="fas fa-wifi-slash mr-1"></i> Offline Mode - Data Saved Locally';
-            }
-            updatePendingBadge();
-        }
-
-        window.addEventListener('online', updateNetworkStatus);
-        window.addEventListener('offline', updateNetworkStatus);
-
-        // Listen for SW messages
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('message', event => {
-                if (event.data && event.data.type === 'SYNC_NOW') {
-                    syncPendingData();
-                }
-            });
-        }
-
         // ==================== PAGE ROUTING ====================
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -801,7 +657,6 @@
             if (pageId === 'main') {
                 updateRecordsTable();
                 updateBusinessDate();
-                updatePendingBadge();
             } else if (pageId === 'register') {
                 loadRootDropdown();
             } else if (pageId === 'customers') {
@@ -810,8 +665,6 @@
                 loadRootList();
             } else if (pageId === 'drive-settings') {
                 loadDriveSettings();
-            } else if (pageId === 'admin') {
-                updateSyncStats();
             }
         }
 
@@ -832,7 +685,7 @@
             if (hour < 6) {
                 date.setDate(date.getDate() - 1);
             }
-            return date.toISOString().split('T')[0];
+            return date.toISOString().split('T')[0]; // YYYY-MM-DD
         }
 
         function getBusinessDateDisplay() {
@@ -844,106 +697,6 @@
         function updateBusinessDate() {
             const el = document.getElementById('business-date-display');
             if (el) el.textContent = getBusinessDateDisplay();
-        }
-
-        // ==================== PENDING SYNC BADGE ====================
-        function updatePendingBadge() {
-            const records = getData('records');
-            const pending = records.filter(r => !r.synced).length;
-
-            const btn = document.getElementById('sync-btn');
-            const count = document.getElementById('pending-count');
-            const badge = document.getElementById('sync-status-badge');
-
-            if (pending > 0) {
-                btn.classList.remove('hidden');
-                count.textContent = pending;
-                if (badge) {
-                    badge.className = 'text-xs px-2 py-1 rounded-full bg-red-100 text-red-600';
-                    badge.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> ' + pending + ' Pending';
-                }
-            } else {
-                btn.classList.add('hidden');
-                if (badge) {
-                    badge.className = 'text-xs px-2 py-1 rounded-full bg-green-100 text-green-600';
-                    badge.innerHTML = '<i class="fas fa-check mr-1"></i> All Synced';
-                }
-            }
-
-            // Update admin stats if visible
-            updateSyncStats();
-        }
-
-        function updateSyncStats() {
-            const records = getData('records');
-            const customers = getData('customers');
-            const total = records.length;
-            const synced = records.filter(r => r.synced).length;
-            const pending = total - synced;
-
-            const statTotal = document.getElementById('stat-total');
-            const statSynced = document.getElementById('stat-synced');
-            const statPending = document.getElementById('stat-pending');
-            const statCustomers = document.getElementById('stat-customers');
-
-            if (statTotal) statTotal.textContent = total;
-            if (statSynced) statSynced.textContent = synced;
-            if (statPending) statPending.textContent = pending;
-            if (statCustomers) statCustomers.textContent = customers.length;
-        }
-
-        // ==================== SYNC PENDING DATA ====================
-        async function syncPendingData() {
-            if (state.isSyncing) return;
-            if (!state.googleAuthToken) {
-                showToast('Google Drive connect කර නැත. Settings වලින් connect වන්න.', 'warning');
-                return;
-            }
-            if (!navigator.onLine) {
-                showToast('Internet connection නැත. Data local save වෙමින්.', 'warning');
-                return;
-            }
-
-            state.isSyncing = true;
-            const bar = document.getElementById('network-bar');
-            const text = document.getElementById('network-text');
-            bar.className = 'network-bar syncing';
-            text.innerHTML = '<i class="fas fa-sync-alt sync-spinner mr-1"></i> Syncing to Google Drive...';
-
-            const records = getData('records');
-            const pendingRecords = records.filter(r => !r.synced);
-
-            if (pendingRecords.length === 0) {
-                showToast('Sync කරන්න දත්ත නැත', 'info');
-                state.isSyncing = false;
-                updateNetworkStatus();
-                return;
-            }
-
-            let successCount = 0;
-            let failCount = 0;
-
-            for (const record of pendingRecords) {
-                try {
-                    await uploadSingleRecord(record);
-                    successCount++;
-                } catch (err) {
-                    console.error('Sync failed for record:', record.id, err);
-                    failCount++;
-                }
-            }
-
-            state.isSyncing = false;
-            updateNetworkStatus();
-            updatePendingBadge();
-            updateRecordsTable();
-
-            if (successCount > 0) {
-                showToast(successCount + ' records Google Drive ට sync වුණා!', 'success');
-            }
-            if (failCount > 0) {
-                showToast(failCount + ' records sync වුණේ නැත. නැවත උත්සාහ කරනු ලැබේ.', 'error');
-            }
         }
 
         // ==================== QR SCANNER ====================
@@ -984,6 +737,7 @@
                 state.currentCustomer = customer;
                 displayCustomerInfo(customer);
                 showToast('ග්‍රාහකයා හඳුනාගත්තා: ' + customer.name, 'success');
+                // Vibrate if supported
                 if (navigator.vibrate) navigator.vibrate(200);
             } else {
                 showToast('QR code එක හමුවුණේ නැත', 'error');
@@ -1035,6 +789,8 @@
                 document.getElementById('scale' + deviceIndex + '-status').classList.add('connected');
 
                 showToast('Scale ' + deviceIndex + ' connect වුණා', 'success');
+
+                // Try to read weight (generic approach)
                 startReadingWeight(deviceIndex, server);
 
                 device.addEventListener('gattserverdisconnected', () => {
@@ -1051,6 +807,7 @@
 
         async function startReadingWeight(deviceIndex, server) {
             try {
+                // Try common weight scale service
                 const services = await server.getPrimaryServices();
                 for (const service of services) {
                     const characteristics = await service.getCharacteristics();
@@ -1076,15 +833,19 @@
         }
 
         function parseWeightData(dataView) {
+            // Try multiple parsing strategies
             try {
+                // Try reading as float (common for BLE scales)
                 if (dataView.byteLength >= 4) {
                     const floatVal = dataView.getFloat32(0, true);
                     if (floatVal > 0 && floatVal < 500) return floatVal;
                 }
+                // Try reading as int16 with decimal
                 if (dataView.byteLength >= 2) {
                     const intVal = dataView.getInt16(0, true);
                     if (intVal > 0 && intVal < 50000) return intVal / 100;
                 }
+                // Try ASCII parsing
                 const decoder = new TextDecoder('utf-8');
                 const str = decoder.decode(dataView).trim();
                 const match = str.match(/(\d+\.?\d*)/);
@@ -1099,6 +860,7 @@
             el.classList.remove('text-gray-400');
             el.classList.add('text-green-600');
 
+            // If this is the active scale, update main display
             state.currentWeight = weight - state.tareWeight;
             document.getElementById('current-weight').textContent = Math.max(0, state.currentWeight).toFixed(2);
         }
@@ -1159,7 +921,7 @@
             records.push(record);
             setData('records', records);
 
-            showToast('වාර්තාව save කරන ලදී!', 'success');
+            showToast('වාර්තාව save කරන ලදී! Google Drive upload වෙමින්...', 'success');
 
             // Reset
             state.currentCustomer = null;
@@ -1174,20 +936,12 @@
             document.getElementById('manual-weight').value = '';
 
             updateRecordsTable();
-            updatePendingBadge();
 
-            // Auto sync if online
-            if (navigator.onLine && state.googleAuthToken) {
-                showToast('Google Drive ට auto upload වෙමින්...', 'info');
-                await syncPendingData();
-            } else if (!navigator.onLine) {
-                showToast('Offline mode. Internet awillama auto sync වෙනු ඇත.', 'warning');
-                // Register background sync if supported
-                if ('serviceWorker' in navigator && 'SyncManager' in window) {
-                    navigator.serviceWorker.ready.then(reg => {
-                        reg.sync.register('sync-pending-data').catch(() => {});
-                    });
-                }
+            // Try Google Drive upload
+            if (state.googleAuthToken) {
+                await uploadToGoogleDrive(record);
+            } else {
+                showToast('Google Drive connect කර නැත. Local save වුණා.', 'info');
             }
         }
 
@@ -1209,7 +963,7 @@
                         <td class="p-2"><span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">${r.rootName}</span></td>
                         <td class="p-2 text-right font-bold">${r.weight.toFixed(2)}</td>
                         <td class="p-2 text-center">
-                            ${r.synced ? '<i class="fas fa-check-circle text-green-500" title="Synced"></i>' : '<i class="fas fa-clock text-amber-500" title="Pending Sync"></i>'}
+                            ${r.synced ? '<i class="fas fa-check-circle text-green-500"></i>' : '<i class="fas fa-clock text-amber-500"></i>'}
                         </td>
                     </tr>
                 `;
@@ -1279,8 +1033,11 @@
             setData('customers', customers);
 
             showToast('ග්‍රාහකයා ලියාපදිංචි වුණා: ' + name, 'success');
+
+            // Clear form
             document.getElementById('register-form').reset();
 
+            // Go to QR print
             prepareQrSticker(customer);
             showPage('qr-print');
         }
@@ -1401,6 +1158,7 @@
                 return;
             }
 
+            // Using Google Identity Services
             if (window.google && google.accounts) {
                 const client = google.accounts.oauth2.initTokenClient({
                     client_id: clientId,
@@ -1415,6 +1173,7 @@
                 client.requestAccessToken();
             } else {
                 showToast('Google API load වෙමින්. Refresh කර නැවත උත්සාහ කරන්න.', 'info');
+                // Fallback: load script dynamically
                 const script = document.createElement('script');
                 script.src = 'https://accounts.google.com/gsi/client';
                 script.onload = () => showToast('Google API load වුණා. නැවත උත්සාහ කරන්න.', 'success');
@@ -1425,6 +1184,7 @@
         async function ensureDriveFolder() {
             const folderName = localStorage.getItem('gdrive_folder_name') || 'LK WEighing-TEA LEAF';
 
+            // Search for existing folder
             const searchRes = await fetch(
                 `https://www.googleapis.com/drive/v3/files?q=name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
                 { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
@@ -1437,6 +1197,7 @@
                 return state.driveFolderId;
             }
 
+            // Create folder
             const createRes = await fetch('https://www.googleapis.com/drive/v3/files', {
                 method: 'POST',
                 headers: {
@@ -1454,113 +1215,121 @@
             return state.driveFolderId;
         }
 
-        // Upload a single record (used by batch sync)
-        async function uploadSingleRecord(record) {
-            if (!state.driveFolderId) {
-                await ensureDriveFolder();
-            }
+        async function uploadToGoogleDrive(record) {
+            try {
+                if (!state.driveFolderId) {
+                    await ensureDriveFolder();
+                }
 
-            const businessDate = record.date;
+                const businessDate = getBusinessDate();
 
-            // Check if date folder exists
-            const dateFolderSearch = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q=name='${businessDate}' and '${state.driveFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
-                { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
-            );
-            const dateSearchData = await dateFolderSearch.json();
-
-            let dateFolderId;
-            if (dateSearchData.files && dateSearchData.files.length > 0) {
-                dateFolderId = dateSearchData.files[0].id;
-            } else {
-                const createDateFolder = await fetch('https://www.googleapis.com/drive/v3/files', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Bearer ' + state.googleAuthToken,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        name: businessDate,
-                        mimeType: 'application/vnd.google-apps.folder',
-                        parents: [state.driveFolderId]
-                    })
-                });
-                const dateFolderData = await createDateFolder.json();
-                dateFolderId = dateFolderData.id;
-            }
-
-            // Check if Excel file exists for this date
-            const fileName = businessDate + '_tea_records.xlsx';
-            const fileSearch = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and '${dateFolderId}' in parents and trashed=false`,
-                { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
-            );
-            const fileSearchData = await fileSearch.json();
-
-            let existingData = [];
-            let fileId = null;
-
-            if (fileSearchData.files && fileSearchData.files.length > 0) {
-                fileId = fileSearchData.files[0].id;
-                const downloadRes = await fetch(
-                    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+                // Check if date folder exists
+                const dateFolderSearch = await fetch(
+                    `https://www.googleapis.com/drive/v3/files?q=name='${businessDate}' and '${state.driveFolderId}' in parents and mimeType='application/vnd.google-apps.folder' and trashed=false`,
                     { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
                 );
-                const blob = await downloadRes.blob();
-                const arrayBuffer = await blob.arrayBuffer();
-                const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                existingData = XLSX.utils.sheet_to_json(firstSheet);
-            }
+                const dateSearchData = await dateFolderSearch.json();
 
-            // Append new record
-            existingData.push({
-                'Date': businessDate,
-                'Time': new Date(record.timestamp).toLocaleTimeString('si-LK'),
-                'Customer ID': record.customerId,
-                'Customer Name': record.customerName,
-                'Root Name': record.rootName,
-                'Weight (kg)': record.weight,
-                'Synced At': new Date().toLocaleString('si-LK')
-            });
+                let dateFolderId;
+                if (dateSearchData.files && dateSearchData.files.length > 0) {
+                    dateFolderId = dateSearchData.files[0].id;
+                } else {
+                    const createDateFolder = await fetch('https://www.googleapis.com/drive/v3/files', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + state.googleAuthToken,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: businessDate,
+                            mimeType: 'application/vnd.google-apps.folder',
+                            parents: [state.driveFolderId]
+                        })
+                    });
+                    const dateFolderData = await createDateFolder.json();
+                    dateFolderId = dateFolderData.id;
+                }
 
-            // Create new workbook
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.json_to_sheet(existingData);
-            XLSX.utils.book_append_sheet(wb, ws, 'Records');
-            const excelBlob = new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], 
-                { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                // Check if Excel file exists for today
+                const fileName = businessDate + '_tea_records.xlsx';
+                const fileSearch = await fetch(
+                    `https://www.googleapis.com/drive/v3/files?q=name='${fileName}' and '${dateFolderId}' in parents and trashed=false`,
+                    { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
+                );
+                const fileSearchData = await fileSearch.json();
 
-            const metadata = {
-                name: fileName,
-                mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                parents: fileId ? undefined : [dateFolderId]
-            };
+                let existingData = [];
+                let fileId = null;
 
-            const form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-            form.append('file', excelBlob);
+                if (fileSearchData.files && fileSearchData.files.length > 0) {
+                    fileId = fileSearchData.files[0].id;
+                    // Download existing
+                    const downloadRes = await fetch(
+                        `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+                        { headers: { 'Authorization': 'Bearer ' + state.googleAuthToken } }
+                    );
+                    const blob = await downloadRes.blob();
+                    const arrayBuffer = await blob.arrayBuffer();
+                    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    existingData = XLSX.utils.sheet_to_json(firstSheet);
+                }
 
-            let uploadUrl = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
-            if (fileId) {
-                uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
-            }
+                // Append new record
+                existingData.push({
+                    'Date': businessDate,
+                    'Time': new Date(record.timestamp).toLocaleTimeString('si-LK'),
+                    'Customer ID': record.customerId,
+                    'Customer Name': record.customerName,
+                    'Root Name': record.rootName,
+                    'Weight (kg)': record.weight,
+                    'Synced At': new Date().toLocaleString('si-LK')
+                });
 
-            const uploadRes = await fetch(uploadUrl, {
-                method: fileId ? 'PATCH' : 'POST',
-                headers: { 'Authorization': 'Bearer ' + state.googleAuthToken },
-                body: form
-            });
+                // Create new workbook
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(existingData);
+                XLSX.utils.book_append_sheet(wb, ws, 'Records');
+                const excelBlob = new Blob([XLSX.write(wb, { bookType: 'xlsx', type: 'array' })], 
+                    { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-            if (uploadRes.ok) {
-                // Mark as synced in local storage
-                const records = getData('records');
-                const rec = records.find(r => r.id === record.id);
-                if (rec) rec.synced = true;
-                setData('records', records);
-                return true;
-            } else {
-                throw new Error('Upload failed');
+                // Upload
+                const metadata = {
+                    name: fileName,
+                    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    parents: fileId ? undefined : [dateFolderId]
+                };
+
+                const form = new FormData();
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', excelBlob);
+
+                let uploadUrl = 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart';
+                if (fileId) {
+                    uploadUrl = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
+                }
+
+                const uploadRes = await fetch(uploadUrl, {
+                    method: fileId ? 'PATCH' : 'POST',
+                    headers: { 'Authorization': 'Bearer ' + state.googleAuthToken },
+                    body: form
+                });
+
+                if (uploadRes.ok) {
+                    // Mark as synced
+                    const records = getData('records');
+                    const rec = records.find(r => r.id === record.id);
+                    if (rec) rec.synced = true;
+                    setData('records', records);
+                    updateRecordsTable();
+                    showToast('Google Drive ට upload වුණා!', 'success');
+                } else {
+                    throw new Error('Upload failed');
+                }
+
+            } catch (err) {
+                console.error('Drive upload error:', err);
+                showToast('Drive upload failed: ' + err.message, 'error');
             }
         }
 
@@ -1595,18 +1364,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateBusinessDate();
             updateRecordsTable();
-            updateNetworkStatus();
-            updatePendingBadge();
 
-            // Periodic sync check every 30 seconds when online
-            setInterval(() => {
-                if (navigator.onLine && state.googleAuthToken) {
-                    const pending = getData('records').filter(r => !r.synced).length;
-                    if (pending > 0) {
-                        syncPendingData();
-                    }
-                }
-            }, 30000);
+            // Load any saved auth token
+            if (state.googleAuthToken) {
+                // Validate token silently if possible
+            }
         });
     </script>
 </body>
