@@ -739,17 +739,31 @@ async function printStickerBT(){
 async function connectUSBPrinter(){
   if(!navigator.usb)return alert("WebUSB support නැහැ. Chrome/Edge desktop use කරන්න.");
   try{
-    const dev=await navigator.usb.requestDevice({filters:[{classCode:7}]});
+    // filters:[] means show ALL connected USB devices - widest compatibility
+    const dev=await navigator.usb.requestDevice({filters:[]});
     await dev.open();
-    if(dev.configuration===null)await dev.selectConfiguration(1);
-    await dev.claimInterface(0);
+    // Try to select configuration 1 if not already selected
+    try{if(dev.configuration===null)await dev.selectConfiguration(1);}catch(e){}
+    // Try to claim interface 0, fallback to interface 1
+    let claimed=false;
+    for(let iNum=0;iNum<4;iNum++){
+      try{await dev.claimInterface(iNum);claimed=true;break;}catch(e){}
+    }
     usbPrinterDevice=dev;
     const nm=dev.productName||dev.manufacturerName||"USB Printer";
     document.getElementById("usbPrinterName").innerText=nm;
-    document.getElementById("usbPrinterStatus").innerText="Connected ✓";
+    document.getElementById("usbPrinterStatus").innerText="Connected ✓"+(claimed?"":" (interface warn)");
     document.getElementById("usbPrinterStatus").className="status ok";
-    alert("🖨 "+nm+" connected!");
-  }catch(e){document.getElementById("usbPrinterStatus").innerText="Failed";document.getElementById("usbPrinterStatus").className="status bad";alert("USB error: "+e.message);}
+    alert("🖨 "+nm+" connected!"+(claimed?"":"\n⚠ Interface claim failed — print may still work."));
+  }catch(e){
+    document.getElementById("usbPrinterStatus").innerText="Failed";
+    document.getElementById("usbPrinterStatus").className="status bad";
+    if(e.message.includes("No device selected")){
+      alert("Device select කළේ නැහැ.\nUSB printer computer ට connect කර list ඇතිව ගත්ත විට select කරන්න.");
+    }else{
+      alert("USB error: "+e.message);
+    }
+  }
 }
 async function printStickerUSB(){
   const c=lastCustomer||selectedCustomer;
@@ -757,12 +771,19 @@ async function printStickerUSB(){
   if(!usbPrinterDevice)return alert("USB printer connect කරන්න (Devices page)");
   try{
     const data=buildEscPos(c);
+    // Search all interfaces & alternates for bulk OUT endpoint
     let epOut=null;
-    for(const iface of usbPrinterDevice.configuration.interfaces)
-      for(const alt of iface.alternates)
-        for(const ep of alt.endpoints)
-          if(ep.direction==="out"){epOut=ep;break;}
-    if(!epOut)throw new Error("Bulk OUT endpoint not found");
+    outer:
+    for(const iface of usbPrinterDevice.configuration.interfaces){
+      for(const alt of iface.alternates){
+        for(const ep of alt.endpoints){
+          if(ep.direction==="out"&&(ep.type==="bulk"||ep.type==="interrupt")){
+            epOut=ep;break outer;
+          }
+        }
+      }
+    }
+    if(!epOut)throw new Error("Bulk OUT endpoint not found. Printer model eka ESC/POS support karannada check karanna.");
     await usbPrinterDevice.transferOut(epOut.endpointNumber,data);
     alert("✅ Printed via USB!");
   }catch(e){alert("USB Print error: "+e.message);}
