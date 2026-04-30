@@ -70,12 +70,21 @@ body{font-family:var(--fb);color:var(--text);min-height:100vh;background:var(--b
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
 /* STATS */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--card-shadow);backdrop-filter:blur(14px);position:relative;overflow:hidden}
-.stat::before{content:"";position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(26,122,82,.06))}
-.stat span{display:block;font-size:10.5px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.6px}
-.stat b{display:block;font-size:20px;margin-top:8px;font-weight:900;color:var(--text)}
-.stat small{color:var(--g3);font-weight:800;font-size:11px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{border-radius:18px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.10);position:relative;overflow:hidden;border:none;}
+.stat::before{content:"";position:absolute;right:-16px;bottom:-16px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.18);pointer-events:none}
+.stat::after{content:"";position:absolute;right:8px;top:8px;font-size:22px;opacity:.35;line-height:1}
+.stat span{display:block;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;opacity:.82}
+.stat b{display:block;font-size:16px;margin-top:5px;font-weight:900;line-height:1.2}
+.stat small{font-size:10px;font-weight:800;opacity:.7}
+.stat-day{background:linear-gradient(135deg,#134e36,#1a7a52);color:#d1fae5}
+.stat-day::after{content:"📅"}
+.stat-rec{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#dbeafe}
+.stat-rec::after{content:"📋"}
+.stat-kg{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fef9c3}
+.stat-kg::after{content:"⚖️"}
+.stat-drive{background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:#ede9fe}
+.stat-drive::after{content:"☁"}
 
 /* CARDS */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
@@ -155,7 +164,10 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .hide{display:none!important}
 
 /* DEVICE STATUS ROW */
-.device-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;background:rgba(240,247,242,.6);border:1px solid var(--border);margin-bottom:8px}
+.icon-pick{border:2px solid var(--border);border-radius:12px;background:rgba(240,247,242,.8);padding:8px;font-size:24px;cursor:pointer;transition:all .15s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent}
+.icon-pick:hover{transform:scale(1.18);border-color:var(--g3);background:#fff;box-shadow:0 4px 12px rgba(26,122,82,.2)}
+.icon-pick:active{transform:scale(.9)!important}
+.icon-pick.selected{border-color:var(--g3);background:#dcfce7;box-shadow:0 0 0 3px rgba(26,122,82,.2)}
 .device-row .dn{font-weight:800;font-size:13px;color:var(--g1)}.device-row .dt{font-size:11px;color:var(--muted);font-weight:700}
 
 /* ══════════════════════════════
@@ -262,10 +274,10 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 
 <!-- STATS -->
 <section class="stats">
-  <div class="stat"><span>Business Day</span><b id="dashDay">-</b><small>6AM cycle</small></div>
-  <div class="stat"><span>Today Records</span><b id="dashRecords">0</b><small>current day</small></div>
-  <div class="stat"><span>Total Weight</span><b id="dashKg">0.000 kg</b><small>today</small></div>
-  <div class="stat"><span>Drive Status</span><b id="dashDrive">Offline</b><small id="networkText">Checking…</small></div>
+  <div class="stat stat-day"><span>Business Day</span><b id="dashDay">-</b><small>6AM cycle</small></div>
+  <div class="stat stat-rec"><span>Today Records</span><b id="dashRecords">0</b><small>current day</small></div>
+  <div class="stat stat-kg"><span>Total Weight</span><b id="dashKg">0.00 kg</b><small>today</small></div>
+  <div class="stat stat-drive"><span>Drive Status</span><b id="dashDrive">Offline</b><small id="networkText">Checking…</small></div>
 </section>
 
 <main>
@@ -306,7 +318,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
     <div class="card">
       <div class="weightBox">
         <div class="weight-label">Current Scale Weight</div>
-        <div class="weight"><span id="liveWeight">0.000</span> <small>kg</small></div>
+        <div class="weight"><span id="liveWeight">0.00</span> <small>kg</small></div>
         <div id="scaleStatus" class="status warn">Scale not connected</div>
       </div>
       <button class="btn btn-green btn-block" onclick="finishWeighing()">✅ Finish Weighing</button>
@@ -320,14 +332,9 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 <section id="bluetooth" class="page">
   <div class="grid">
     <div class="card">
-      <h2>⚖️ Bluetooth Scale 1</h2>
-      <div class="device-row"><div><div class="dn" id="bt1Name">Device 1</div><div class="dt">Weighing Scale</div></div><span id="bt1Status" class="status bad">Disconnected</span></div>
-      <button class="btn btn-sky btn-block" onclick="connectBluetooth(1)">🔵 Connect Scale 1</button>
-    </div>
-    <div class="card">
-      <h2>⚖️ Bluetooth Scale 2</h2>
-      <div class="device-row"><div><div class="dn" id="bt2Name">Device 2</div><div class="dt">Weighing Scale</div></div><span id="bt2Status" class="status bad">Disconnected</span></div>
-      <button class="btn btn-sky btn-block" onclick="connectBluetooth(2)">🔵 Connect Scale 2</button>
+      <h2>⚖️ Bluetooth Scale</h2>
+      <div class="device-row"><div><div class="dn" id="bt1Name">Scale Device</div><div class="dt">Weighing Scale – Bluetooth</div></div><span id="bt1Status" class="status bad">Disconnected</span></div>
+      <button class="btn btn-sky btn-block" onclick="connectBluetooth(1)">🔵 Connect Scale</button>
     </div>
     <div class="card">
       <h2>🖨 Bluetooth Printer</h2>
@@ -421,7 +428,23 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 <section id="manager" class="page">
   <div class="grid">
     <div class="card">
-      <h2>🏭 Factory Name</h2>
+      <h2>🎨 App Icon Change</h2>
+      <label>Logo Icon (Emoji)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px">
+        <button class="icon-pick" onclick="pickIcon('🍃')">🍃</button>
+        <button class="icon-pick" onclick="pickIcon('🌿')">🌿</button>
+        <button class="icon-pick" onclick="pickIcon('🍵')">🍵</button>
+        <button class="icon-pick" onclick="pickIcon('🏭')">🏭</button>
+        <button class="icon-pick" onclick="pickIcon('⚖️')">⚖️</button>
+        <button class="icon-pick" onclick="pickIcon('🌱')">🌱</button>
+        <button class="icon-pick" onclick="pickIcon('☘️')">☘️</button>
+        <button class="icon-pick" onclick="pickIcon('🫖')">🫖</button>
+      </div>
+      <label>Custom Emoji</label>
+      <input id="customIconInput" placeholder="Emoji type කරන්න: 🍀" maxlength="4" style="font-size:22px;text-align:center">
+      <button class="btn btn-green btn-block" onclick="saveIcon()">✅ Save Icon</button>
+      <p style="margin-top:10px;font-size:13px">Current: <span id="currentIconDisplay" style="font-size:22px">🍃</span></p>
+    </div>
       <label>QR Sticker Top Name</label>
       <input id="factoryNameInput" placeholder="LK Weighing – TEA LEAF">
       <button class="btn btn-green btn-block" onclick="saveFactoryName()">💾 Save Factory Name</button>
@@ -597,7 +620,7 @@ function showPage(id,btn=null){
   if(btn) btn.classList.add("active");
   if(id==="admin")   prepareCustomerForm();
   if(id==="reports") renderReports(1);
-  if(id==="manager"){renderRoots();initFactoryName();}
+  if(id==="manager"){renderRoots();initFactoryName();initIcon();}
 }
 
 /* ════════════════ CUSTOMER / ROOT ════════════════ */
@@ -667,7 +690,7 @@ function loadCustomerByQr(text){
 
 /* ════════════════ WEIGHT ════════════════ */
 function extractWeight(data){const m=String(data).match(/[-+]?\d+(\.\d+)?/g);return m?parseFloat(m[m.length-1]):null;}
-function setWeight(w){currentWeight=Number(w||0);document.getElementById("liveWeight").innerText=currentWeight.toFixed(3);document.getElementById("scaleStatus").innerText="Stable weight received";document.getElementById("scaleStatus").className="status ok";}
+function setWeight(w){currentWeight=Number(w||0);document.getElementById("liveWeight").innerText=currentWeight.toFixed(2);document.getElementById("scaleStatus").innerText="Stable weight received";document.getElementById("scaleStatus").className="status ok";}
 function testScaleData(){const w=extractWeight(document.getElementById("testScale").value);if(w===null)alert("Weight not found");else setWeight(w);}
 function manualWeight(){const w=prompt("Weight (kg):");if(w&&!isNaN(w))setWeight(parseFloat(w));}
 async function connectBluetooth(n){
@@ -804,7 +827,7 @@ function finishWeighing(){
     customerId:selectedCustomer.id,name:selectedCustomer.name,address:selectedCustomer.address,
     root:selectedCustomer.root,phone:selectedCustomer.phone,weight:currentWeight,sync:"Pending"};
   records.push(rec);saveAll();renderReports(currentPage);autoSyncSoon();
-  alert("✅ Weighing saved!\n"+currentWeight.toFixed(3)+" kg — pending sync");
+  alert("✅ Weighing saved!\n"+currentWeight.toFixed(2)+" kg — pending sync");
   return true;
 }
 async function quickSyncAfterWeighing(){const s=finishWeighing();if(s)await syncAllPendingDays(false);}
@@ -846,7 +869,7 @@ function updateDashboard(){
   const f=records.filter(r=>(r.sync||"Pending")==="Failed").length;
   document.getElementById("dashDay").innerText=businessDay();
   document.getElementById("dashRecords").innerText=t.length;
-  document.getElementById("dashKg").innerText=kg.toFixed(3)+" kg";
+  document.getElementById("dashKg").innerText=kg.toFixed(2)+" kg";
   document.getElementById("sumBusinessDay").innerText=businessDay();
   document.getElementById("sumRecords").innerText=t.length;
   document.getElementById("sumKg").innerText=kg.toFixed(3);
@@ -884,17 +907,33 @@ function initGoogleAuth(){
   if(!window.google||!google.accounts){alert("Google Identity not loaded.");return false;}
   tokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:DRIVE_SCOPE,callback:t=>{
     if(t.error)return alert("Google error: "+t.error);
-    accessToken=t.access_token;localStorage.setItem("googleAccessToken",accessToken);
-    setDriveStatus("Google Drive connected","ok","Connected");autoSyncSoon();
+    accessToken=t.access_token;
+    localStorage.setItem("googleAccessToken",accessToken);
+    localStorage.setItem("driveConnected","1"); // remember connection
+    setDriveStatus("Google Drive connected ✓","ok","Connected");autoSyncSoon();
   }});
   return true;
 }
-function connectGoogleDrive(){if(!tokenClient){if(!initGoogleAuth())return;}tokenClient.requestAccessToken({prompt:"consent"});}
+// Manual connect button - only prompt if never connected before
+function connectGoogleDrive(){
+  if(!tokenClient){if(!initGoogleAuth())return;}
+  const wasConnected=localStorage.getItem("driveConnected")==="1";
+  tokenClient.requestAccessToken({prompt: wasConnected ? "" : "consent"});
+}
 async function ensureDriveTokenSilent(){
-  if(accessToken)return true;if(!navigator.onLine)return false;
+  if(accessToken)return true;
+  if(!navigator.onLine)return false;
   if(!tokenClient){if(!initGoogleAuth())return false;}
+  // Only attempt silent refresh if user previously connected
+  if(localStorage.getItem("driveConnected")!=="1")return false;
   return new Promise(resolve=>{
-    tokenClient.callback=t=>{if(t.error){resolve(false);return;}accessToken=t.access_token;localStorage.setItem("googleAccessToken",accessToken);setDriveStatus("Google Drive connected","ok","Connected");resolve(true);};
+    tokenClient.callback=t=>{
+      if(t.error){resolve(false);return;}
+      accessToken=t.access_token;
+      localStorage.setItem("googleAccessToken",accessToken);
+      setDriveStatus("Google Drive connected ✓","ok","Connected");
+      resolve(true);
+    };
     try{tokenClient.requestAccessToken({prompt:""});}catch(e){resolve(false);}
   });
 }
@@ -971,6 +1010,25 @@ async function syncAllPendingDays(showAlert=false){
 }
 function autoSyncSoon(){setTimeout(()=>syncAllPendingDays(false),1200);}
 
+/* ════════════════ APP ICON ════════════════ */
+let appIcon = localStorage.getItem("appIcon") || "🍃";
+function initIcon(){
+  document.querySelector(".logo").innerText = appIcon;
+  document.getElementById("currentIconDisplay").innerText = appIcon;
+  document.getElementById("customIconInput").value = "";
+}
+function pickIcon(em){
+  document.querySelectorAll(".icon-pick").forEach(b=>b.classList.remove("selected"));
+  event.target.classList.add("selected");
+  document.getElementById("customIconInput").value = em;
+}
+function saveIcon(){
+  const v = document.getElementById("customIconInput").value.trim();
+  if(!v) return alert("Emoji enter / pick කරන්න");
+  appIcon = v; localStorage.setItem("appIcon", appIcon);
+  initIcon(); alert("✅ App icon updated!");
+}
+
 /* ════════════════ ONLINE/OFFLINE ════════════════ */
 window.addEventListener("online",()=>{setDriveStatus("Online – syncing…","warn","Online");updateDashboard();autoSyncSoon();});
 window.addEventListener("offline",()=>{setDriveStatus("Offline – local save","warn","Offline");updateDashboard();});
@@ -981,14 +1039,30 @@ document.getElementById("installBtn").addEventListener("click",async()=>{if(defe
 
 /* ════════════════ INIT ════════════════ */
 initFactoryName();
+initIcon();
 renderReports(1);
 renderRoots();
 prepareCustomerForm();
 resetReaderPlaceholder();
-setDriveStatus(
-  navigator.onLine?(accessToken?"Ready for sync":"Drive not connected"):"Offline – local mode","warn",
-  navigator.onLine?(accessToken?"Ready":"Offline"):"Offline"
-);
+
+// Drive status init
+const _wasConnected = localStorage.getItem("driveConnected")==="1";
+if(_wasConnected){
+  setDriveStatus(navigator.onLine?"Reconnecting…":"Offline – will reconnect","warn",navigator.onLine?"Connecting":"Offline");
+  // Try silent token refresh after Google Identity loads
+  window.addEventListener("load",()=>{
+    setTimeout(async()=>{
+      if(navigator.onLine && initGoogleAuth()){
+        const ok = await ensureDriveTokenSilent();
+        if(ok) setDriveStatus("Google Drive connected ✓","ok","Connected");
+        else setDriveStatus("Drive – click Reconnect","warn","Reconnect");
+      }
+    },1800);
+  });
+}else{
+  setDriveStatus("Drive not connected","warn","Offline");
+}
+
 if(navigator.onLine&&accessToken)autoSyncSoon();
 </script>
 </body>
