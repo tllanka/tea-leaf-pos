@@ -14,7 +14,7 @@
   --g1:#0a2e1f;--g2:#134e36;--g3:#1a7a52;--g4:#22c55e;--g5:#86efac;
   --gold:#f5c842;--amber:#f59e0b;
   --red:#ef4444;--red2:#b91c1c;
-  --blue:#3b82f6;--sky:#06b6d4;--sky2:#0891b2;
+  --blue:#3b82f6;--sky:#06b6d4;
   --purple:#8b5cf6;--purple2:#6d28d9;
   --bg:#f0f7f2;--surface:rgba(255,255,255,.9);--border:rgba(26,122,82,.15);
   --text:#0d2d1f;--muted:#4d7a64;
@@ -29,10 +29,9 @@ body{font-family:var(--fb);color:var(--text);min-height:100vh;background:var(--b
     radial-gradient(ellipse 50% 80% at 50% 100%,rgba(245,200,66,.07),transparent);}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,82,.3);border-radius:99px}
+.app{max-width:1280px;margin:auto;padding:18px 18px 130px}
 
-.app{max-width:1280px;margin:auto;padding:18px 18px 110px}
-
-/* TOPBAR */
+/* ── TOPBAR ── */
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;
   padding:20px 26px;border-radius:28px;margin-bottom:18px;
   background:linear-gradient(135deg,var(--g1) 0%,var(--g2) 55%,#1c6040 100%);
@@ -40,12 +39,13 @@ body{font-family:var(--fb);color:var(--text);min-height:100vh;background:var(--b
 .topbar::before{content:"🍃";position:absolute;right:-30px;top:-40px;font-size:190px;opacity:.045;transform:rotate(-20deg);pointer-events:none}
 .topbar::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.04),transparent 60%);pointer-events:none}
 .brand{display:flex;align-items:center;gap:16px;z-index:1}
-.logo{width:62px;height:62px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.22);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 24px rgba(0,0,0,.2)}
+.logo{width:62px;height:62px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.22);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 24px rgba(0,0,0,.2);overflow:hidden;flex-shrink:0;}
+.logo img{width:100%;height:100%;object-fit:cover;border-radius:17px}
 .brand-text h1{font-family:var(--fh);font-size:22px;color:#fff;letter-spacing:.3px;line-height:1.2}
 .brand-text p{color:#a8d5c0;font-size:11.5px;font-weight:600;margin-top:3px;letter-spacing:.3px}
 .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;z-index:1}
 
-/* BUTTONS */
+/* ── BUTTONS ── */
 .btn{border:none;border-radius:14px;padding:11px 18px;min-height:44px;font-family:var(--fb);font-weight:800;font-size:13px;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
 .btn::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,.15),transparent);pointer-events:none;border-radius:inherit}
 .btn:active{transform:scale(.94) translateY(2px)!important}
@@ -57,36 +57,33 @@ body{font-family:var(--fb);color:var(--text);min-height:100vh;background:var(--b
 .btn-blue{background:linear-gradient(180deg,#60a5fa,#2563eb);color:#fff;box-shadow:0 4px 0 #1d4ed8,0 12px 24px rgba(37,99,235,.25),inset 0 1px 0 rgba(255,255,255,.25)}
 .btn-sky{background:linear-gradient(180deg,#22d3ee,#0891b2);color:#fff;box-shadow:0 4px 0 #0e7490,0 12px 24px rgba(6,182,212,.25),inset 0 1px 0 rgba(255,255,255,.25)}
 .btn-purple{background:linear-gradient(180deg,#a78bfa,#6d28d9);color:#fff;box-shadow:0 4px 0 #4c1d95,0 12px 24px rgba(109,40,217,.25),inset 0 1px 0 rgba(255,255,255,.25)}
+.btn-orange{background:linear-gradient(180deg,#fb923c,#ea580c);color:#fff;box-shadow:0 4px 0 #9a3412,0 12px 24px rgba(234,88,12,.25),inset 0 1px 0 rgba(255,255,255,.25)}
 .btn-block{width:100%;margin-top:10px;display:block}
 
-/* NAV */
-.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px;border-radius:26px;background:rgba(255,255,255,.82);backdrop-filter:blur(20px);border:1px solid rgba(26,122,82,.12);box-shadow:0 8px 32px rgba(10,46,31,.10);margin-bottom:18px;}
-.nav button{border:none;border-radius:18px;padding:12px 8px;background:transparent;color:var(--muted);font-family:var(--fb);font-weight:800;font-size:12px;cursor:pointer;transition:all .2s ease;-webkit-tap-highlight-color:transparent}
+/* ── NAV ── */
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;padding:7px;border-radius:26px;background:rgba(255,255,255,.82);backdrop-filter:blur(20px);border:1px solid rgba(26,122,82,.12);box-shadow:0 8px 32px rgba(10,46,31,.10);margin-bottom:18px;}
+.nav button{border:none;border-radius:16px;padding:11px 6px;background:transparent;color:var(--muted);font-family:var(--fb);font-weight:800;font-size:11px;cursor:pointer;transition:all .2s ease;-webkit-tap-highlight-color:transparent;line-height:1.25}
 .nav button:hover{background:rgba(26,122,82,.08);color:var(--g2)}
 .nav button.active{color:#fff;background:linear-gradient(135deg,var(--g2),var(--g3));box-shadow:0 6px 20px rgba(26,122,82,.3)}
 
-/* PAGES */
+/* ── PAGES ── */
 .page{display:none;animation:fadeUp .35s ease}.page.active{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
-/* STATS */
+/* ── STATS ── */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .stat{border-radius:18px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.10);position:relative;overflow:hidden;border:none;}
 .stat::before{content:"";position:absolute;right:-16px;bottom:-16px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.18);pointer-events:none}
-.stat::after{content:"";position:absolute;right:8px;top:8px;font-size:22px;opacity:.35;line-height:1}
+.stat::after{position:absolute;right:8px;top:8px;font-size:22px;opacity:.35;line-height:1}
 .stat span{display:block;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;opacity:.82}
 .stat b{display:block;font-size:16px;margin-top:5px;font-weight:900;line-height:1.2}
 .stat small{font-size:10px;font-weight:800;opacity:.7}
-.stat-day{background:linear-gradient(135deg,#134e36,#1a7a52);color:#d1fae5}
-.stat-day::after{content:"📅"}
-.stat-rec{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#dbeafe}
-.stat-rec::after{content:"📋"}
-.stat-kg{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fef9c3}
-.stat-kg::after{content:"⚖️"}
-.stat-drive{background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:#ede9fe}
-.stat-drive::after{content:"☁"}
+.stat-day{background:linear-gradient(135deg,#134e36,#1a7a52);color:#d1fae5}.stat-day::after{content:"📅"}
+.stat-rec{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#dbeafe}.stat-rec::after{content:"📋"}
+.stat-kg{background:linear-gradient(135deg,#b45309,#f59e0b);color:#fef9c3}.stat-kg::after{content:"⚖️"}
+.stat-drive{background:linear-gradient(135deg,#6d28d9,#8b5cf6);color:#ede9fe}.stat-drive::after{content:"☁"}
 
-/* CARDS */
+/* ── CARDS ── */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:28px;padding:22px;box-shadow:var(--card-shadow);backdrop-filter:blur(14px)}
 .card h2{font-family:var(--fh);font-size:18px;color:var(--g1);margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid rgba(26,122,82,.1)}
@@ -95,13 +92,13 @@ input,select,textarea{width:100%;padding:12px 15px;border-radius:14px;border:1.5
 input:focus,select:focus,textarea:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(26,122,82,.14);background:#fff}
 textarea{min-height:80px;resize:vertical}
 
-/* ── SCANNER + ANIMATION ── */
+/* ── SCANNER ── */
 .scanner-container{position:relative;border-radius:20px;overflow:hidden;margin-bottom:2px}
 #reader{width:100%;min-height:250px;border-radius:20px;background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(20,184,166,.12));border:2px dashed rgba(26,122,82,.3);display:grid;place-items:center;overflow:hidden;}
 .scanner-container.scanning #reader{border:none}
 .scan-anim{position:absolute;inset:0;pointer-events:none;z-index:10;display:none;border-radius:20px;overflow:hidden;}
 .scanner-container.scanning .scan-anim{display:block}
-.scan-line{position:absolute;left:8%;right:8%;height:3px;background:linear-gradient(90deg,transparent,rgba(34,197,94,.8),#22c55e,rgba(134,239,172,.9),#22c55e,rgba(34,197,94,.8),transparent);border-radius:99px;box-shadow:0 0 14px rgba(34,197,94,.9),0 0 28px rgba(34,197,94,.5),0 0 48px rgba(34,197,94,.25);animation:scanMove 2.2s cubic-bezier(.45,.05,.55,.95) infinite;}
+.scan-line{position:absolute;left:8%;right:8%;height:3px;background:linear-gradient(90deg,transparent,rgba(34,197,94,.8),#22c55e,rgba(134,239,172,.9),#22c55e,rgba(34,197,94,.8),transparent);border-radius:99px;box-shadow:0 0 14px rgba(34,197,94,.9),0 0 28px rgba(34,197,94,.5);animation:scanMove 2.2s cubic-bezier(.45,.05,.55,.95) infinite;}
 @keyframes scanMove{0%{top:12%}50%{top:82%}100%{top:12%}}
 .scan-glow{position:absolute;left:0;right:0;height:70px;background:linear-gradient(180deg,transparent,rgba(34,197,94,.09),transparent);animation:scanMove 2.2s cubic-bezier(.45,.05,.55,.95) infinite;pointer-events:none;}
 .scan-c{position:absolute;width:34px;height:34px;border-color:#22c55e;border-style:solid}
@@ -116,7 +113,7 @@ textarea{min-height:80px;resize:vertical}
 .qr-placeholder b{display:block;font-size:14px;font-weight:900;color:var(--g2)}
 .qr-placeholder small{color:var(--muted);font-size:12px}
 
-/* WEIGHT BOX */
+/* ── WEIGHT BOX ── */
 .weightBox{text-align:center;color:#fff;border-radius:24px;padding:28px 20px;background:linear-gradient(145deg,var(--g1) 0%,var(--g2) 55%,var(--g3) 100%);position:relative;overflow:hidden;margin-bottom:14px}
 .weightBox::before{content:"";position:absolute;right:-60px;bottom:-60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.08)}
 .weightBox::after{content:"";position:absolute;left:-30px;top:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04)}
@@ -124,36 +121,36 @@ textarea{min-height:80px;resize:vertical}
 .weight{position:relative;z-index:1;font-family:var(--fh);font-size:62px;font-weight:900;letter-spacing:-2px;margin:10px 0;line-height:1;text-shadow:0 4px 20px rgba(0,0,0,.2)}
 .weight small{font-size:24px;color:#86efac;letter-spacing:0}
 
-/* BADGES / STATUS */
+/* ── STATUS ── */
 .status{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;font-size:12px;font-weight:800;background:#e2e8f0;color:#475569}
 .ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}
 .warn{background:#fef9c3;color:#854d0e}.info{background:#dbeafe;color:#1e40af}
 .badge{display:inline-block;border-radius:999px;padding:4px 10px;font-size:11px;font-weight:900}
 .badge.synced{background:#dcfce7;color:#166534}.badge.pending{background:#fef9c3;color:#854d0e}.badge.failed{background:#fee2e2;color:#991b1b}
 
-/* SUMMARY */
+/* ── SUMMARY ── */
 .summaryBox{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
 .summaryItem{background:linear-gradient(145deg,rgba(240,247,242,.9),rgba(220,242,230,.7));border:1px solid var(--border);border-radius:18px;padding:13px}
 .summaryItem span{font-size:11px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.4px}
 .summaryItem b{display:block;font-size:21px;font-weight:900;margin-top:5px;color:var(--g1)}
 
-/* TABLE */
+/* ── TABLE ── */
 .tableWrap{overflow:auto;margin-top:14px;border-radius:18px;border:1px solid var(--border)}
 table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;min-width:680px}
 th,td{padding:12px 14px;border-bottom:1px solid #e8f3ec;text-align:left}
 th{background:linear-gradient(180deg,#f4fbf7,#ebf6ef);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.5px;font-weight:900}
 tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 
-/* PAGINATION */
+/* ── PAGINATION ── */
 .pagination{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:16px;flex-wrap:wrap}
-.pg-btn{border:none;border-radius:10px;width:36px;height:36px;font-family:var(--fb);font-weight:800;font-size:13px;cursor:pointer;background:rgba(255,255,255,.9);color:var(--g2);border:1.5px solid var(--border);transition:all .15s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;}
+.pg-btn{border:1.5px solid var(--border);border-radius:10px;width:36px;height:36px;font-family:var(--fb);font-weight:800;font-size:13px;cursor:pointer;background:rgba(255,255,255,.9);color:var(--g2);transition:all .15s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent;}
 .pg-btn:hover{background:var(--g3);color:#fff;border-color:var(--g3);transform:translateY(-1px)}
 .pg-btn.active{background:linear-gradient(135deg,var(--g2),var(--g3));color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(26,122,82,.3)}
 .pg-btn.wide{width:auto;padding:0 14px}
 .pg-dots{color:var(--muted);font-weight:900;display:flex;align-items:center;padding:0 2px}
 .pg-info{text-align:center;color:var(--muted);font-size:11px;font-weight:800;margin-top:8px;margin-bottom:4px}
 
-/* QR STICKER */
+/* ── STICKER ── */
 .sticker-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px;background:linear-gradient(135deg,rgba(240,247,242,.8),rgba(220,242,230,.6));border-radius:22px;border:1.5px dashed rgba(26,122,82,.25);margin-bottom:4px;}
 .printSticker{width:72mm;min-height:48mm;border:2.5px solid var(--g1);padding:10px 12px;background:#fff;color:var(--g1);text-align:center;border-radius:10px;box-shadow:0 8px 24px rgba(10,46,31,.12);font-family:var(--fb);}
 .factory-name-label{font-weight:900;font-size:13px;margin-bottom:6px;letter-spacing:.3px}
@@ -163,16 +160,46 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .small{font-size:12px;color:var(--muted);line-height:1.5}
 .hide{display:none!important}
 
-/* DEVICE STATUS ROW */
+/* ── DEVICE ROW ── */
+.device-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;background:rgba(240,247,242,.6);border:1px solid var(--border);margin-bottom:8px}
+.device-row .dn{font-weight:800;font-size:13px;color:var(--g1)}.device-row .dt{font-size:11px;color:var(--muted);font-weight:700}
+
+/* ── ICON PICKER ── */
 .icon-pick{border:2px solid var(--border);border-radius:12px;background:rgba(240,247,242,.8);padding:8px;font-size:24px;cursor:pointer;transition:all .15s cubic-bezier(.34,1.56,.64,1);-webkit-tap-highlight-color:transparent}
 .icon-pick:hover{transform:scale(1.18);border-color:var(--g3);background:#fff;box-shadow:0 4px 12px rgba(26,122,82,.2)}
 .icon-pick:active{transform:scale(.9)!important}
 .icon-pick.selected{border-color:var(--g3);background:#dcfce7;box-shadow:0 0 0 3px rgba(26,122,82,.2)}
-.device-row .dn{font-weight:800;font-size:13px;color:var(--g1)}.device-row .dt{font-size:11px;color:var(--muted);font-weight:700}
 
-/* ══════════════════════════════
-   SUCCESS POPUP
-══════════════════════════════ */
+/* ── IMAGE ICON PREVIEW ── */
+.img-icon-preview{width:80px;height:80px;border-radius:20px;object-fit:cover;border:3px solid rgba(26,122,82,.3);display:block;margin:8px auto;box-shadow:0 4px 16px rgba(10,46,31,.15)}
+
+/* ── BACKUP STATUS ── */
+.backup-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:12px;background:rgba(240,247,242,.6);border:1px solid var(--border);margin-bottom:6px;font-size:12px;font-weight:800}
+.backup-row .bl{color:var(--g1)}.backup-row .br{font-size:11px;color:var(--muted)}
+
+/* ── ABOUT PAGE ── */
+.about-hero{border-radius:28px;padding:40px 30px;text-align:center;background:linear-gradient(145deg,var(--g1),var(--g2) 60%,var(--g3));color:#fff;margin-bottom:18px;position:relative;overflow:hidden}
+.about-hero::before{content:"🍃";position:absolute;right:-30px;bottom:-50px;font-size:200px;opacity:.06;transform:rotate(-15deg)}
+.about-logo{width:90px;height:90px;border-radius:28px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:42px;margin:0 auto 16px;box-shadow:0 8px 24px rgba(0,0,0,.2);overflow:hidden}
+.about-logo img{width:100%;height:100%;object-fit:cover;border-radius:24px}
+.about-hero h2{font-family:var(--fh);font-size:26px;margin-bottom:6px}
+.about-hero p{color:#a8d5c0;font-size:13px;font-weight:600}
+.about-version{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:5px 16px;font-size:12px;font-weight:800;margin-top:12px}
+.about-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.about-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:18px;box-shadow:var(--card-shadow)}
+.about-card h3{font-family:var(--fh);font-size:15px;color:var(--g2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.about-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.feature-list{list-style:none;padding:0;margin:0}
+.feature-list li{font-size:13px;color:var(--muted);padding:5px 0;border-bottom:1px solid rgba(26,122,82,.08);display:flex;align-items:center;gap:8px}
+.feature-list li:last-child{border-bottom:none}
+.feature-list li::before{content:"✓";color:var(--g3);font-weight:900;flex-shrink:0}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:18px 10px;margin-top:24px;border-top:1.5px solid rgba(26,122,82,.12)}
+.footer-text{font-size:11.5px;color:var(--muted);font-weight:800;letter-spacing:.3px}
+.footer-brand{font-size:12px;font-weight:900;color:var(--g3);margin-top:2px}
+
+/* ── SUCCESS POPUP ── */
 .success-overlay{position:fixed;inset:0;z-index:9997;display:flex;align-items:center;justify-content:center;background:rgba(5,20,13,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .25s ease;}
 .success-overlay.show{opacity:1;pointer-events:all}
 .success-box{background:linear-gradient(160deg,#fff 0%,#eefff5 100%);border-radius:34px;padding:38px 32px 30px;width:320px;max-width:92vw;text-align:center;box-shadow:0 40px 100px rgba(5,20,13,.35),0 0 0 1px rgba(34,197,94,.2);transform:scale(.82) translateY(24px);transition:transform .35s cubic-bezier(.34,1.56,.64,1);}
@@ -188,14 +215,12 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .success-title{font-family:var(--fh);font-size:22px;font-weight:900;color:var(--g1);margin-bottom:4px}
 .success-meta{font-size:12px;color:var(--g3);font-weight:700;margin-bottom:16px}
 .success-progress{height:5px;background:rgba(26,122,82,.12);border-radius:99px;overflow:hidden;margin-top:4px}
-.success-bar{height:100%;width:100%;background:linear-gradient(90deg,var(--g3),var(--g4));border-radius:99px;animation:shrinkBar 2.4s linear forwards}
+.success-bar{height:100%;width:100%;background:linear-gradient(90deg,var(--g3),var(--g4));border-radius:99px;animation:shrinkBar 2.5s linear forwards}
 @keyframes shrinkBar{from{width:100%}to{width:0}}
 .success-dismiss{border:none;background:rgba(26,122,82,.07);color:var(--muted);font-family:var(--fb);font-weight:800;font-size:12px;padding:8px 18px;border-radius:99px;cursor:pointer;margin-top:14px;transition:background .15s;}
 .success-dismiss:hover{background:rgba(26,122,82,.14);color:var(--g2)}
 
-/* ══════════════════════════════
-   PIN MODAL
-══════════════════════════════ */
+/* ── PIN MODAL ── */
 .modal-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(5,20,13,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .25s ease;}
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal-box{background:linear-gradient(160deg,#fff 0%,#f4fbf6 100%);border-radius:32px;width:340px;max-width:92vw;box-shadow:0 40px 100px rgba(5,20,13,.35),0 0 0 1px rgba(26,122,82,.15);transform:scale(.88) translateY(20px);transition:transform .3s cubic-bezier(.34,1.56,.64,1);overflow:hidden;}
@@ -219,29 +244,30 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .modal-cancel{width:100%;margin-top:12px;border:none;border-radius:14px;padding:12px;background:rgba(26,122,82,.06);color:var(--muted);font-family:var(--fb);font-weight:800;font-size:13px;cursor:pointer;transition:all .15s}
 .modal-cancel:hover{background:rgba(26,122,82,.12);color:var(--g2)}
 
-/* PRINT */
+/* ── PRINT ── */
 @media print{body *{visibility:hidden}#stickerPreview,#stickerPreview *{visibility:visible}#stickerPreview{position:absolute;top:0;left:0}}
 
-/* RESPONSIVE */
+/* ── RESPONSIVE ── */
 @media(max-width:900px){
   .stats{grid-template-columns:repeat(2,1fr)}
   .topbar{flex-direction:column;align-items:flex-start;border-radius:0 0 26px 26px;margin:-18px -18px 18px}
-  .nav{position:fixed;left:10px;right:10px;bottom:10px;z-index:100;margin:0;box-shadow:0 16px 48px rgba(10,46,31,.22)}
+  .nav{position:fixed;left:6px;right:6px;bottom:8px;z-index:100;margin:0;grid-template-columns:repeat(6,1fr);box-shadow:0 16px 48px rgba(10,46,31,.22)}
 }
 @media(max-width:560px){
-  .app{padding:12px 12px 100px}
+  .app{padding:12px 12px 108px}
   .topbar{margin:-12px -12px 14px;padding:16px}
   .logo{width:52px;height:52px;font-size:25px}
-  .brand-text h1{font-size:18px}
+  .brand-text h1{font-size:17px}
   .weight{font-size:48px}
-  .stats{gap:10px}.stat b{font-size:16px}
+  .stats{gap:10px}.stat b{font-size:15px}
   .card{padding:16px}
   .top-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
-  .nav button{font-size:10.5px;padding:10px 5px}
+  .nav button{font-size:9.5px;padding:9px 4px}
   .modal-box{width:96vw}
   .printSticker{width:100%;max-width:72mm}
   .success-box{padding:28px 18px 24px}
   .sticker-wrap{padding:14px}
+  .about-hero{padding:28px 18px}
 }
 </style>
 </head>
@@ -251,7 +277,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 <!-- TOPBAR -->
 <section class="topbar">
   <div class="brand">
-    <div class="logo">🍃</div>
+    <div class="logo" id="mainLogo">🍃</div>
     <div class="brand-text">
       <h1>LK Weighing – TEA LEAF</h1>
       <p>Tea Factory POS &nbsp;•&nbsp; QR Scan &nbsp;•&nbsp; BT &amp; USB Printer &nbsp;•&nbsp; Google Drive Sync</p>
@@ -265,11 +291,12 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 
 <!-- NAV -->
 <nav class="nav">
-  <button onclick="showPage('weigh',this)" class="active">⚖️ Weigh</button>
-  <button onclick="showPage('bluetooth',this)">🔵 Devices</button>
-  <button onclick="showPage('reports',this)">📊 Reports</button>
-  <button onclick="adminLogin()">👤 Admin</button>
-  <button onclick="managerLogin()">🌿 Routes</button>
+  <button onclick="showPage('weigh',this)" class="active">⚖️<br>Weigh</button>
+  <button onclick="showPage('bluetooth',this)">🔵<br>Devices</button>
+  <button onclick="showPage('reports',this)">📊<br>Reports</button>
+  <button onclick="adminLogin()">👤<br>Admin</button>
+  <button onclick="managerLogin()">🌿<br>Routes</button>
+  <button onclick="showPage('about',this)">ℹ️<br>About</button>
 </nav>
 
 <!-- STATS -->
@@ -282,7 +309,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 
 <main>
 
-<!-- ══════ WEIGH ══════ -->
+<!-- ══ WEIGH ══ -->
 <section id="weigh" class="page active">
   <div class="grid">
     <div class="card">
@@ -296,8 +323,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
           </div>
         </div>
         <div class="scan-anim" id="scanAnim">
-          <div class="scan-glow"></div>
-          <div class="scan-line"></div>
+          <div class="scan-glow"></div><div class="scan-line"></div>
           <div class="scan-c tl"></div><div class="scan-c tr"></div>
           <div class="scan-c bl"></div><div class="scan-c br"></div>
         </div>
@@ -305,7 +331,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
       <button class="btn btn-green btn-block" onclick="startScanner()">▶ Start QR Scanner</button>
       <button class="btn btn-red btn-block" onclick="stopScanner()">■ Stop Scanner</button>
     </div>
-
     <div class="card">
       <h2>👤 Customer Details</h2>
       <label>Customer ID</label><input id="wCustomerId" readonly placeholder="QR scan auto fill">
@@ -314,7 +339,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
       <label>Root Name</label><input id="wRoot" readonly>
       <label>Phone</label><input id="wPhone" readonly>
     </div>
-
     <div class="card">
       <div class="weightBox">
         <div class="weight-label">Current Scale Weight</div>
@@ -328,7 +352,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
   </div>
 </section>
 
-<!-- ══════ DEVICES ══════ -->
+<!-- ══ DEVICES ══ -->
 <section id="bluetooth" class="page">
   <div class="grid">
     <div class="card">
@@ -341,7 +365,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
       <div class="device-row"><div><div class="dn" id="btPrinterName">BT Printer</div><div class="dt">ESC/POS Thermal</div></div><span id="btPrinterStatus" class="status bad">Disconnected</span></div>
       <button class="btn btn-purple btn-block" onclick="connectBluetoothPrinter()">🔵 Connect BT Printer</button>
       <button class="btn btn-default btn-block" onclick="printStickerBT()">🖨 Print via Bluetooth</button>
-      <p class="small" style="margin-top:8px">Android Chrome – ESC/POS thermal printer support</p>
+      <p class="small" style="margin-top:8px">Android Chrome – ESC/POS thermal printer</p>
     </div>
     <div class="card">
       <h2>🔌 USB Printer</h2>
@@ -355,19 +379,19 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
       <label>Scale Raw Output</label>
       <input id="testScale" placeholder="ST,GS,+00025.450kg">
       <button class="btn btn-default btn-block" onclick="testScaleData()">▶ Test Read</button>
-      <p class="small" style="margin-top:8px">Scale output paste කරලා weight extract test කරන්න.</p>
+      <p class="small" style="margin-top:8px">Scale output paste කරලා weight extract test.</p>
     </div>
   </div>
 </section>
 
-<!-- ══════ REPORTS ══════ -->
+<!-- ══ REPORTS ══ -->
 <section id="reports" class="page">
   <div class="card">
     <h2>📊 Reports &amp; Google Drive Sync</h2>
     <div class="summaryBox">
       <div class="summaryItem"><span>Business Day</span><b id="sumBusinessDay">-</b></div>
       <div class="summaryItem"><span>Today</span><b id="sumRecords">0</b></div>
-      <div class="summaryItem"><span>Total KG</span><b id="sumKg">0.000</b></div>
+      <div class="summaryItem"><span>Total KG</span><b id="sumKg">0.00</b></div>
       <div class="summaryItem"><span>Pending</span><b id="sumPending">0</b></div>
       <div class="summaryItem"><span>Failed</span><b id="sumFailed">0</b></div>
       <div class="summaryItem"><span>All Records</span><b id="sumTotal">0</b></div>
@@ -379,7 +403,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
       <button class="btn btn-default" onclick="renderReports(1)">↻ Refresh</button>
     </div>
     <p id="driveStatus" class="status warn">Drive not connected</p>
-    <p class="small" style="margin-top:6px">Internet ආවම pending records auto sync. Records page 20  බැගින් page කළා.</p>
+    <p class="small" style="margin-top:6px">Internet ආවම pending records auto sync. Records 20 per page.</p>
     <div class="tableWrap">
       <table>
         <thead><tr><th>Business Day</th><th>Time</th><th>ID</th><th>Name</th><th>Root</th><th>Phone</th><th>Weight</th><th>Sync</th></tr></thead>
@@ -390,7 +414,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
   </div>
 </section>
 
-<!-- ══════ ADMIN ══════ -->
+<!-- ══ ADMIN ══ -->
 <section id="admin" class="page">
   <div class="grid">
     <div class="card">
@@ -424,46 +448,70 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
   </div>
 </section>
 
-<!-- ══════ MANAGER ══════ -->
+<!-- ══ MANAGER ══ -->
 <section id="manager" class="page">
   <div class="grid">
+
+    <!-- Factory Name -->
     <div class="card">
-      <h2>🎨 App Icon Change</h2>
-      <label>Logo Icon (Emoji)</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px">
-        <button class="icon-pick" onclick="pickIcon('🍃')">🍃</button>
-        <button class="icon-pick" onclick="pickIcon('🌿')">🌿</button>
-        <button class="icon-pick" onclick="pickIcon('🍵')">🍵</button>
-        <button class="icon-pick" onclick="pickIcon('🏭')">🏭</button>
-        <button class="icon-pick" onclick="pickIcon('⚖️')">⚖️</button>
-        <button class="icon-pick" onclick="pickIcon('🌱')">🌱</button>
-        <button class="icon-pick" onclick="pickIcon('☘️')">☘️</button>
-        <button class="icon-pick" onclick="pickIcon('🫖')">🫖</button>
-      </div>
-      <label>Custom Emoji</label>
-      <input id="customIconInput" placeholder="Emoji type කරන්න: 🍀" maxlength="4" style="font-size:22px;text-align:center">
-      <button class="btn btn-green btn-block" onclick="saveIcon()">✅ Save Icon</button>
-      <p style="margin-top:10px;font-size:13px">Current: <span id="currentIconDisplay" style="font-size:22px">🍃</span></p>
-    </div>
+      <h2>🏭 Factory Name</h2>
       <label>QR Sticker Top Name</label>
       <input id="factoryNameInput" placeholder="LK Weighing – TEA LEAF">
       <button class="btn btn-green btn-block" onclick="saveFactoryName()">💾 Save Factory Name</button>
       <p style="margin-top:10px;font-size:13px">Current: <b id="factoryNameDisplay" style="color:var(--g2)">-</b></p>
-      <p class="small" style="margin-top:4px">QR sticker print top ලෙස දිස් වෙයි</p>
     </div>
+
+    <!-- App Icon -->
+    <div class="card">
+      <h2>🎨 App Logo / Icon</h2>
+      <label>Emoji Shortcuts</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 10px">
+        <button class="icon-pick" onclick="pickEmoji('🍃',this)">🍃</button>
+        <button class="icon-pick" onclick="pickEmoji('🌿',this)">🌿</button>
+        <button class="icon-pick" onclick="pickEmoji('🍵',this)">🍵</button>
+        <button class="icon-pick" onclick="pickEmoji('🏭',this)">🏭</button>
+        <button class="icon-pick" onclick="pickEmoji('⚖️',this)">⚖️</button>
+        <button class="icon-pick" onclick="pickEmoji('🌱',this)">🌱</button>
+        <button class="icon-pick" onclick="pickEmoji('☘️',this)">☘️</button>
+        <button class="icon-pick" onclick="pickEmoji('🫖',this)">🫖</button>
+      </div>
+      <label>Custom Emoji</label>
+      <input id="customEmojiInput" placeholder="🍀 emoji type කරන්න" maxlength="4" style="font-size:20px;text-align:center">
+      <label>OR – Image Upload (photo/logo)</label>
+      <input type="file" id="iconImageFile" accept="image/*" style="font-size:12px;padding:8px">
+      <div id="iconImgPreviewWrap" class="hide">
+        <img id="iconImgPreview" class="img-icon-preview" src="" alt="preview">
+      </div>
+      <button class="btn btn-green btn-block" onclick="saveIcon()">✅ Save Icon</button>
+      <button class="btn btn-red btn-block" onclick="resetIcon()">↺ Reset to Emoji</button>
+      <p style="margin-top:10px;font-size:13px">Current: <span id="currentIconDisplay" style="font-size:22px">🍃</span></p>
+    </div>
+
+    <!-- Route Register -->
     <div class="card">
       <h2>🗺 Root / Route Register</h2>
       <label>New Root Name</label>
       <input id="rootName" placeholder="Route A – Pelmadulla">
       <button class="btn btn-green btn-block" onclick="saveRoot()">💾 Save Root</button>
-    </div>
-    <div class="card">
-      <h2>✅ Active Root</h2>
-      <label>Select Root</label>
+      <hr style="margin:14px 0;border:none;border-top:1.5px solid rgba(26,122,82,.1)">
+      <h2 style="border:none;padding:0;margin-bottom:10px">✅ Active Root</h2>
       <select id="activeRootSelect"></select>
       <button class="btn btn-green btn-block" onclick="setActiveRoot()">Set Active Root</button>
-      <p style="margin-top:12px;font-size:13px">Current: <b id="currentRootText" style="color:var(--g2)">None</b></p>
+      <p style="margin-top:10px;font-size:13px">Current: <b id="currentRootText" style="color:var(--g2)">None</b></p>
     </div>
+
+    <!-- Backup -->
+    <div class="card">
+      <h2>💾 Backup &amp; Restore</h2>
+      <div class="backup-row"><span class="bl">📱 Phone Storage Folder</span><span class="br" id="localFolderStatus">Not set</span></div>
+      <div class="backup-row"><span class="bl">☁ Drive Backup</span><span class="br" id="driveBackupStatus">-</span></div>
+      <button class="btn btn-green btn-block" onclick="pickLocalFolder()">📁 Set Phone Backup Folder</button>
+      <button class="btn btn-gold btn-block" onclick="manualBackupNow()">💾 Backup Now (Both)</button>
+      <button class="btn btn-blue btn-block" onclick="restoreFromDrive()">☁ Restore from Drive</button>
+      <button class="btn btn-default btn-block" onclick="restoreFromFile()">📂 Restore from File</button>
+      <p class="small" style="margin-top:8px">Auto backup: weighing save කළ හැම විටම phone + Drive ලෙස backup වේ. Overwrite mode.</p>
+    </div>
+
   </div>
   <div class="card" style="margin-top:16px">
     <h2>📋 Root List</h2>
@@ -471,7 +519,64 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
   </div>
 </section>
 
+<!-- ══ ABOUT ══ -->
+<section id="about" class="page">
+  <div class="about-hero">
+    <div class="about-logo" id="aboutLogo">🍃</div>
+    <h2>LK Weighing – TEA LEAF POS</h2>
+    <p>Professional Tea Factory Weighing System</p>
+    <div class="about-version">Version 2.0 – PWA Ready</div>
+  </div>
+  <div class="about-grid">
+    <div class="about-card">
+      <h3>📱 App Features</h3>
+      <ul class="feature-list">
+        <li>QR Code Customer Scanner</li>
+        <li>Bluetooth &amp; USB Scale Support</li>
+        <li>Bluetooth &amp; USB Thermal Printer</li>
+        <li>Google Drive Auto Sync</li>
+        <li>Phone Storage Backup</li>
+        <li>Offline / PWA Support</li>
+        <li>Multi-Route Management</li>
+        <li>XLSX Export</li>
+      </ul>
+    </div>
+    <div class="about-card">
+      <h3>⚙️ Technical Info</h3>
+      <p>Built with pure HTML, CSS &amp; JavaScript. No server required. Runs 100% in your browser as a Progressive Web App (PWA). All data stored securely on-device.</p>
+      <br>
+      <p><b>Compatible:</b> Android Chrome, Edge, Desktop Chrome/Edge</p>
+      <br>
+      <p><b>Storage:</b> localStorage + File System API + Google Drive</p>
+    </div>
+    <div class="about-card">
+      <h3>🔐 Security</h3>
+      <ul class="feature-list">
+        <li>Admin PIN protected</li>
+        <li>Manager PIN protected</li>
+        <li>Data stays on device</li>
+        <li>Drive OAuth – secure login</li>
+        <li>No external servers</li>
+      </ul>
+    </div>
+    <div class="about-card">
+      <h3>📞 Support</h3>
+      <p style="font-size:14px;color:var(--g2);font-weight:800">LK Weighing Solution</p>
+      <p style="margin-top:6px">Ratnapura, Sri Lanka</p>
+      <br>
+      <p class="small">More features &amp; updates coming soon. Image details &amp; further about content will be added in next update.</p>
+    </div>
+  </div>
+</section>
+
 </main>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-text">© 2025 All Rights Reserved</div>
+  <div class="footer-brand">Designed by LK Weighing Solution – Ratnapura</div>
+</div>
+
 </div><!-- .app -->
 
 <!-- SUCCESS POPUP -->
@@ -514,27 +619,35 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
     </div>
   </div>
 </div>
+<!-- Hidden file input for restore -->
+<input type="file" id="restoreFileInput" accept=".json" class="hide" onchange="handleRestoreFile(event)">
 
 <script>
-/* ════════════════ CONFIG ════════════════ */
+/* ══════════════════ CONFIG ══════════════════ */
 const ADMIN_PASSWORD   = "1990";
 const MANAGER_PASSWORD = "199002";
 const GOOGLE_CLIENT_ID = "458733588827-lmphjs7bb1k8b4vkbteff2nd53epv2c1.apps.googleusercontent.com";
 const DRIVE_SCOPE      = "https://www.googleapis.com/auth/drive.file";
 const MAIN_FOLDER_NAME = "LK WEighing-TEA LEAF";
+const BACKUP_FOLDER    = "backup";
+const LOCAL_FOLDER_KEY = "localBackupFolderName";
 const PER_PAGE         = 20;
 
-/* ════════════════ DATA ════════════════ */
+/* ══════════════════ DATA ══════════════════ */
 let customers  = JSON.parse(localStorage.getItem("customers")  || "[]");
 let roots      = JSON.parse(localStorage.getItem("roots")      || "[]");
 let activeRoot = localStorage.getItem("activeRoot")            || "";
 let records    = JSON.parse(localStorage.getItem("records")    || "[]");
 let factoryName= localStorage.getItem("factoryName")           || "LK Weighing – TEA LEAF";
+let appIcon    = localStorage.getItem("appIcon")               || "🍃";
+let appIconType= localStorage.getItem("appIconType")           || "emoji"; // "emoji" | "image"
+let appIconImg = localStorage.getItem("appIconImg")            || "";      // base64
 
-let currentWeight=0, selectedCustomer=null, qrScanner=null;
-let deferredPrompt=null, accessToken=localStorage.getItem("googleAccessToken")||null;
-let tokenClient=null, autoSyncRunning=false, currentPage=1;
-let btPrinterChar=null, usbPrinterDevice=null, lastCustomer=null;
+let currentWeight=0,selectedCustomer=null,qrScanner=null;
+let deferredPrompt=null,accessToken=localStorage.getItem("googleAccessToken")||null;
+let tokenClient=null,autoSyncRunning=false,currentPage=1;
+let btPrinterChar=null,usbPrinterDevice=null,lastCustomer=null;
+let _localDirHandle=null; // File System API dir handle
 
 function saveAll(){
   localStorage.setItem("customers", JSON.stringify(customers));
@@ -543,40 +656,259 @@ function saveAll(){
   localStorage.setItem("records",   JSON.stringify(records));
 }
 
-/* ════════════════ FACTORY NAME ════════════════ */
+/* ══════════════════ INDEXEDDB FOR DIR HANDLE ══════════════════ */
+function openIDB(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open("LKWeighDB",1);
+    r.onupgradeneeded=e=>e.target.result.createObjectStore("handles",{keyPath:"key"});
+    r.onsuccess=e=>res(e.target.result);
+    r.onerror=e=>rej(e);
+  });
+}
+async function idbGet(key){
+  try{const db=await openIDB();return new Promise((res,rej)=>{const tx=db.transaction("handles","readonly");const r=tx.objectStore("handles").get(key);r.onsuccess=()=>res(r.result?.value);r.onerror=()=>res(null);});}
+  catch(e){return null;}
+}
+async function idbSet(key,value){
+  try{const db=await openIDB();return new Promise((res,rej)=>{const tx=db.transaction("handles","readwrite");tx.objectStore("handles").put({key,value});tx.oncomplete=()=>res();tx.onerror=()=>rej();});}
+  catch(e){}
+}
+
+/* ══════════════════ LOCAL FOLDER BACKUP ══════════════════ */
+async function pickLocalFolder(){
+  if(!window.showDirectoryPicker){alert("File System API support නැහැ. Android Chrome 86+ use කරන්න.");return;}
+  try{
+    const handle=await window.showDirectoryPicker({mode:"readwrite",startIn:"downloads"});
+    _localDirHandle=handle;
+    await idbSet("localDir",handle);
+    localStorage.setItem(LOCAL_FOLDER_KEY,handle.name);
+    document.getElementById("localFolderStatus").innerText="📁 "+handle.name;
+    alert("✅ Backup folder set: "+handle.name+"\nHemadema save kala viTa auto backup wenu.");
+  }catch(e){if(e.name!=="AbortError")alert("Folder select error: "+e.message);}
+}
+
+async function getLocalDirHandle(){
+  if(_localDirHandle) return _localDirHandle;
+  try{
+    const h=await idbGet("localDir");
+    if(!h)return null;
+    const perm=await h.queryPermission({mode:"readwrite"});
+    if(perm==="granted"){_localDirHandle=h;return h;}
+    const req=await h.requestPermission({mode:"readwrite"});
+    if(req==="granted"){_localDirHandle=h;return h;}
+  }catch(e){}
+  return null;
+}
+
+async function backupToLocalFolder(){
+  try{
+    const dir=await getLocalDirHandle();
+    if(!dir) return false;
+    const data=buildBackupJSON();
+    const fileHandle=await dir.getFileHandle("LKWeigh_backup.json",{create:true});
+    const writable=await fileHandle.createWritable();
+    await writable.write(data); await writable.close();
+    document.getElementById("localFolderStatus").innerText="✅ "+new Date().toLocaleTimeString();
+    return true;
+  }catch(e){document.getElementById("localFolderStatus").innerText="❌ Error";return false;}
+}
+
+/* ══════════════════ BACKUP JSON ══════════════════ */
+function buildBackupJSON(){
+  return JSON.stringify({
+    version:2,
+    backupDate:new Date().toISOString(),
+    factoryName,
+    customers,
+    roots,
+    activeRoot,
+    records
+  },null,2);
+}
+
+function applyBackupJSON(json){
+  try{
+    const d=JSON.parse(json);
+    if(!d.version)throw new Error("Invalid backup file");
+    if(d.customers)customers=d.customers;
+    if(d.roots)roots=d.roots;
+    if(d.activeRoot)activeRoot=d.activeRoot;
+    if(d.records)records=d.records;
+    if(d.factoryName)factoryName=d.factoryName;
+    saveAll();
+    localStorage.setItem("factoryName",factoryName);
+    renderReports(1);renderRoots();prepareCustomerForm();initFactoryName();
+    return true;
+  }catch(e){alert("Restore failed: "+e.message);return false;}
+}
+
+/* ══════════════════ DRIVE BACKUP ══════════════════ */
+async function backupToDrive(){
+  if(!accessToken)return;
+  try{
+    const main=await getOrCreateFolder(MAIN_FOLDER_NAME);
+    const bkFolder=await getOrCreateFolder(BACKUP_FOLDER,main.id);
+    const fileName="LKWeigh_full_backup.json";
+    const blob=new Blob([buildBackupJSON()],{type:"application/json"});
+    const existing=await findDriveFileInFolder(fileName,bkFolder.id);
+    if(existing){
+      // Overwrite
+      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${existing.id}?uploadType=media`,{
+        method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/json"},body:blob
+      });
+    }else{
+      const meta={name:fileName,parents:[bkFolder.id]};
+      const form=new FormData();
+      form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));
+      form.append("file",blob,fileName);
+      await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{
+        method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form
+      });
+    }
+    document.getElementById("driveBackupStatus").innerText="✅ "+new Date().toLocaleTimeString();
+  }catch(e){document.getElementById("driveBackupStatus").innerText="❌ "+e.message.slice(0,30);}
+}
+
+async function manualBackupNow(){
+  const loc=await backupToLocalFolder();
+  await backupToDrive();
+  alert("✅ Backup complete!\n📱 Phone: "+(loc?"OK":"not set")+"\n☁ Drive: "+(accessToken?"OK":"not connected"));
+}
+
+async function restoreFromDrive(){
+  if(!accessToken){alert("Connect Google Drive.");return;}
+  try{
+    const main=await findDriveFolder(MAIN_FOLDER_NAME);
+    if(!main){alert("Drive folder not found.");return;}
+    const bk=await findDriveFolder(BACKUP_FOLDER,main.id);
+    if(!bk){alert("Backup folder not found on Drive.");return;}
+    const file=await findDriveFileInFolder("LKWeigh_full_backup.json",bk.id);
+    if(!file){alert("Backup file not found.");return;}
+    const res=await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`,{headers:{Authorization:"Bearer "+accessToken}});
+    const json=await res.text();
+    if(confirm("Drive backup restore කරන්නද?\nCurrent data replace වේ.")){
+      if(applyBackupJSON(json))alert("✅ Restore complete!");
+    }
+  }catch(e){alert("Restore error: "+e.message);}
+}
+
+function restoreFromFile(){document.getElementById("restoreFileInput").click();}
+function handleRestoreFile(e){
+  const file=e.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    if(confirm("File backup restore කරන්නද?\nCurrent data replace වේ.")){
+      if(applyBackupJSON(ev.target.result))alert("✅ Restore complete!");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value="";
+}
+
+/* ══════════════════ FACTORY NAME ══════════════════ */
 function initFactoryName(){
-  document.getElementById("factoryNameInput").value = factoryName;
-  document.getElementById("factoryNameDisplay").innerText = factoryName;
-  document.getElementById("stickerFactoryName").innerText = factoryName;
+  document.getElementById("factoryNameInput").value=factoryName;
+  document.getElementById("factoryNameDisplay").innerText=factoryName;
+  document.getElementById("stickerFactoryName").innerText=factoryName;
 }
 function saveFactoryName(){
   const v=document.getElementById("factoryNameInput").value.trim();
-  if(!v) return alert("Factory name enter කරන්න");
-  factoryName=v; localStorage.setItem("factoryName",factoryName);
-  initFactoryName(); alert("✅ Factory name saved!");
+  if(!v)return alert("Factory name enter කරන්න");
+  factoryName=v;localStorage.setItem("factoryName",factoryName);
+  initFactoryName();alert("✅ Factory name saved!");
 }
 
-/* ════════════════ SUCCESS POPUP ════════════════ */
+/* ══════════════════ APP ICON ══════════════════ */
+function initIcon(){
+  const logo=document.getElementById("mainLogo");
+  const aboutLogo=document.getElementById("aboutLogo");
+  if(appIconType==="image"&&appIconImg){
+    const imgTag=`<img src="${appIconImg}" alt="logo">`;
+    logo.innerHTML=imgTag; aboutLogo.innerHTML=imgTag;
+    document.getElementById("iconImgPreview").src=appIconImg;
+    document.getElementById("iconImgPreviewWrap").classList.remove("hide");
+    document.getElementById("currentIconDisplay").innerHTML=`<img src="${appIconImg}" style="width:28px;height:28px;border-radius:8px;object-fit:cover">`;
+  }else{
+    logo.innerText=appIcon; aboutLogo.innerText=appIcon;
+    document.getElementById("currentIconDisplay").innerText=appIcon;
+  }
+}
+let _pickedEmoji="";
+function pickEmoji(em,btn){
+  _pickedEmoji=em;
+  document.querySelectorAll(".icon-pick").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  document.getElementById("customEmojiInput").value=em;
+}
+function saveIcon(){
+  const file=document.getElementById("iconImageFile").files[0];
+  if(file){
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      // Resize to max 120px
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement("canvas");
+        const maxS=120; let w=img.width,h=img.height;
+        if(w>h){h=Math.round(h*maxS/w);w=maxS;}else{w=Math.round(w*maxS/h);h=maxS;}
+        canvas.width=w;canvas.height=h;
+        canvas.getContext("2d").drawImage(img,0,0,w,h);
+        const b64=canvas.toDataURL("image/jpeg",0.82);
+        appIconType="image";appIconImg=b64;appIcon="🍃";
+        localStorage.setItem("appIconType","image");
+        localStorage.setItem("appIconImg",b64);
+        localStorage.setItem("appIcon",appIcon);
+        initIcon();alert("✅ Image icon saved!");
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+  const em=(document.getElementById("customEmojiInput").value.trim()||_pickedEmoji).slice(0,4);
+  if(!em)return alert("Emoji enter / image upload / pick කරන්න");
+  appIcon=em;appIconType="emoji";appIconImg="";
+  localStorage.setItem("appIcon",appIcon);
+  localStorage.setItem("appIconType","emoji");
+  localStorage.removeItem("appIconImg");
+  initIcon();alert("✅ Icon saved!");
+}
+function resetIcon(){
+  appIcon="🍃";appIconType="emoji";appIconImg="";
+  localStorage.setItem("appIcon",appIcon);
+  localStorage.setItem("appIconType","emoji");
+  localStorage.removeItem("appIconImg");
+  document.getElementById("iconImageFile").value="";
+  document.getElementById("iconImgPreviewWrap").classList.add("hide");
+  document.getElementById("customEmojiInput").value="";
+  initIcon();
+}
+// Image file preview
+document.getElementById("iconImageFile").addEventListener("change",e=>{
+  const f=e.target.files[0];if(!f)return;
+  const url=URL.createObjectURL(f);
+  document.getElementById("iconImgPreview").src=url;
+  document.getElementById("iconImgPreviewWrap").classList.remove("hide");
+});
+
+/* ══════════════════ SUCCESS POPUP ══════════════════ */
 let _sucTimer=null;
 function showSuccess(c){
-  document.getElementById("successName").innerText = c.name;
-  document.getElementById("successMeta").innerText = "ID: "+c.id+"  •  📱 "+c.phone+"  •  🗺 "+c.root;
+  document.getElementById("successName").innerText=c.name;
+  document.getElementById("successMeta").innerText="ID: "+c.id+"  •  📱 "+c.phone+"  •  🗺 "+c.root;
   const bar=document.getElementById("successBar");
-  bar.style.animation="none"; bar.offsetHeight;
+  bar.style.animation="none";bar.offsetHeight;
   bar.style.animation="shrinkBar 2.5s linear forwards";
   document.getElementById("successOverlay").classList.add("show");
-  if(_sucTimer) clearTimeout(_sucTimer);
+  if(_sucTimer)clearTimeout(_sucTimer);
   _sucTimer=setTimeout(closeSuccess,2600);
 }
-function closeSuccess(){
-  document.getElementById("successOverlay").classList.remove("show");
-  if(_sucTimer) clearTimeout(_sucTimer);
-}
+function closeSuccess(){document.getElementById("successOverlay").classList.remove("show");if(_sucTimer)clearTimeout(_sucTimer);}
 
-/* ════════════════ PIN MODAL ════════════════ */
-let pinValue="", pinCallback=null, pinLength=4;
+/* ══════════════════ PIN MODAL ══════════════════ */
+let pinValue="",pinCallback=null,pinLength=4;
 function openPin(icon,title,sub,len,cb){
-  pinValue=""; pinLength=len; pinCallback=cb;
+  pinValue="";pinLength=len;pinCallback=cb;
   document.getElementById("modalIcon").innerText=icon;
   document.getElementById("modalTitle").innerText=title;
   document.getElementById("modalSub").innerText=sub;
@@ -585,12 +917,8 @@ function openPin(icon,title,sub,len,cb){
 }
 function closeModal(){document.getElementById("pinModal").classList.remove("open");pinValue="";renderPinDots();}
 function renderPinDots(err=false){
-  const el=document.getElementById("pinDisplay"); el.innerHTML="";
-  for(let i=0;i<pinLength;i++){
-    const d=document.createElement("div");
-    d.className="pin-dot"+(i<pinValue.length?(err?" error":" filled"):"");
-    el.appendChild(d);
-  }
+  const el=document.getElementById("pinDisplay");el.innerHTML="";
+  for(let i=0;i<pinLength;i++){const d=document.createElement("div");d.className="pin-dot"+(i<pinValue.length?(err?" error":" filled"):"");el.appendChild(d);}
 }
 function pinPress(d){if(pinValue.length>=pinLength)return;pinValue+=d;renderPinDots();if(pinValue.length===pinLength)setTimeout(pinConfirm,280);}
 function pinDel(){pinValue=pinValue.slice(0,-1);renderPinDots();}
@@ -608,38 +936,45 @@ document.addEventListener("keydown",e=>{
   else if(e.key==="Escape")closeModal();
 });
 
-/* ════════════════ AUTH ════════════════ */
+/* ══════════════════ AUTH ══════════════════ */
 function adminLogin(){openPin("👤","Admin Login","Admin PIN enter කරන්න",4,pin=>{if(pin===ADMIN_PASSWORD){showPage("admin");prepareCustomerForm();return true;}return false;});}
-function managerLogin(){openPin("🌿","Manager Login","Manager PIN enter කරන්න",6,pin=>{if(pin===MANAGER_PASSWORD){showPage("manager");renderRoots();initFactoryName();return true;}return false;});}
+function managerLogin(){openPin("🌿","Manager Login","Manager PIN enter කරන්න",6,pin=>{if(pin===MANAGER_PASSWORD){showPage("manager");renderRoots();initFactoryName();initIcon();return true;}return false;});}
 
-/* ════════════════ PAGE NAV ════════════════ */
+/* ══════════════════ PAGE NAV ══════════════════ */
 function showPage(id,btn=null){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  if(btn) btn.classList.add("active");
-  if(id==="admin")   prepareCustomerForm();
-  if(id==="reports") renderReports(1);
-  if(id==="manager"){renderRoots();initFactoryName();initIcon();}
+  if(btn)btn.classList.add("active");
+  if(id==="admin")prepareCustomerForm();
+  if(id==="reports")renderReports(1);
+  if(id==="manager"){renderRoots();initFactoryName();initIcon();refreshBackupStatus();}
+  if(id==="about"){document.getElementById("aboutLogo").innerHTML=document.getElementById("mainLogo").innerHTML||document.getElementById("mainLogo").innerText;}
 }
 
-/* ════════════════ CUSTOMER / ROOT ════════════════ */
+function refreshBackupStatus(){
+  const folderName=localStorage.getItem(LOCAL_FOLDER_KEY);
+  document.getElementById("localFolderStatus").innerText=folderName?"📁 "+folderName:"Not set";
+  document.getElementById("driveBackupStatus").innerText=accessToken?"Ready":"Not connected";
+}
+
+/* ══════════════════ CUSTOMER / ROOT ══════════════════ */
 function newCustomerId(){const max=customers.reduce((m,c)=>Math.max(m,parseInt(String(c.id||"").replace(/\D/g,""))||0),0);return "CUS-"+String(max+1).padStart(4,"0");}
 function prepareCustomerForm(){document.getElementById("cId").value=newCustomerId();document.getElementById("cRoot").value=activeRoot||"";renderCustomers();}
 function saveCustomer(){
   const c={id:document.getElementById("cId").value,name:document.getElementById("cName").value.trim(),address:document.getElementById("cAddress").value.trim(),root:document.getElementById("cRoot").value.trim(),phone:document.getElementById("cPhone").value.trim()};
-  if(!c.name||!c.phone) return alert("Name සහ Phone අවශ්‍යයි");
-  if(!c.root) return alert("Manager page Active Root set කරන්න");
-  customers.push(c); lastCustomer=c; saveAll(); generateSticker(c);
+  if(!c.name||!c.phone)return alert("Name සහ Phone අවශ්‍යයි");
+  if(!c.root)return alert("Manager page Active Root set කරන්න");
+  customers.push(c);lastCustomer=c;saveAll();generateSticker(c);
   document.getElementById("cName").value="";document.getElementById("cAddress").value="";document.getElementById("cPhone").value="";
-  prepareCustomerForm(); alert("✅ Customer registered! QR sticker generate විය.");
+  prepareCustomerForm();alert("✅ Customer registered! QR sticker generate විය.");
 }
 function renderCustomers(){
   const tb=document.getElementById("customerTable");tb.innerHTML="";
   customers.forEach((c,i)=>tb.innerHTML+=`<tr><td>${c.id}</td><td>${c.name}</td><td>${c.address||'-'}</td><td>${c.root}</td><td>${c.phone}</td><td><button class="btn btn-red" style="width:auto;min-height:34px;padding:5px 12px;font-size:11px" onclick="deleteCustomer(${i})">Delete</button></td></tr>`);
 }
-function deleteCustomer(i){if(confirm("Delete?")){ customers.splice(i,1);saveAll();renderCustomers();updateDashboard();}}
-function saveRoot(){const r=document.getElementById("rootName").value.trim();if(!r)return alert("Root name enter කරන්න");if(roots.includes(r))return alert("Already exists");roots.push(r);if(!activeRoot)activeRoot=r;saveAll();document.getElementById("rootName").value="";renderRoots();}
+function deleteCustomer(i){if(confirm("Delete?")){customers.splice(i,1);saveAll();renderCustomers();updateDashboard();}}
+function saveRoot(){const r=document.getElementById("rootName").value.trim();if(!r)return alert("Root name enter");if(roots.includes(r))return alert("Already exists");roots.push(r);if(!activeRoot)activeRoot=r;saveAll();document.getElementById("rootName").value="";renderRoots();}
 function renderRoots(){
   document.getElementById("currentRootText").innerText=activeRoot||"None";
   const sel=document.getElementById("activeRootSelect");
@@ -648,9 +983,9 @@ function renderRoots(){
   roots.forEach((r,i)=>tb.innerHTML+=`<tr><td>${r}</td><td><button class="btn btn-red" style="width:auto;min-height:34px;padding:5px 12px;font-size:11px" onclick="deleteRoot(${i})">Delete</button></td></tr>`);
 }
 function setActiveRoot(){activeRoot=document.getElementById("activeRootSelect").value;saveAll();renderRoots();alert("✅ Active root updated");}
-function deleteRoot(i){if(!confirm("Delete root?"))return;roots.splice(i,1);if(activeRoot&&!roots.includes(activeRoot))activeRoot=roots[0]||"";saveAll();renderRoots();}
+function deleteRoot(i){if(!confirm("Delete?"))return;roots.splice(i,1);if(activeRoot&&!roots.includes(activeRoot))activeRoot=roots[0]||"";saveAll();renderRoots();}
 
-/* ════════════════ QR STICKER ════════════════ */
+/* ══════════════════ QR STICKER ══════════════════ */
 function generateSticker(c){
   document.getElementById("qrBox").innerHTML="";
   document.getElementById("stickerFactoryName").innerText=factoryName;
@@ -659,11 +994,11 @@ function generateSticker(c){
   setTimeout(()=>{const el=document.getElementById("stickerPreview");if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},350);
 }
 
-/* ════════════════ SCANNER ════════════════ */
+/* ══════════════════ SCANNER ══════════════════ */
 function resetReaderPlaceholder(){
   const r=document.getElementById("reader"),c=document.getElementById("scannerContainer");
-  if(r&&!qrScanner) r.innerHTML=`<div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR scan කරන්න</small></div>`;
-  if(c) c.classList.remove("scanning");
+  if(r&&!qrScanner)r.innerHTML=`<div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR scan කරන්න</small></div>`;
+  if(c)c.classList.remove("scanning");
 }
 function startScanner(){
   if(qrScanner)return;
@@ -688,11 +1023,12 @@ function loadCustomerByQr(text){
   showSuccess(c);
 }
 
-/* ════════════════ WEIGHT ════════════════ */
+/* ══════════════════ WEIGHT ══════════════════ */
 function extractWeight(data){const m=String(data).match(/[-+]?\d+(\.\d+)?/g);return m?parseFloat(m[m.length-1]):null;}
 function setWeight(w){currentWeight=Number(w||0);document.getElementById("liveWeight").innerText=currentWeight.toFixed(2);document.getElementById("scaleStatus").innerText="Stable weight received";document.getElementById("scaleStatus").className="status ok";}
 function testScaleData(){const w=extractWeight(document.getElementById("testScale").value);if(w===null)alert("Weight not found");else setWeight(w);}
 function manualWeight(){const w=prompt("Weight (kg):");if(w&&!isNaN(w))setWeight(parseFloat(w));}
+
 async function connectBluetooth(n){
   if(!navigator.bluetooth)return alert("Web Bluetooth support නැහැ. Android Chrome use කරන්න.");
   try{
@@ -703,116 +1039,73 @@ async function connectBluetooth(n){
     document.getElementById(`bt${n}Status`).className="status ok";
     document.getElementById("scaleStatus").innerText="Bluetooth connected";
     document.getElementById("scaleStatus").className="status ok";
-    alert("✅ "+nm+" connected!");
   }catch(e){alert("BT error: "+e.message);}
 }
 
-/* ════════════════ BT PRINTER ════════════════ */
+/* ══════════════════ BT PRINTER ══════════════════ */
 function buildEscPos(c){
   const E=0x1B,G=0x1D,enc=new TextEncoder();
-  const p=[
-    ...[E,0x40],         // init
-    ...[E,0x61,0x01],    // center
-    ...[E,0x45,0x01],[G,0x21,0x11], // bold + double
-    ...enc.encode(factoryName+"\n"),
-    ...[G,0x21,0x00],[E,0x45,0x00], // normal
-    ...[0x0A],
-    ...[E,0x45,0x01],...enc.encode(c.name+"\n"),...[E,0x45,0x00],
-    ...enc.encode("ID: "+c.id+"\n"),
-    ...enc.encode("Root: "+c.root+"\n"),
-    ...enc.encode("Tel: "+c.phone+"\n"),
-    ...[0x0A,0x0A,0x0A],
-    ...[G,0x56,0x42,0x00]  // cut
-  ];
+  const p=[...[E,0x40],...[E,0x61,0x01],...[E,0x45,0x01],[G,0x21,0x11],...enc.encode(factoryName+"\n"),...[G,0x21,0x00],[E,0x45,0x00],...[0x0A],...[E,0x45,0x01],...enc.encode(c.name+"\n"),...[E,0x45,0x00],...enc.encode("ID: "+c.id+"\n"),...enc.encode("Root: "+c.root+"\n"),...enc.encode("Tel: "+c.phone+"\n"),...[0x0A,0x0A,0x0A],...[G,0x56,0x42,0x00]];
   return new Uint8Array(p);
 }
 async function connectBluetoothPrinter(){
   if(!navigator.bluetooth)return alert("Web Bluetooth support නැහැ.");
   try{
-    const dev=await navigator.bluetooth.requestDevice({
-      acceptAllDevices:true,
-      optionalServices:["e7810a71-73ae-499d-8c15-faa9aef0c3f2","000018f0-0000-1000-8000-00805f9b34fb","0000ff00-0000-1000-8000-00805f9b34fb","0000ffe0-0000-1000-8000-00805f9b34fb"]
-    });
+    const dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:["e7810a71-73ae-499d-8c15-faa9aef0c3f2","000018f0-0000-1000-8000-00805f9b34fb","0000ff00-0000-1000-8000-00805f9b34fb","0000ffe0-0000-1000-8000-00805f9b34fb"]});
     document.getElementById("btPrinterStatus").innerText="Connecting…";document.getElementById("btPrinterStatus").className="status warn";
     const srv=await dev.gatt.connect();
-    const srvUuids=["e7810a71-73ae-499d-8c15-faa9aef0c3f2","000018f0-0000-1000-8000-00805f9b34fb","0000ff00-0000-1000-8000-00805f9b34fb","0000ffe0-0000-1000-8000-00805f9b34fb"];
+    const srvIds=["e7810a71-73ae-499d-8c15-faa9aef0c3f2","000018f0-0000-1000-8000-00805f9b34fb","0000ff00-0000-1000-8000-00805f9b34fb","0000ffe0-0000-1000-8000-00805f9b34fb"];
     let svc=null,ch=null;
-    for(const u of srvUuids){try{svc=await srv.getPrimaryService(u);break;}catch(e){}}
+    for(const u of srvIds){try{svc=await srv.getPrimaryService(u);break;}catch(e){}}
     if(svc){const cs=await svc.getCharacteristics();for(const c of cs){if(c.properties.write||c.properties.writeWithoutResponse){ch=c;break;}}}
     btPrinterChar=ch;
     const nm=dev.name||"BT Printer";
     document.getElementById("btPrinterName").innerText=nm;
-    document.getElementById("btPrinterStatus").innerText=ch?"Connected ✓":"Connected (no char)";
+    document.getElementById("btPrinterStatus").innerText=ch?"Connected ✓":"Connected";
     document.getElementById("btPrinterStatus").className="status ok";
-    alert("🖨 "+nm+" connected!"+(ch?"":" (characteristic not found)"));
+    alert("🖨 "+nm+" connected!");
   }catch(e){document.getElementById("btPrinterStatus").innerText="Failed";document.getElementById("btPrinterStatus").className="status bad";alert("BT Printer error: "+e.message);}
 }
 async function printStickerBT(){
-  const c=lastCustomer||selectedCustomer;
-  if(!c)return alert("Customer scan / register කරන්න");
-  if(!btPrinterChar)return alert("Bluetooth printer connect කරන්න (Devices page)");
-  try{
-    const data=buildEscPos(c);
-    for(let i=0;i<data.length;i+=100){await btPrinterChar.writeValue(data.slice(i,i+100));await new Promise(r=>setTimeout(r,30));}
-    alert("✅ Printed via Bluetooth!");
-  }catch(e){alert("BT Print error: "+e.message);}
+  const c=lastCustomer||selectedCustomer;if(!c)return alert("Customer scan / register කරන්න");
+  if(!btPrinterChar)return alert("BT printer connect කරන්න");
+  try{const data=buildEscPos(c);for(let i=0;i<data.length;i+=100){await btPrinterChar.writeValue(data.slice(i,i+100));await new Promise(r=>setTimeout(r,30));}alert("✅ Printed!");}
+  catch(e){alert("BT Print error: "+e.message);}
 }
 
-/* ════════════════ USB PRINTER ════════════════ */
+/* ══════════════════ USB PRINTER ══════════════════ */
 async function connectUSBPrinter(){
-  if(!navigator.usb)return alert("WebUSB support නැහැ. Chrome/Edge desktop use කරන්න.");
+  if(!navigator.usb)return alert("WebUSB support නැහැ. Chrome/Edge desktop.");
   try{
-    // filters:[] means show ALL connected USB devices - widest compatibility
     const dev=await navigator.usb.requestDevice({filters:[]});
     await dev.open();
-    // Try to select configuration 1 if not already selected
     try{if(dev.configuration===null)await dev.selectConfiguration(1);}catch(e){}
-    // Try to claim interface 0, fallback to interface 1
     let claimed=false;
-    for(let iNum=0;iNum<4;iNum++){
-      try{await dev.claimInterface(iNum);claimed=true;break;}catch(e){}
-    }
+    for(let n=0;n<4;n++){try{await dev.claimInterface(n);claimed=true;break;}catch(e){}}
     usbPrinterDevice=dev;
     const nm=dev.productName||dev.manufacturerName||"USB Printer";
     document.getElementById("usbPrinterName").innerText=nm;
-    document.getElementById("usbPrinterStatus").innerText="Connected ✓"+(claimed?"":" (interface warn)");
+    document.getElementById("usbPrinterStatus").innerText="Connected ✓";
     document.getElementById("usbPrinterStatus").className="status ok";
-    alert("🖨 "+nm+" connected!"+(claimed?"":"\n⚠ Interface claim failed — print may still work."));
-  }catch(e){
-    document.getElementById("usbPrinterStatus").innerText="Failed";
-    document.getElementById("usbPrinterStatus").className="status bad";
-    if(e.message.includes("No device selected")){
-      alert("Device select කළේ නැහැ.\nUSB printer computer ට connect කර list ඇතිව ගත්ත විට select කරන්න.");
-    }else{
-      alert("USB error: "+e.message);
-    }
-  }
+    alert("🖨 "+nm+" connected!");
+  }catch(e){document.getElementById("usbPrinterStatus").innerText="Failed";document.getElementById("usbPrinterStatus").className="status bad";alert("USB error: "+e.message);}
 }
 async function printStickerUSB(){
-  const c=lastCustomer||selectedCustomer;
-  if(!c)return alert("Customer scan / register කරන්න");
-  if(!usbPrinterDevice)return alert("USB printer connect කරන්න (Devices page)");
+  const c=lastCustomer||selectedCustomer;if(!c)return alert("Customer scan / register කරන්න");
+  if(!usbPrinterDevice)return alert("USB printer connect කරන්න");
   try{
-    const data=buildEscPos(c);
-    // Search all interfaces & alternates for bulk OUT endpoint
-    let epOut=null;
-    outer:
-    for(const iface of usbPrinterDevice.configuration.interfaces){
-      for(const alt of iface.alternates){
-        for(const ep of alt.endpoints){
-          if(ep.direction==="out"&&(ep.type==="bulk"||ep.type==="interrupt")){
-            epOut=ep;break outer;
-          }
-        }
-      }
-    }
-    if(!epOut)throw new Error("Bulk OUT endpoint not found. Printer model eka ESC/POS support karannada check karanna.");
+    const data=buildEscPos(c);let epOut=null;
+    outer:for(const iface of usbPrinterDevice.configuration.interfaces)
+      for(const alt of iface.alternates)
+        for(const ep of alt.endpoints)
+          if(ep.direction==="out"&&(ep.type==="bulk"||ep.type==="interrupt")){epOut=ep;break outer;}
+    if(!epOut)throw new Error("Bulk OUT endpoint not found");
     await usbPrinterDevice.transferOut(epOut.endpointNumber,data);
     alert("✅ Printed via USB!");
   }catch(e){alert("USB Print error: "+e.message);}
 }
 
-/* ════════════════ BUSINESS DAY ════════════════ */
+/* ══════════════════ BUSINESS DAY / RECORD ══════════════════ */
 function businessDay(date=new Date()){
   const d=new Date(date);if(d.getHours()<6)d.setDate(d.getDate()-1);
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -826,43 +1119,46 @@ function finishWeighing(){
     time:now.toLocaleTimeString(),timestamp:now.toISOString(),
     customerId:selectedCustomer.id,name:selectedCustomer.name,address:selectedCustomer.address,
     root:selectedCustomer.root,phone:selectedCustomer.phone,weight:currentWeight,sync:"Pending"};
-  records.push(rec);saveAll();renderReports(currentPage);autoSyncSoon();
-  alert("✅ Weighing saved!\n"+currentWeight.toFixed(2)+" kg — pending sync");
+  records.push(rec);saveAll();renderReports(currentPage);
+  // Auto sync + Auto backup
+  autoSyncSoon();
+  autoBackupSoon();
+  alert("✅ Weighing saved!\n"+currentWeight.toFixed(2)+" kg – pending sync");
   return true;
 }
 async function quickSyncAfterWeighing(){const s=finishWeighing();if(s)await syncAllPendingDays(false);}
 
-/* ════════════════ REPORTS + PAGINATION ════════════════ */
+function autoBackupSoon(){setTimeout(async()=>{await backupToLocalFolder();await backupToDrive();},2000);}
+
+/* ══════════════════ REPORTS + PAGINATION ══════════════════ */
 function getTodayRecords(){return records.filter(r=>r.businessDay===businessDay());}
 function getPendingDays(){return [...new Set(records.filter(r=>(r.sync||"Pending")!=="Synced").map(r=>r.businessDay))].sort();}
 
 function renderReports(page=1){
   updateDashboard();
   const all=records.slice().reverse();
-  const total=all.length, pages=Math.max(1,Math.ceil(total/PER_PAGE));
-  page=Math.max(1,Math.min(page,pages)); currentPage=page;
-  const slice=all.slice((page-1)*PER_PAGE, page*PER_PAGE);
-  const tb=document.getElementById("reportTable"); tb.innerHTML="";
+  const total=all.length,pages=Math.max(1,Math.ceil(total/PER_PAGE));
+  page=Math.max(1,Math.min(page,pages));currentPage=page;
+  const slice=all.slice((page-1)*PER_PAGE,page*PER_PAGE);
+  const tb=document.getElementById("reportTable");tb.innerHTML="";
   slice.forEach(r=>{
     const s=r.sync||"Pending",cls=s==="Synced"?"synced":s==="Failed"?"failed":"pending";
-    tb.innerHTML+=`<tr><td><b>${r.businessDay}</b></td><td>${r.time}</td><td style="font-weight:800;color:var(--g2)">${r.customerId}</td><td>${r.name}</td><td>${r.root}</td><td>${r.phone}</td><td><b>${Number(r.weight).toFixed(3)}</b></td><td><span class="badge ${cls}">${s}</span></td></tr>`;
+    tb.innerHTML+=`<tr><td><b>${r.businessDay}</b></td><td>${r.time}</td><td style="font-weight:800;color:var(--g2)">${r.customerId}</td><td>${r.name}</td><td>${r.root}</td><td>${r.phone}</td><td><b>${Number(r.weight).toFixed(2)}</b></td><td><span class="badge ${cls}">${s}</span></td></tr>`;
   });
   buildPagination(page,pages,total);
 }
-
 function buildPagination(cur,total,count){
   const el=document.getElementById("reportPagination");
   if(total<=1){el.innerHTML=`<p class="pg-info">${count} records</p>`;return;}
   let h=`<p class="pg-info">Showing ${(cur-1)*PER_PAGE+1}–${Math.min(cur*PER_PAGE,count)} of ${count} records</p><div class="pagination">`;
-  if(cur>1) h+=`<button class="pg-btn wide" onclick="renderReports(${cur-1})">‹ Prev</button>`;
+  if(cur>1)h+=`<button class="pg-btn wide" onclick="renderReports(${cur-1})">‹ Prev</button>`;
   for(let i=1;i<=total;i++){
-    if(i===1||i===total||Math.abs(i-cur)<=2) h+=`<button class="pg-btn${i===cur?" active":""}" onclick="renderReports(${i})">${i}</button>`;
-    else if(Math.abs(i-cur)===3) h+=`<span class="pg-dots">…</span>`;
+    if(i===1||i===total||Math.abs(i-cur)<=2)h+=`<button class="pg-btn${i===cur?" active":""}" onclick="renderReports(${i})">${i}</button>`;
+    else if(Math.abs(i-cur)===3)h+=`<span class="pg-dots">…</span>`;
   }
-  if(cur<total) h+=`<button class="pg-btn wide" onclick="renderReports(${cur+1})">Next ›</button>`;
+  if(cur<total)h+=`<button class="pg-btn wide" onclick="renderReports(${cur+1})">Next ›</button>`;
   el.innerHTML=h+"</div>";
 }
-
 function updateDashboard(){
   const t=getTodayRecords(),kg=t.reduce((s,r)=>s+Number(r.weight||0),0);
   const p=records.filter(r=>(r.sync||"Pending")==="Pending").length;
@@ -872,21 +1168,19 @@ function updateDashboard(){
   document.getElementById("dashKg").innerText=kg.toFixed(2)+" kg";
   document.getElementById("sumBusinessDay").innerText=businessDay();
   document.getElementById("sumRecords").innerText=t.length;
-  document.getElementById("sumKg").innerText=kg.toFixed(3);
+  document.getElementById("sumKg").innerText=kg.toFixed(2);
   document.getElementById("sumPending").innerText=p;
   document.getElementById("sumFailed").innerText=f;
   document.getElementById("sumTotal").innerText=records.length;
   document.getElementById("networkText").innerText=navigator.onLine?"Online":"Offline";
 }
-
-/* Auto day refresh every 60s */
 let _lastDay=businessDay();
 setInterval(()=>{const d=businessDay();if(d!==_lastDay){_lastDay=d;renderReports(1);}},60000);
 
-/* ════════════════ XLSX ════════════════ */
+/* ══════════════════ XLSX ══════════════════ */
 function buildWorkbookBlob(day){
   const rows=records.filter(r=>r.businessDay===day);
-  if(!rows.length) throw new Error(day+" records නැහැ");
+  if(!rows.length)throw new Error(day+" records නැහැ");
   const data=rows.map(r=>({"Record ID":r.id||"","Business Day":r.businessDay,"Date":r.date,"Time":r.time,"Customer ID":r.customerId,"Customer Name":r.name,"Address":r.address,"Root Name":r.root,"Phone":r.phone,"Weight KG":Number(r.weight),"Sync Status":r.sync||"Pending"}));
   const ws=XLSX.utils.json_to_sheet(data);
   ws["!cols"]=[{wch:24},{wch:14},{wch:12},{wch:12},{wch:14},{wch:22},{wch:28},{wch:20},{wch:14},{wch:12},{wch:12}];
@@ -898,41 +1192,37 @@ function exportTodayXlsx(){
   catch(e){alert(e.message);}
 }
 
-/* ════════════════ GOOGLE DRIVE ════════════════ */
+/* ══════════════════ GOOGLE DRIVE ══════════════════ */
 function setDriveStatus(text,cls="warn",dash=""){
   const el=document.getElementById("driveStatus");if(el){el.innerText=text;el.className="status "+cls;}
   if(dash)document.getElementById("dashDrive").innerText=dash;
 }
 function initGoogleAuth(){
-  if(!window.google||!google.accounts){alert("Google Identity not loaded.");return false;}
+  if(!window.google||!google.accounts){return false;}
   tokenClient=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:DRIVE_SCOPE,callback:t=>{
     if(t.error)return alert("Google error: "+t.error);
-    accessToken=t.access_token;
-    localStorage.setItem("googleAccessToken",accessToken);
-    localStorage.setItem("driveConnected","1"); // remember connection
-    setDriveStatus("Google Drive connected ✓","ok","Connected");autoSyncSoon();
+    accessToken=t.access_token;localStorage.setItem("googleAccessToken",accessToken);
+    localStorage.setItem("driveConnected","1");
+    setDriveStatus("Google Drive connected ✓","ok","Connected");
+    autoSyncSoon();
   }});
   return true;
 }
-// Manual connect button - only prompt if never connected before
 function connectGoogleDrive(){
   if(!tokenClient){if(!initGoogleAuth())return;}
-  const wasConnected=localStorage.getItem("driveConnected")==="1";
-  tokenClient.requestAccessToken({prompt: wasConnected ? "" : "consent"});
+  const was=localStorage.getItem("driveConnected")==="1";
+  tokenClient.requestAccessToken({prompt:was?"":"consent"});
 }
 async function ensureDriveTokenSilent(){
   if(accessToken)return true;
   if(!navigator.onLine)return false;
-  if(!tokenClient){if(!initGoogleAuth())return false;}
-  // Only attempt silent refresh if user previously connected
   if(localStorage.getItem("driveConnected")!=="1")return false;
+  if(!tokenClient){if(!initGoogleAuth())return false;}
   return new Promise(resolve=>{
     tokenClient.callback=t=>{
       if(t.error){resolve(false);return;}
-      accessToken=t.access_token;
-      localStorage.setItem("googleAccessToken",accessToken);
-      setDriveStatus("Google Drive connected ✓","ok","Connected");
-      resolve(true);
+      accessToken=t.access_token;localStorage.setItem("googleAccessToken",accessToken);
+      setDriveStatus("Google Drive connected ✓","ok","Connected");resolve(true);
     };
     try{tokenClient.requestAccessToken({prompt:""});}catch(e){resolve(false);}
   });
@@ -944,7 +1234,7 @@ async function driveJsonRequest(url,opt={}){
   if(!res.ok)throw new Error(await res.text());
   return await res.json();
 }
-function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
 async function findDriveFolder(name,pid=null){
   let q=`name='${esc(name)}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
   if(pid)q+=` and '${pid}' in parents`;
@@ -966,19 +1256,19 @@ async function findDriveFileAnywhere(name){
   const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
   return d.files&&d.files.length?d.files[0]:null;
 }
-async function uploadNewXlsxToDrive(fileName,folderId,blob){
-  const meta={name:fileName,parents:[folderId],mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
-  const form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",blob,fileName);
+async function uploadNewXlsxToDrive(fn,fid,blob){
+  const meta={name:fn,parents:[fid],mimeType:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
+  const form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",blob,fn);
   const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,parents",{method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form});
   if(!res.ok)throw new Error(await res.text());return await res.json();
 }
-async function updateXlsxOnDrive(fileId,blob){
-  const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&fields=id,name,parents`,{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},body:blob});
+async function updateXlsxOnDrive(id,blob){
+  const res=await fetch(`https://www.googleapis.com/upload/drive/v3/files/${id}?uploadType=media&fields=id,name,parents`,{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},body:blob});
   if(!res.ok)throw new Error(await res.text());return await res.json();
 }
-async function moveFileToFolder(fileId,targetId,currentParents=[]){
-  const old=(currentParents||[]).filter(p=>p!==targetId).join(",");
-  let url=`https://www.googleapis.com/drive/v3/files/${fileId}?addParents=${encodeURIComponent(targetId)}&fields=id,name,parents`;
+async function moveFileToFolder(fid,tid,cp=[]){
+  const old=(cp||[]).filter(p=>p!==tid).join(",");
+  let url=`https://www.googleapis.com/drive/v3/files/${fid}?addParents=${encodeURIComponent(tid)}&fields=id,name,parents`;
   if(old)url+=`&removeParents=${encodeURIComponent(old)}`;
   return await driveJsonRequest(url,{method:"PATCH"});
 }
@@ -1010,59 +1300,45 @@ async function syncAllPendingDays(showAlert=false){
 }
 function autoSyncSoon(){setTimeout(()=>syncAllPendingDays(false),1200);}
 
-/* ════════════════ APP ICON ════════════════ */
-let appIcon = localStorage.getItem("appIcon") || "🍃";
-function initIcon(){
-  document.querySelector(".logo").innerText = appIcon;
-  document.getElementById("currentIconDisplay").innerText = appIcon;
-  document.getElementById("customIconInput").value = "";
-}
-function pickIcon(em){
-  document.querySelectorAll(".icon-pick").forEach(b=>b.classList.remove("selected"));
-  event.target.classList.add("selected");
-  document.getElementById("customIconInput").value = em;
-}
-function saveIcon(){
-  const v = document.getElementById("customIconInput").value.trim();
-  if(!v) return alert("Emoji enter / pick කරන්න");
-  appIcon = v; localStorage.setItem("appIcon", appIcon);
-  initIcon(); alert("✅ App icon updated!");
-}
-
-/* ════════════════ ONLINE/OFFLINE ════════════════ */
+/* ══════════════════ ONLINE/OFFLINE ══════════════════ */
 window.addEventListener("online",()=>{setDriveStatus("Online – syncing…","warn","Online");updateDashboard();autoSyncSoon();});
 window.addEventListener("offline",()=>{setDriveStatus("Offline – local save","warn","Offline");updateDashboard();});
 
-/* ════════════════ PWA ════════════════ */
+/* ══════════════════ PWA ══════════════════ */
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").classList.remove("hide");});
-document.getElementById("installBtn").addEventListener("click",async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hide");}else alert("Chrome menu – Add to Home screen.");});
+document.getElementById("installBtn").addEventListener("click",async()=>{
+  if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;document.getElementById("installBtn").classList.add("hide");}
+  else alert("Chrome menu – Add to Home screen.");
+});
 
-/* ════════════════ INIT ════════════════ */
+/* ══════════════════ INIT ══════════════════ */
 initFactoryName();
 initIcon();
 renderReports(1);
 renderRoots();
 prepareCustomerForm();
 resetReaderPlaceholder();
+refreshBackupStatus();
 
-// Drive status init
-const _wasConnected = localStorage.getItem("driveConnected")==="1";
+// Restore cached local folder name display
+(async()=>{const h=await idbGet("localDir");if(h)localStorage.setItem(LOCAL_FOLDER_KEY,h.name||"Saved");refreshBackupStatus();})();
+
+// Drive init
+const _wasConnected=localStorage.getItem("driveConnected")==="1";
 if(_wasConnected){
-  setDriveStatus(navigator.onLine?"Reconnecting…":"Offline – will reconnect","warn",navigator.onLine?"Connecting":"Offline");
-  // Try silent token refresh after Google Identity loads
+  setDriveStatus("Reconnecting…","warn",navigator.onLine?"Connecting":"Offline");
   window.addEventListener("load",()=>{
     setTimeout(async()=>{
-      if(navigator.onLine && initGoogleAuth()){
-        const ok = await ensureDriveTokenSilent();
-        if(ok) setDriveStatus("Google Drive connected ✓","ok","Connected");
+      if(navigator.onLine&&initGoogleAuth()){
+        const ok=await ensureDriveTokenSilent();
+        if(ok)setDriveStatus("Google Drive connected ✓","ok","Connected");
         else setDriveStatus("Drive – click Reconnect","warn","Reconnect");
       }
-    },1800);
+    },2000);
   });
 }else{
   setDriveStatus("Drive not connected","warn","Offline");
 }
-
 if(navigator.onLine&&accessToken)autoSyncSoon();
 </script>
 </body>
