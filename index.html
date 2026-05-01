@@ -928,7 +928,7 @@ async function manualBackupNow(){
   const drv=await backupToDrive(true);
   refreshBackupStatus();
   alert("💾 Backup!\n📱 Phone: "+(loc?"✅ Done":"❌ Folder not set / permission needed")+
-    "\n☁ Drive: "+(drv?"✅ Done":"❌ Google Drive login expired. නැවත Connect Drive press කර allow කරන්න."));
+    "\n☁ Drive: "+(drv?"✅ Done":"❌ Drive token expired. Reconnect / Sync press කර Google account allow කරන්න. Folder එක නැවත තෝරන්න අවශ්‍ය නැහැ."));
 }
 async function restoreFromDrive(){
   const ok=await ensureDriveTokenInteractive();
@@ -1516,14 +1516,24 @@ function setDriveStatus(text,cls="warn",dash=""){
 function saveGoogleToken(t){
   accessToken=t.access_token||null;
   googleTokenExpiresAt=Date.now()+Math.max(0,(Number(t.expires_in||3500)-120))*1000;
-  if(accessToken)sessionStorage.setItem("googleAccessToken",accessToken);
+  if(accessToken){
+    sessionStorage.setItem("googleAccessToken",accessToken);
+    sessionStorage.setItem("googleTokenExpiresAt",String(googleTokenExpiresAt));
+  }
   localStorage.setItem("driveConnected","1");
   setDriveStatus("Google Drive connected ✓","ok","Connected");
 }
 function clearGoogleToken(){
   accessToken=null;googleTokenExpiresAt=0;
   sessionStorage.removeItem("googleAccessToken");
+  sessionStorage.removeItem("googleTokenExpiresAt");
   localStorage.removeItem("googleAccessToken");
+}
+function restoreSessionDriveToken(){
+  const t=sessionStorage.getItem("googleAccessToken");
+  const exp=Number(sessionStorage.getItem("googleTokenExpiresAt")||0);
+  if(t&&exp>Date.now()){accessToken=t;googleTokenExpiresAt=exp;return true;}
+  clearGoogleToken();return false;
 }
 function hasValidDriveToken(){return !!accessToken&&Date.now()<googleTokenExpiresAt;}
 function initGoogleAuth(){
@@ -1545,8 +1555,14 @@ function requestDriveToken(promptMode=""){
   });
 }
 function connectGoogleDrive(){
-  requestDriveToken(localStorage.getItem("driveConnected")==="1"?"":"consent").then(ok=>{
-    if(!ok)alert("Google Drive connect වෙලා නැහැ. නැවත account allow කරන්න.");
+  requestDriveToken(localStorage.getItem("driveConnected")==="1"?"":"consent").then(async ok=>{
+    if(!ok){alert("Google Drive connect වෙලා නැහැ. නැවත account allow කරන්න.");return;}
+    try{
+      const main=await getOrCreateFolder(MAIN_FOLDER_NAME);
+      await getOrCreateFolder("backup",main.id);
+      setDriveStatus("Google Drive connected ✓ Folder saved","ok","Connected");
+      refreshBackupStatus();
+    }catch(e){alert("Drive folder save error: "+e.message);}
   });
 }
 async function ensureDriveTokenSilent(){
@@ -1579,6 +1595,19 @@ async function driveJsonRequest(url,opt={}){
   if(!res.ok)throw new Error(await res.text());return await res.json();
 }
 function esc(n){return String(n).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
+function driveFolderCacheKey(name,pid=null){return (pid||"root")+"::"+String(name);}
+function loadDriveFolderCache(){try{return JSON.parse(localStorage.getItem("driveFolderCache")||"{}");}catch(e){return {};}}
+function saveDriveFolderCache(c){localStorage.setItem("driveFolderCache",JSON.stringify(c));}
+function cacheDriveFolder(name,pid,id){const c=loadDriveFolderCache();c[driveFolderCacheKey(name,pid)]=id;saveDriveFolderCache(c);}
+function getCachedDriveFolderId(name,pid=null){return loadDriveFolderCache()[driveFolderCacheKey(name,pid)]||null;}
+async function getDriveFolderById(id){
+  if(!id)return null;
+  try{
+    const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files/"+id+"?fields=id,name,parents,trashed,mimeType");
+    if(d&&d.id&&!d.trashed&&d.mimeType==="application/vnd.google-apps.folder")return d;
+  }catch(e){console.warn("Cached Drive folder invalid",e);}
+  return null;
+}
 async function findDriveFolder(name,pid=null){
   let q=`name=\'${esc(name)}\' and mimeType=\'application/vnd.google-apps.folder\' and trashed=false`;
   if(pid)q+=` and \'${pid}\' in parents`;
@@ -1596,14 +1625,21 @@ async function findDriveFolders(name,pid=null){
   return d.files||[];
 }
 async function getOrCreateFolder(name,pid=null){
+  // Use saved folder ID first. This stops duplicate Drive folders after closing/opening the app.
+  const cachedId=getCachedDriveFolderId(name,pid);
+  const cached=await getDriveFolderById(cachedId);
+  if(cached)return cached;
+
   const folders=await findDriveFolders(name,pid);
   if(folders.length){
     const keep=folders[0];
-    // Duplicate folders are the reason one business day appeared 2-3 times. Keep the oldest exact folder and remove extra empty/old duplicates.
+    cacheDriveFolder(name,pid,keep.id);
     for(const extra of folders.slice(1)){try{await deleteDriveFileOrFolder(extra.id);}catch(e){console.warn("Duplicate folder cleanup skipped",extra.name,e);}}
     return keep;
   }
-  return await createDriveFolder(name,pid);
+  const created=await createDriveFolder(name,pid);
+  cacheDriveFolder(name,pid,created.id);
+  return created;
 }
 async function findDriveFileInFolder(name,pid){
   const q=`name=\'${esc(name)}\' and \'${pid}\' in parents and trashed=false`;
@@ -1745,19 +1781,17 @@ renderPendingWeights();
 
 const _wasConnected=localStorage.getItem("driveConnected")==="1";
 if(_wasConnected){
-  setDriveStatus("Reconnecting…","warn","Connecting");
-  window.addEventListener("load",()=>{
-    setTimeout(async()=>{
-      if(navigator.onLine&&initGoogleAuth()){
-        const ok=await ensureDriveTokenSilent();
-        if(ok){setDriveStatus("Google Drive connected ✓","ok","Connected");refreshBackupStatus();autoSyncSoon();scheduleAutoBackup(2200);}
-        else setDriveStatus("Drive – click Reconnect","warn","Reconnect");
-      }
-    },2000);
-  });
+  restoreSessionDriveToken();
+  if(hasValidDriveToken()){
+    setDriveStatus("Google Drive connected ✓","ok","Connected");
+    refreshBackupStatus();autoSyncSoon();scheduleAutoBackup(2200);
+  }else{
+    // Do not open the Google account selector automatically on app start.
+    // Saved Drive folder IDs will be reused after Reconnect/Sync.
+    setDriveStatus("Drive folder saved – Sync press කරන්න","warn","Ready");
+  }
+  window.addEventListener("load",()=>{setTimeout(()=>{if(navigator.onLine&&initGoogleAuth())refreshBackupStatus();},1200);});
 }else{setDriveStatus("Drive not connected","warn","Offline");}
-
-if(navigator.onLine&&localStorage.getItem("driveConnected")==="1")autoSyncSoon();
 </script>
 </body>
 </html>
