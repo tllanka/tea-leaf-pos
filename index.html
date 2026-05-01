@@ -205,7 +205,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .feature-list li::before{content:"✓";color:var(--g3);font-weight:900;flex-shrink:0}
 
 .about-logo-card{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:230px}
-.about-logo-card img{width:180px;height:180px;max-width:80%;border-radius:36px;object-fit:cover;box-shadow:0 16px 40px rgba(10,46,31,.22);border:3px solid rgba(26,122,82,.22)}
+.about-logo-card img{width:100%;max-width:300px;height:auto;max-height:190px;border-radius:24px;object-fit:contain;box-shadow:0 16px 40px rgba(10,46,31,.22);border:3px solid rgba(26,122,82,.22);background:#07304d;padding:10px}
 .about-logo-card .logo-caption{font-family:var(--fh);font-size:18px;font-weight:900;color:var(--g1)}
 .social-card h3{justify-content:center;font-size:18px;margin-bottom:14px}
 .social-buttons{display:grid;gap:12px;margin-top:10px}
@@ -928,7 +928,7 @@ async function manualBackupNow(){
   const drv=await backupToDrive(true);
   refreshBackupStatus();
   alert("💾 Backup!\n📱 Phone: "+(loc?"✅ Done":"❌ Folder not set / permission needed")+
-    "\n☁ Drive: "+(drv?"✅ Done":"❌ Drive token expired. Reconnect / Sync press කර Google account allow කරන්න. Folder එක නැවත තෝරන්න අවශ්‍ය නැහැ."));
+    "\n☁ Drive: "+(drv?"✅ Done":"❌ Google login අවශ්‍යයි. Connect Drive / Sync press කරන්න. Folder එක නැවත select වෙන්නේ නැහැ."));
 }
 async function restoreFromDrive(){
   const ok=await ensureDriveTokenInteractive();
@@ -1519,6 +1519,8 @@ function saveGoogleToken(t){
   if(accessToken){
     sessionStorage.setItem("googleAccessToken",accessToken);
     sessionStorage.setItem("googleTokenExpiresAt",String(googleTokenExpiresAt));
+    localStorage.setItem("googleAccessToken",accessToken);
+    localStorage.setItem("googleTokenExpiresAt",String(googleTokenExpiresAt));
   }
   localStorage.setItem("driveConnected","1");
   setDriveStatus("Google Drive connected ✓","ok","Connected");
@@ -1528,11 +1530,20 @@ function clearGoogleToken(){
   sessionStorage.removeItem("googleAccessToken");
   sessionStorage.removeItem("googleTokenExpiresAt");
   localStorage.removeItem("googleAccessToken");
+  localStorage.removeItem("googleTokenExpiresAt");
 }
 function restoreSessionDriveToken(){
-  const t=sessionStorage.getItem("googleAccessToken");
-  const exp=Number(sessionStorage.getItem("googleTokenExpiresAt")||0);
+  let t=sessionStorage.getItem("googleAccessToken");
+  let exp=Number(sessionStorage.getItem("googleTokenExpiresAt")||0);
   if(t&&exp>Date.now()){accessToken=t;googleTokenExpiresAt=exp;return true;}
+  t=localStorage.getItem("googleAccessToken");
+  exp=Number(localStorage.getItem("googleTokenExpiresAt")||0);
+  if(t&&exp>Date.now()){
+    accessToken=t;googleTokenExpiresAt=exp;
+    sessionStorage.setItem("googleAccessToken",t);
+    sessionStorage.setItem("googleTokenExpiresAt",String(exp));
+    return true;
+  }
   clearGoogleToken();return false;
 }
 function hasValidDriveToken(){return !!accessToken&&Date.now()<googleTokenExpiresAt;}
@@ -1574,7 +1585,10 @@ async function ensureDriveTokenSilent(){
 async function ensureDriveTokenInteractive(){
   if(await ensureDriveTokenSilent())return true;
   if(!navigator.onLine)return false;
-  return await requestDriveToken("consent");
+  // If Drive was already connected before, do NOT force Google account/select/consent popup.
+  // Try to get a fresh token using the saved Google session. Only first-time connect uses consent.
+  const promptMode=localStorage.getItem("driveConnected")==="1" ? "" : "consent";
+  return await requestDriveToken(promptMode);
 }
 async function driveFetch(url,opt={},retry=true){
   if(!hasValidDriveToken()){
