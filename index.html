@@ -398,9 +398,10 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
         <div class="weight"><span id="liveWeight">0.00</span> <small>kg</small></div>
         <div id="scaleStatus" class="status warn">Scale not connected</div>
       </div>
+      <button class="btn btn-gold btn-block" onclick="addAnotherWeight()">➕ Add Another Weight</button>
       <button class="btn btn-green btn-block" onclick="finishWeighing()">✅ Finish Weighing</button>
-      <button class="btn btn-gold btn-block" onclick="quickSyncAfterWeighing()">💾 Save + Auto Sync</button>
       <button class="btn btn-default btn-block" onclick="manualWeight()">✏️ Manual Weight</button>
+      <div id="pendingWeightBox" class="small" style="margin-top:10px;text-align:center;font-weight:800;color:var(--g2)">අමතර කිරුම් නැහැ</div>
     </div>
   </div>
 </section>
@@ -704,6 +705,7 @@ let customers  = JSON.parse(localStorage.getItem("customers")  || "[]");
 let roots      = JSON.parse(localStorage.getItem("roots")      || "[]");
 let activeRoot = localStorage.getItem("activeRoot")            || "";
 let records    = JSON.parse(localStorage.getItem("records")    || "[]");
+let pendingWeights = JSON.parse(localStorage.getItem("pendingWeights") || "{}");
 let factoryName= localStorage.getItem("factoryName")           || "LK Weighing – TEA LEAF";
 let appIconType= localStorage.getItem("appIconType")           || "builtin1";
 let appIconImg = localStorage.getItem("appIconImg")            || "";
@@ -1271,6 +1273,7 @@ function loadCustomerByQr(text){
   document.getElementById("wRoot").value=c.root;
   document.getElementById("wPhone").value=c.phone;
   showSuccess(c);
+  renderPendingWeights();
 }
 
 /* ══════════ WEIGHT ══════════ */
@@ -1367,18 +1370,59 @@ function businessDay(date=new Date()){
   const d=new Date(date);if(d.getHours()<6)d.setDate(d.getDate()-1);
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 }
-function finishWeighing(){
+function currentBatchKey(){return selectedCustomer?businessDay()+"::"+String(selectedCustomer.id):"";}
+function savePendingWeights(){localStorage.setItem("pendingWeights",JSON.stringify(pendingWeights));}
+function resetCurrentWeightOnly(){currentWeight=0;document.getElementById("liveWeight").innerText="0.00";document.getElementById("scaleStatus").innerText="Scale not connected";document.getElementById("scaleStatus").className="status warn";}
+function clearCustomerDetails(){
+  selectedCustomer=null;["wCustomerId","wName","wAddress","wRoot","wPhone"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  renderPendingWeights();
+}
+function renderPendingWeights(){
+  const box=document.getElementById("pendingWeightBox");if(!box)return;
+  const key=currentBatchKey();const arr=key?(pendingWeights[key]||[]):[];
+  if(!selectedCustomer){box.innerText="Customer QR scan කළ පසු අමතර කිරුම් එකතු කරන්න";return;}
+  if(!arr.length){box.innerText="අමතර කිරුම් නැහැ";return;}
+  const total=arr.reduce((s,w)=>s+Number(w||0),0);
+  box.innerText=`මතකයේ ඇති කිරුම්: ${arr.length} | එකතුව: ${total.toFixed(2)} kg`;
+}
+function addAnotherWeight(){
   if(!selectedCustomer){alert("QR scan කර customer තෝරන්න");return false;}
   if(currentWeight<=0){alert("Valid weight නැහැ");return false;}
+  const key=currentBatchKey();
+  if(!pendingWeights[key])pendingWeights[key]=[];
+  pendingWeights[key].push(Number(currentWeight));
+  savePendingWeights();
+  resetCurrentWeightOnly();
+  renderPendingWeights();
+  scheduleAutoBackup();
+  alert("✅ මෙම කිරුම මතකයේ තබාගත්තා.\nදැන් ඊළඟ බර කිරන්න.");
+  return true;
+}
+function finishWeighing(){
+  if(!selectedCustomer){alert("QR scan කර customer තෝරන්න");return false;}
+  const key=currentBatchKey();
+  const batch=(pendingWeights[key]||[]).slice();
+  if(currentWeight>0)batch.push(Number(currentWeight));
+  if(!batch.length){alert("Valid weight නැහැ");return false;}
   const now=new Date();
-  const rec={id:"REC-"+Date.now()+"-"+Math.floor(Math.random()*9999),businessDay:businessDay(now),
-    date:`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`,
-    time:now.toLocaleTimeString(),timestamp:now.toISOString(),
-    customerId:selectedCustomer.id,name:selectedCustomer.name,address:selectedCustomer.address,
-    root:selectedCustomer.root,phone:selectedCustomer.phone,weight:currentWeight,sync:"Pending"};
-  records.push(rec);saveAll();renderReports(currentPage);
+  const day=businessDay(now);
+  const total=batch.reduce((s,w)=>s+Number(w||0),0);
+  batch.forEach((w,idx)=>{
+    const t=new Date(now.getTime()+idx);
+    const rec={id:"REC-"+Date.now()+"-"+idx+"-"+Math.floor(Math.random()*9999),businessDay:day,
+      date:`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`,
+      time:t.toLocaleTimeString(),timestamp:t.toISOString(),
+      customerId:selectedCustomer.id,name:selectedCustomer.name,address:selectedCustomer.address,
+      root:selectedCustomer.root,phone:selectedCustomer.phone,weight:Number(w),sync:"Pending"};
+    records.push(rec);
+  });
+  delete pendingWeights[key];
+  savePendingWeights();saveAll();renderReports(1);
   scheduleAutoBackup();autoSyncSoon();
-  alert("✅ Weighing saved!\n"+currentWeight.toFixed(2)+" kg");return true;
+  alert(`✅ Weighing Finish!\nCustomer: ${selectedCustomer.id}\nකිරුම් ගණන: ${batch.length}\nTotal: ${total.toFixed(2)} kg`);
+  resetCurrentWeightOnly();
+  clearCustomerDetails();
+  return true;
 }
 async function quickSyncAfterWeighing(){const s=finishWeighing();if(s)await syncAllPendingDays(false);}
 
@@ -1388,7 +1432,8 @@ function getPendingDays(){return [...new Set(records.filter(r=>(r.sync||"Pending
 
 function renderReports(page=1){
   updateDashboard();
-  const all=records.slice().reverse();
+  const displayRows=records.filter(r=>r.businessDay===businessDay());
+  const all=displayRows.slice().reverse();
   const total=all.length,pages=Math.max(1,Math.ceil(total/PER_PAGE));
   page=Math.max(1,Math.min(page,pages));currentPage=page;
   const slice=all.slice((page-1)*PER_PAGE,page*PER_PAGE);
@@ -1404,7 +1449,7 @@ function renderReports(page=1){
 }
 function buildPagination(cur,total,count){
   const el=document.getElementById("reportPagination");
-  const allKg=records.reduce((s,r)=>s+Number(r.weight||0),0);
+  const allKg=getTodayRecords().reduce((s,r)=>s+Number(r.weight||0),0);
   if(total<=1){el.innerHTML=`<p class="pg-info">${count} records | Grand Total: <b>${allKg.toFixed(2)} kg</b></p>`;return;}
   let h=`<p class="pg-info">Showing ${(cur-1)*PER_PAGE+1}–${Math.min(cur*PER_PAGE,count)} of ${count} records | Grand Total: <b>${allKg.toFixed(2)} kg</b></p><div class="pagination">`;
   if(cur>1)h+=`<button class="pg-btn wide" onclick="renderReports(${cur-1})">‹ Prev</button>`;
@@ -1499,7 +1544,22 @@ async function createDriveFolder(name,pid=null){
   const meta={name,mimeType:"application/vnd.google-apps.folder"};if(pid)meta.parents=[pid];
   return await driveJsonRequest("https://www.googleapis.com/drive/v3/files?fields=id,name,parents",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(meta)});
 }
-async function getOrCreateFolder(name,pid=null){return await findDriveFolder(name,pid)||await createDriveFolder(name,pid);}
+async function findDriveFolders(name,pid=null){
+  let q=`name=\'${esc(name)}\' and mimeType=\'application/vnd.google-apps.folder\' and trashed=false`;
+  if(pid)q+=` and \'${pid}\' in parents`;
+  const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents,createdTime)&orderBy=createdTime");
+  return d.files||[];
+}
+async function getOrCreateFolder(name,pid=null){
+  const folders=await findDriveFolders(name,pid);
+  if(folders.length){
+    const keep=folders[0];
+    // Duplicate folders are the reason one business day appeared 2-3 times. Keep the oldest exact folder and remove extra empty/old duplicates.
+    for(const extra of folders.slice(1)){try{await deleteDriveFileOrFolder(extra.id);}catch(e){console.warn("Duplicate folder cleanup skipped",extra.name,e);}}
+    return keep;
+  }
+  return await createDriveFolder(name,pid);
+}
 async function findDriveFileInFolder(name,pid){
   const q=`name=\'${esc(name)}\' and \'${pid}\' in parents and trashed=false`;
   const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
@@ -1629,6 +1689,7 @@ prepareCustomerForm();
 resetReaderPlaceholder();
 refreshBackupStatus();
 refreshInstallButton();
+renderPendingWeights();
 
 (async()=>{
   const h=await idbGet("localDir");
