@@ -204,6 +204,20 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .feature-list li:last-child{border-bottom:none}
 .feature-list li::before{content:"✓";color:var(--g3);font-weight:900;flex-shrink:0}
 
+.about-logo-card{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:230px}
+.about-logo-card img{width:180px;height:180px;max-width:80%;border-radius:36px;object-fit:cover;box-shadow:0 16px 40px rgba(10,46,31,.22);border:3px solid rgba(26,122,82,.22)}
+.about-logo-card .logo-caption{font-family:var(--fh);font-size:18px;font-weight:900;color:var(--g1)}
+.social-card h3{justify-content:center;font-size:18px;margin-bottom:14px}
+.social-buttons{display:grid;gap:12px;margin-top:10px}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;border-radius:16px;padding:14px 16px;font-weight:900;font-size:14px;box-shadow:0 5px 0 rgba(10,46,31,.15),0 12px 24px rgba(10,46,31,.10);transition:all .18s cubic-bezier(.34,1.56,.64,1)}
+.social-btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.social-btn:active{transform:scale(.96) translateY(2px)}
+.social-youtube{background:linear-gradient(180deg,#ff5a5a,#dc2626);color:#fff}
+.social-facebook{background:linear-gradient(180deg,#60a5fa,#2563eb);color:#fff}
+.support-lines p{margin-top:8px;font-weight:800;color:var(--muted)}
+.support-lines .support-name{font-size:16px;color:var(--g2);font-weight:900}
+.support-lines .support-note{background:linear-gradient(145deg,rgba(220,252,231,.8),rgba(240,253,244,.9));border:1px solid rgba(26,122,82,.14);border-radius:16px;padding:12px 14px;margin-top:12px;color:var(--g1);font-weight:800;line-height:1.75}
+
 /* DAY FINISH BUTTON */
 .day-finish-wrap{max-width:1280px;margin:0 auto;padding:0 0 14px;}
 .day-finish-btn{
@@ -584,28 +598,26 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
         <li>Customer JSON Reports per Day</li>
       </ul>
     </div>
-    <div class="about-card">
-      <h3>⚙️ Technical Info</h3>
-      <p>Built with pure HTML, CSS &amp; JavaScript. No server required. Runs 100% in your browser as a Progressive Web App (PWA). All data stored securely on-device and backed up to Google Drive.</p>
-      <br><p><b>Compatible:</b> Android Chrome 86+, Edge, Desktop Chrome/Edge</p>
-      <br><p><b>Storage:</b> localStorage + IndexedDB + File System API + Google Drive</p>
+    <div class="about-card about-logo-card">
+      <img src="icons/about-logo.png" alt="LK Weighing Solution Logo">
+      <div class="logo-caption">LK Weighing Solution</div>
     </div>
-    <div class="about-card">
-      <h3>🔐 Security &amp; Data</h3>
-      <ul class="feature-list">
-        <li>Admin PIN (4-digit) protected</li>
-        <li>Manager PIN (6-digit) protected</li>
-        <li>All data stays on device</li>
-        <li>Google Drive OAuth – secure login</li>
-        <li>No external servers – 100% private</li>
-        <li>Auto backup on every save</li>
-      </ul>
+    <div class="about-card social-card">
+      <h3>🌐 Social Media</h3>
+      <p class="small" style="text-align:center">LK Weighing Solution updates, videos සහ support details බලන්න.</p>
+      <div class="social-buttons">
+        <a class="social-btn social-youtube" href="https://www.youtube.com/channel/UClDZ4PTy_NwxkFyJWtt4J6w" target="_blank" rel="noopener noreferrer">▶ YouTube Channel</a>
+        <a class="social-btn social-facebook" href="https://www.facebook.com/share/1E9QfTjKye/" target="_blank" rel="noopener noreferrer">f Facebook Page</a>
+      </div>
     </div>
-    <div class="about-card">
+    <div class="about-card support-lines">
       <h3>📞 Support</h3>
-      <p style="font-size:15px;color:var(--g2);font-weight:900">LK Weighing Solution</p>
-      <p style="margin-top:6px;font-weight:700">Ratnapura, Sri Lanka</p>
-      <br><p class="small">More features coming soon in next update. Image details about page in next update.</p>
+      <p class="support-name">LK Weighing Solution</p>
+      <p>Ratnapura, Sri Lanka</p>
+      <p><b>Email:</b> tllankaweb@gmail.com</p>
+      <p><b>Email:</b> lkweighing.ratnapura@gmail.com</p>
+      <p><b>Phone:</b> 0717008553</p>
+      <div class="support-note">ඔබට යම් ගැටළුවක් ඇත්නම් මේ සම්බන්දව, ආයතන ප්‍රධානියා දැනුවත් කර අපට කතා කරන්න. එවිට ගැටළුව සම්බන්දව කටයුතු කරමු.</div>
     </div>
   </div>
 </section>
