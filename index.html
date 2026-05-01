@@ -4,6 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<meta name="theme-color" content="#0a2e1f"/>
 <meta name="theme-color" content="#0a2e1f"/>
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
 <link rel="apple-touch-icon" href="icons/icon-192.png"/>
@@ -876,7 +878,9 @@ async function uploadCustomerDayFiles(day,cid,dayFolderId){
   else await uploadNewXlsxToDrive(xlsxName,custFolder.id,xlsxBlob);
 }
 async function backupToDrive(){
-  if(!accessToken)return false;
+  if(!navigator.onLine){document.getElementById("driveBackupStatus").innerText="❌ Offline";return false;}
+  const ok=await ensureDriveTokenSilent();
+  if(!ok){document.getElementById("driveBackupStatus").innerText="❌ Drive login අවශ්‍යයි";return false;}
   try{
     const main=await getOrCreateFolder(MAIN_FOLDER_NAME);
     const bkFolder=await getOrCreateFolder("backup",main.id);
@@ -904,13 +908,16 @@ async function backupToDrive(){
 }
 
 async function manualBackupNow(){
+  document.getElementById("driveBackupStatus").innerText="⏳ Checking Drive…";
   const loc=await backupToLocalFolder(false);
   const drv=await backupToDrive();
-  alert("💾 Backup!\n📱 Phone: "+(loc?"✅":"❌ Folder not set")+
-    "\n☁ Drive: "+(drv?"✅":"❌ Not connected / failed"));
+  refreshBackupStatus();
+  alert("💾 Backup!\n📱 Phone: "+(loc?"✅ Done":"❌ Folder not set / permission needed")+
+    "\n☁ Drive: "+(drv?"✅ Done":"❌ Login expired / not connected. Sync button press කර Google account allow කරන්න."));
 }
 async function restoreFromDrive(){
-  if(!accessToken){alert("Connect Google Drive.");return;}
+  const ok=await ensureDriveTokenSilent();
+  if(!ok){alert("Google Drive නැවත connect කරන්න. Sync button press කර account allow කරන්න.");return;}
   try{
     const main=await findDriveFolder(MAIN_FOLDER_NAME);if(!main){alert("Drive folder not found.");return;}
     const bk=await findDriveFolder("backup",main.id);if(!bk){alert("Backup folder not found.");return;}
@@ -1190,8 +1197,9 @@ function refreshBackupStatus(){
   const n=localStorage.getItem("localFolderName");
   const lt=localStorage.getItem("lastLocalBackupTime");
   const dt=localStorage.getItem("lastDriveBackupTime");
+  const driveWasConnected=localStorage.getItem("driveConnected")==="1";
   document.getElementById("localFolderStatus").innerText=n?(lt?"✅ "+lt:"📁 "+n+" – auto backup ready"):"Not set";
-  document.getElementById("driveBackupStatus").innerText=accessToken?(dt?"✅ "+dt:"Drive auto backup ready"):"Not connected";
+  document.getElementById("driveBackupStatus").innerText=driveWasConnected?(dt?"✅ Last backup: "+dt:"☁ Drive ready – Sync/Backup press කරන්න"):"Not connected";
 }
 
 /* ══════════ CUSTOMER / ROOT ══════════ */
@@ -1570,9 +1578,11 @@ function isStandaloneApp(){
 }
 function refreshInstallButton(){
   const btn=document.getElementById("installBtn");if(!btn)return;
-  if(isStandaloneApp()||localStorage.getItem("pwaInstalled")==="1")btn.classList.add("hide");
-  else if(deferredPrompt)btn.classList.remove("hide");
-  else btn.classList.add("hide");
+  /* App එක uninstall කළ පසුත් localStorage එකේ පරණ pwaInstalled flag එක ඉතිරි වෙන්න පුළුවන්.
+     ඒ නිසා browser tab එකෙන් open කරද්දී Install button එක සැමවිටම පෙන්වයි.
+     App එක ඇතුළෙන් standalone mode එකේ open නම් පමණක් hide කරයි. */
+  if(isStandaloneApp())btn.classList.add("hide");
+  else btn.classList.remove("hide");
 }
 window.addEventListener("beforeinstallprompt",e=>{
   e.preventDefault();deferredPrompt=e;refreshInstallButton();
@@ -1580,18 +1590,31 @@ window.addEventListener("beforeinstallprompt",e=>{
 document.getElementById("installBtn").addEventListener("click",async()=>{
   if(isStandaloneApp()){refreshInstallButton();return;}
   if(deferredPrompt){
-    deferredPrompt.prompt();const choice=await deferredPrompt.userChoice;
-    deferredPrompt=null;
-    if(choice.outcome==="accepted"){localStorage.setItem("pwaInstalled","1");document.getElementById("installBtn").classList.add("hide");}
+    try{
+      deferredPrompt.prompt();
+      const choice=await deferredPrompt.userChoice;
+      deferredPrompt=null;
+      if(choice.outcome==="accepted")document.getElementById("installBtn").classList.add("hide");
+    }catch(err){
+      alert("Install prompt open කරන්න බැරි වුණා. Chrome menu → Add to Home screen භාවිතා කරන්න.");
+    }
   }else{
-    alert(`Chrome menu → Add to Home screen click කරන්න.
-GitHub Pages HTTPS link එකෙන් open කළ විට Install button active වේ.`);
+    alert(`Install prompt එක තවම browser එකෙන් ලබා දී නැහැ.
+
+කරන්න:
+1. Chrome menu ⋮ open කරන්න
+2. Add to Home screen / Install app click කරන්න
+3. එය නැති නම් page එක refresh කර තත්පර කිහිපයක් ඉන්න
+
+App එක uninstall කළා නම් button එක දැන් browser tab එකේ පෙන්විය යුතුයි.`);
   }
   refreshInstallButton();
 });
-window.addEventListener("appinstalled",()=>{localStorage.setItem("pwaInstalled","1");document.getElementById("installBtn").classList.add("hide");deferredPrompt=null;});
+window.addEventListener("appinstalled",()=>{document.getElementById("installBtn")?.classList.add("hide");deferredPrompt=null;});
 window.matchMedia("(display-mode: standalone)").addEventListener?.("change",refreshInstallButton);
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));}
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").then(()=>setTimeout(refreshInstallButton,800)).catch(()=>{}));}
+setTimeout(refreshInstallButton,300);
+setTimeout(refreshInstallButton,1600);
 
 
 /* ══════════ INIT ══════════ */

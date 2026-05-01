@@ -1,7 +1,7 @@
 {
   "name": "LK Weighing – TEA LEAF POS",
   "short_name": "LK Tea POS",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0a2e1f",
