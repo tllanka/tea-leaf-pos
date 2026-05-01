@@ -45,7 +45,8 @@ body{font-family:var(--fb);color:var(--text);min-height:100vh;background:var(--b
 .logo{width:62px;height:62px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.22);display:grid;place-items:center;font-size:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 8px 24px rgba(0,0,0,.2);overflow:hidden;flex-shrink:0;}
 .logo img{width:100%;height:100%;object-fit:cover;border-radius:17px}
 .brand-text h1{font-family:var(--fh);font-size:22px;color:#fff;letter-spacing:.3px;line-height:1.2}
-.greeting-text{color:#a8d5c0;font-size:13px;font-weight:700;margin-top:4px;letter-spacing:.2px;animation:fadeIn .5s ease}
+.header-factory-name{font-family:var(--fh);font-size:18px;color:#fef9c3;font-weight:900;letter-spacing:.4px;text-align:center;text-shadow:0 3px 14px rgba(0,0,0,.28);margin-top:2px}
+.greeting-text{color:#c8f7d8;font-size:15px;font-weight:900;margin-top:4px;letter-spacing:.25px;animation:fadeIn .5s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;z-index:1}
 
@@ -113,6 +114,8 @@ textarea{min-height:80px;resize:vertical}
 .scan-c::after{content:"";position:absolute;inset:-4px;border-radius:inherit;box-shadow:0 0 10px rgba(34,197,94,.5)}
 .qr-placeholder{text-align:center;color:var(--g3);padding:28px}
 .qr-placeholder .mark{font-size:56px;margin-bottom:10px;animation:pulse 2.5s ease-in-out infinite}
+.scanner-logo{width:68px;height:68px;margin:0 auto 10px;border-radius:22px;display:grid;place-items:center;background:linear-gradient(145deg,#dcfce7,#86efac);box-shadow:0 10px 26px rgba(26,122,82,.22),inset 0 1px 0 rgba(255,255,255,.8)}
+.scanner-logo svg{width:42px;height:42px;stroke:var(--g2);stroke-width:2.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
 @keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.08)}}
 .qr-placeholder b{display:block;font-size:14px;font-weight:900;color:var(--g2)}
 .qr-placeholder small{color:var(--muted);font-size:12px}
@@ -302,7 +305,8 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
   .topbar{margin:-12px -12px 14px;padding:16px}
   .logo{width:52px;height:52px;font-size:25px}
   .brand-text h1{font-size:17px}
-  .greeting-text{font-size:11px}
+  .header-factory-name{font-size:15px;text-align:left}
+  .greeting-text{font-size:12.5px}
   .weight{font-size:48px}
   .stats{gap:10px}.stat b{font-size:15px}
   .card{padding:16px}
@@ -326,6 +330,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
     <div class="logo" id="mainLogo"><img src="icons/icon-192.png" alt="LK" style="width:100%;height:100%;object-fit:cover;border-radius:17px"></div>
     <div class="brand-text">
       <h1>LK Weighing – TEA LEAF POS</h1>
+      <div class="header-factory-name" id="headerFactoryName">LK Weighing – TEA LEAF</div>
       <div class="greeting-text" id="greetingText">…</div>
     </div>
   </div>
@@ -363,7 +368,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
       <div class="scanner-container" id="scannerContainer">
         <div id="reader">
           <div class="qr-placeholder">
-            <div class="mark">▦</div>
+            <div class="scanner-logo"><svg viewBox="0 0 64 64"><path d="M15 19v-4h12"/><path d="M37 15h12v12"/><path d="M49 37v12H37"/><path d="M27 49H15V37"/><rect x="19" y="19" width="10" height="10" rx="2"/><rect x="35" y="19" width="10" height="10" rx="2"/><rect x="19" y="35" width="10" height="10" rx="2"/><path d="M36 36h4v4h-4zM44 36h2v10h-8M34 46h4"/></svg></div>
             <b>Camera Scanner Ready</b><br>
             <small>Customer sticker QR scan කරන්න</small>
           </div>
@@ -606,18 +611,18 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 
 </div><!-- .app -->
 
-<!-- DAY FINISH BUTTON -->
-<div class="day-finish-wrap">
-  <button class="day-finish-btn" onclick="dayFinish()">
-    <span class="moon-icon">🌙</span>
-    <span>දින අවසානය – Day Finish</span>
-    <span style="font-size:13px;opacity:.7;margin-left:4px">ආලෝකවත් රාත්‍රියක්</span>
-  </button>
-</div>
-
 <div class="footer">
   <div class="footer-text">© 2025 All Rights Reserved</div>
   <div class="footer-brand">Designed by LK Weighing Solution – Ratnapura</div>
+</div>
+
+<!-- DAY FINISH BUTTON -->
+<div class="day-finish-wrap">
+  <button class="day-finish-btn" onclick="dayFinish()">
+    <span class="moon-icon" id="dayFinishIcon">🌙</span>
+    <span>දින අවසානය – Day Finish</span>
+    <span id="dayFinishHint" style="font-size:13px;opacity:.82;margin-left:4px">සුභ රාත්‍රියක් වේවා</span>
+  </button>
 </div>
 
 <!-- SUCCESS POPUP -->
@@ -714,6 +719,7 @@ function saveAll(){
   localStorage.setItem("roots",     JSON.stringify(roots));
   localStorage.setItem("activeRoot",activeRoot);
   localStorage.setItem("records",   JSON.stringify(records));
+  scheduleAutoBackup(1600);
 }
 
 /* ══════════ GREETING ══════════ */
@@ -724,8 +730,18 @@ function getGreeting(){
   if(h>=17&&h<20) return "🌆 සුභ සවස් කාලයක් ඔබට!";
   return "🌙 සුභ රාත්‍රියක් ඔබට!";
 }
+function getDayFinishHint(){
+  const h=new Date().getHours();
+  if(h>=5&&h<12) return {icon:"🌄",text:"අද වැඩ අවසන් කරන්න"};
+  if(h>=12&&h<17) return {icon:"☀️",text:"දහවල් වැඩ අවසන් කරන්න"};
+  if(h>=17&&h<20) return {icon:"🌆",text:"සවස් වැඩ අවසන් කරන්න"};
+  return {icon:"🌙",text:"සුභ රාත්‍රියක් වේවා"};
+}
 function updateGreeting(){
   document.getElementById("greetingText").innerText=getGreeting();
+  const d=getDayFinishHint();
+  const hi=document.getElementById("dayFinishHint"),ic=document.getElementById("dayFinishIcon");
+  if(hi)hi.innerText=d.text;if(ic)ic.innerText=d.icon;
 }
 setInterval(updateGreeting,60000);
 
@@ -753,8 +769,8 @@ async function pickLocalFolder(){
     const handle=await window.showDirectoryPicker({mode:"readwrite",startIn:"downloads"});
     _localDirHandle=handle;await idbSet("localDir",handle);
     localStorage.setItem("localFolderName",handle.name);
-    document.getElementById("localFolderStatus").innerText="📁 "+handle.name;
-    alert("✅ Folder set: "+handle.name+"\nHemadema weigings kala vITa auto backup wenu.");
+    document.getElementById("localFolderStatus").innerText="📁 "+handle.name+" – auto backup ready";
+    alert("✅ Folder set: "+handle.name+"\nදැන් weighing / customer / root වෙනස් වූ වහාම auto backup වේ.");
     // Immediately backup after folder set
     await backupToLocalFolder();
   }catch(e){if(e.name!=="AbortError")alert("Folder error: "+e.message);}
@@ -780,38 +796,44 @@ async function backupToLocalFolder(silent=true){
     await writeDailyJsonToLocal(dir);
     const ts=new Date().toLocaleTimeString();
     document.getElementById("localFolderStatus").innerText="✅ "+ts;
+    localStorage.setItem("lastLocalBackupTime",ts);
     return true;
   }catch(e){if(!silent)alert("Local backup error: "+e.message);return false;}
 }
+function safeName(name){return String(name||"UNKNOWN").trim().replace(/[^a-zA-Z0-9_\-\u0D80-\u0DFF]/g,"_")||"UNKNOWN";}
+function buildCustomerReportObject(day,cid){
+  const rows=records.filter(r=>r.businessDay===day&&String(r.customerId)===String(cid));
+  const c=customers.find(x=>String(x.id)===String(cid))||{};
+  const total=+rows.reduce((sum,r)=>sum+Number(r.weight||0),0).toFixed(2);
+  return {customerId:String(cid),customerName:rows[0]?.name||c.name||"",address:rows[0]?.address||c.address||"",root:rows[0]?.root||c.root||"",phone:rows[0]?.phone||c.phone||"",businessDay:day,factoryName,generatedAt:new Date().toISOString(),totalKg:total,recordCount:rows.length,records:rows.map(r=>({recordId:r.id,date:r.date,time:r.time,timestamp:r.timestamp,weight:Number(r.weight||0),sync:r.sync||"Pending"}))};
+}
+function customerIdsForDay(day){return [...new Set(records.filter(r=>r.businessDay===day).map(r=>String(r.customerId||"UNKNOWN")))];}
+function buildCustomerWorkbookBlob(day,cid){
+  const rows=records.filter(r=>r.businessDay===day&&String(r.customerId)===String(cid));
+  if(!rows.length)throw new Error("Customer records නැහැ");
+  const data=rows.map(r=>({"Record ID":r.id||"","Business Day":r.businessDay,"Date":r.date,"Time":r.time,"Customer ID":r.customerId,"Customer Name":r.name,"Address":r.address,"Root Name":r.root,"Phone":r.phone,"Weight KG":Number(r.weight),"Sync Status":r.sync||"Pending"}));
+  const totalKg=rows.reduce((sum,r)=>sum+Number(r.weight||0),0);
+  data.push({"Record ID":"TOTAL","Business Day":day,"Date":"","Time":"","Customer ID":cid,"Customer Name":rows[0]?.name||"","Address":"","Root Name":"","Phone":"","Weight KG":parseFloat(totalKg.toFixed(2)),"Sync Status":""});
+  const ws=XLSX.utils.json_to_sheet(data);
+  ws["!cols"]=[{wch:24},{wch:14},{wch:12},{wch:12},{wch:14},{wch:22},{wch:28},{wch:20},{wch:14},{wch:12},{wch:12}];
+  const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Customer Report");
+  return new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+async function writeBlobToHandle(dir,name,blob){const fh=await dir.getFileHandle(name,{create:true});const wr=await fh.createWritable();await wr.write(blob);await wr.close();}
 async function writeDailyJsonToLocal(dir){
   const day=businessDay();
-  const dayRecs=records.filter(r=>r.businessDay===day);
-  if(!dayRecs.length)return;
-  const custMap={};
-  dayRecs.forEach(r=>{
-    const id=String(r.customerId||"UNKNOWN").trim()||"UNKNOWN";
-    if(!custMap[id])custMap[id]={customerId:id,name:r.name,root:r.root,phone:r.phone,businessDay:day,factoryName,generatedAt:new Date().toISOString(),records:[],totalKg:0};
-    custMap[id].records.push({recordId:r.id,date:r.date,time:r.time,timestamp:r.timestamp,weight:Number(r.weight||0),sync:r.sync||"Pending"});
-    custMap[id].totalKg=+(custMap[id].totalKg+Number(r.weight||0)).toFixed(2);
-  });
+  const ids=customerIdsForDay(day);if(!ids.length)return;
   try{
-    let lkDir;
-    try{lkDir=await dir.getDirectoryHandle(MAIN_FOLDER_NAME,{create:true});}catch(e){lkDir=dir;}
+    let lkDir;try{lkDir=await dir.getDirectoryHandle(MAIN_FOLDER_NAME,{create:true});}catch(e){lkDir=dir;}
     const dayDir=await lkDir.getDirectoryHandle(day,{create:true});
-    const autoDir=await dayDir.getDirectoryHandle("auto (jeson)",{create:true});
-    for(const [cid,obj] of Object.entries(custMap)){
-      obj.generatedAt=new Date().toISOString();
-      const safe=cid.replace(/[^a-zA-Z0-9_-]/g,"_");
-      const jFh=await autoDir.getFileHandle(`${safe}.json`,{create:true});
-      const jWr=await jFh.createWritable();
-      await jWr.write(JSON.stringify(obj,null,2));
-      await jWr.close();
+    for(const cid of ids){
+      const safe=safeName(cid);
+      const custDir=await dayDir.getDirectoryHandle(safe,{create:true});
+      const obj=buildCustomerReportObject(day,cid);
+      await writeBlobToHandle(custDir,safe+".json",new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}));
+      await writeBlobToHandle(custDir,"tea_leaf_report_"+day+"_"+safe+".xlsx",buildCustomerWorkbookBlob(day,cid));
     }
-    const indexFh=await autoDir.getFileHandle(`all_customers_${day}.json`,{create:true});
-    const indexWr=await indexFh.createWritable();
-    await indexWr.write(JSON.stringify({businessDay:day,generatedAt:new Date().toISOString(),factoryName,customers:Object.values(custMap)},null,2));
-    await indexWr.close();
-  }catch(e){}
+  }catch(e){console.warn("Local daily backup error",e);}
 }
 
 /* ══════════ BACKUP JSON ══════════ */
@@ -830,51 +852,53 @@ function applyBackupJSON(json){
 }
 
 /* ══════════ DRIVE BACKUP ══════════ */
+async function uploadJsonToDriveFolder(fn,fid,obj){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
+  const exFile=await findDriveFileInFolder(fn,fid);
+  if(exFile){
+    const res=await fetch("https://www.googleapis.com/upload/drive/v3/files/"+exFile.id+"?uploadType=media",{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/json"},body:blob});
+    if(!res.ok)throw new Error(await res.text());
+  }else{
+    const meta={name:fn,parents:[fid]};
+    const form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",blob,fn);
+    const res=await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form});
+    if(!res.ok)throw new Error(await res.text());
+  }
+}
+async function uploadCustomerDayFiles(day,cid,dayFolderId){
+  const safe=safeName(cid);
+  const custFolder=await getOrCreateFolder(safe,dayFolderId);
+  await uploadJsonToDriveFolder(safe+".json",custFolder.id,buildCustomerReportObject(day,cid));
+  const xlsxBlob=buildCustomerWorkbookBlob(day,cid);
+  const xlsxName="tea_leaf_report_"+day+"_"+safe+".xlsx";
+  let xf=await findDriveFileInFolder(xlsxName,custFolder.id);
+  if(xf)await updateXlsxOnDrive(xf.id,xlsxBlob);
+  else await uploadNewXlsxToDrive(xlsxName,custFolder.id,xlsxBlob);
+}
 async function backupToDrive(){
   if(!accessToken)return false;
   try{
     const main=await getOrCreateFolder(MAIN_FOLDER_NAME);
     const bkFolder=await getOrCreateFolder("backup",main.id);
     const day=businessDay();
-
     const fullBlob=new Blob([buildBackupJSON()],{type:"application/json"});
     const ex=await findDriveFileInFolder("LKWeigh_full_backup.json",bkFolder.id);
     if(ex){
-      await fetch(`https://www.googleapis.com/upload/drive/v3/files/${ex.id}?uploadType=media`,{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/json"},body:fullBlob});
+      await fetch("https://www.googleapis.com/upload/drive/v3/files/"+ex.id+"?uploadType=media",{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/json"},body:fullBlob});
     }else{
       const meta={name:"LKWeigh_full_backup.json",parents:[bkFolder.id]};
       const form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",fullBlob,"LKWeigh_full_backup.json");
       await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form});
     }
-
-    const dayRecs=records.filter(r=>r.businessDay===day);
-    if(dayRecs.length){
+    const ids=customerIdsForDay(day);
+    if(ids.length){
       const dayFolder=await getOrCreateFolder(day,main.id);
-      const autoFolder=await getOrCreateFolder("auto (jeson)",dayFolder.id);
-      const custMap={};
-      dayRecs.forEach(r=>{
-        const id=String(r.customerId||"UNKNOWN").trim()||"UNKNOWN";
-        if(!custMap[id])custMap[id]={customerId:id,name:r.name,root:r.root,phone:r.phone,businessDay:day,factoryName,generatedAt:new Date().toISOString(),records:[],totalKg:0};
-        custMap[id].records.push({recordId:r.id,date:r.date,time:r.time,timestamp:r.timestamp,weight:Number(r.weight||0),sync:r.sync||"Pending"});
-        custMap[id].totalKg=+(custMap[id].totalKg+Number(r.weight||0)).toFixed(2);
-      });
-      for(const [cid,obj] of Object.entries(custMap)){
-        obj.generatedAt=new Date().toISOString();
-        const safe=cid.replace(/[^a-zA-Z0-9_-]/g,"_");
-        const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
-        const fn=`${safe}.json`;
-        const exFile=await findDriveFileInFolder(fn,autoFolder.id);
-        if(exFile){
-          await fetch(`https://www.googleapis.com/upload/drive/v3/files/${exFile.id}?uploadType=media`,{method:"PATCH",headers:{Authorization:"Bearer "+accessToken,"Content-Type":"application/json"},body:blob});
-        }else{
-          const meta={name:fn,parents:[autoFolder.id]};
-          const form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",blob,fn);
-          await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",headers:{Authorization:"Bearer "+accessToken},body:form});
-        }
-      }
+      for(const cid of ids)await uploadCustomerDayFiles(day,cid,dayFolder.id);
     }
-
-    document.getElementById("driveBackupStatus").innerText="✅ "+new Date().toLocaleTimeString();
+    await cleanupOldDriveDayFolders(main.id,30);
+    const ts=new Date().toLocaleTimeString();
+    document.getElementById("driveBackupStatus").innerText="✅ "+ts;
+    localStorage.setItem("lastDriveBackupTime",ts);
     return true;
   }catch(e){document.getElementById("driveBackupStatus").innerText="❌ "+e.message.slice(0,28);return false;}
 }
@@ -909,13 +933,18 @@ async function autoBackupAll(){
   await backupToLocalFolder(true);
   if(accessToken)await backupToDrive();
 }
-function scheduleAutoBackup(){setTimeout(autoBackupAll,2500);}
+let _backupTimer=null;
+function scheduleAutoBackup(delay=2500){
+  if(_backupTimer)clearTimeout(_backupTimer);
+  _backupTimer=setTimeout(autoBackupAll,delay);
+}
 
 /* ══════════ FACTORY NAME ══════════ */
 function initFactoryName(){
   document.getElementById("factoryNameInput").value=factoryName;
   document.getElementById("factoryNameDisplay").innerText=factoryName;
   document.getElementById("stickerFactoryName").innerText=factoryName;
+  const hf=document.getElementById("headerFactoryName");if(hf)hf.innerText=factoryName;
 }
 function saveFactoryName(){
   const v=document.getElementById("factoryNameInput").value.trim();
@@ -1012,7 +1041,7 @@ function openCModal(icon,title,sub,bodyHTML,okText,cancelText,okCb,headerClass="
   document.getElementById("cModal").classList.add("open");
 }
 function closeCModal(){document.getElementById("cModal").classList.remove("open");}
-function cModalOkAction(){if(_cModalOkCb)_cModalOkCb();closeCModal();}
+function cModalOkAction(){if(_cModalOkCb){const r=_cModalOkCb();if(r===false)return;}closeCModal();}
 
 
 function getFinishedDays(){return JSON.parse(localStorage.getItem("finishedDays")||"[]");}
@@ -1036,7 +1065,7 @@ async function dayFinish(){
 
   const bodyHTML=`
     <div class="cmodal-time">${t}</div>
-    <div class="cmodal-greeting">🌙 සුභ රාත්‍රියක් වේවා!</div>
+    <div class="cmodal-greeting">${getGreeting()}</div>
     <p style="text-align:center;font-size:14px;color:var(--text);line-height:1.7;margin-bottom:18px">
       <b>අද දිනයේ මාගේ කිරුම් අවසානයි.</b><br>
       සියලුම වැඩ කටයුතු නිමා කරන්න.<br>
@@ -1095,7 +1124,7 @@ async function dayFinishConfirm(){
 
   if(canFinish){
     const cleared=archiveAndClearDay(finishDay);
-    const bodyHTML=`<p style="text-align:center;font-size:15px;color:var(--g2);font-weight:800;margin-bottom:14px">🌙 සුභ රාත්‍රියක් ඔබට!</p>${checks}<div class="check-row pass">✅ Report history clear කළා (${cleared} records archived)</div>`;
+    const bodyHTML=`<p style="text-align:center;font-size:15px;color:var(--g2);font-weight:800;margin-bottom:14px">${getGreeting()}</p>${checks}<div class="check-row pass">✅ Report history clear කළා (${cleared} records archived)</div>`;
     openCModal("✅","Day Finish Complete","සියල්ල හොඳින් නිම විය!",bodyHTML,"👍 Close","",()=>{},"green");
   }else{
     const bodyHTML=`<p style="text-align:center;font-size:14px;color:var(--red2);font-weight:800;margin-bottom:14px">⚠️ Finish කළ නොහැකි!<br>Pending data ඇත.</p>${checks}<p style="margin-top:10px;font-size:12px;color:var(--muted)">Internet connect කර නැවත try කරන්න.</p>`;
@@ -1159,8 +1188,10 @@ function showPage(id,btn=null){
 }
 function refreshBackupStatus(){
   const n=localStorage.getItem("localFolderName");
-  document.getElementById("localFolderStatus").innerText=n?"📁 "+n:"Not set";
-  document.getElementById("driveBackupStatus").innerText=accessToken?"Ready":"Not connected";
+  const lt=localStorage.getItem("lastLocalBackupTime");
+  const dt=localStorage.getItem("lastDriveBackupTime");
+  document.getElementById("localFolderStatus").innerText=n?(lt?"✅ "+lt:"📁 "+n+" – auto backup ready"):"Not set";
+  document.getElementById("driveBackupStatus").innerText=accessToken?(dt?"✅ "+dt:"Drive auto backup ready"):"Not connected";
 }
 
 /* ══════════ CUSTOMER / ROOT ══════════ */
@@ -1209,7 +1240,7 @@ function generateSticker(c){
 /* ══════════ SCANNER ══════════ */
 function resetReaderPlaceholder(){
   const r=document.getElementById("reader"),c=document.getElementById("scannerContainer");
-  if(r&&!qrScanner)r.innerHTML=`<div class="qr-placeholder"><div class="mark">▦</div><b>Camera Scanner Ready</b><br><small>Customer sticker QR scan කරන්න</small></div>`;
+  if(r&&!qrScanner)r.innerHTML=`<div class="qr-placeholder"><div class="scanner-logo"><svg viewBox="0 0 64 64"><path d="M15 19v-4h12"/><path d="M37 15h12v12"/><path d="M49 37v12H37"/><path d="M27 49H15V37"/><rect x="19" y="19" width="10" height="10" rx="2"/><rect x="35" y="19" width="10" height="10" rx="2"/><rect x="19" y="35" width="10" height="10" rx="2"/><path d="M36 36h4v4h-4zM44 36h2v10h-8M34 46h4"/></svg></div><b>Camera Scanner Ready</b><br><small>Customer sticker QR scan කරන්න</small></div>`;
   if(c)c.classList.remove("scanning");
 }
 function startScanner(){
@@ -1238,7 +1269,22 @@ function loadCustomerByQr(text){
 function extractWeight(data){const m=String(data).match(/[-+]?\d+(\.\d+)?/g);return m?parseFloat(m[m.length-1]):null;}
 function setWeight(w){currentWeight=Number(w||0);document.getElementById("liveWeight").innerText=currentWeight.toFixed(2);document.getElementById("scaleStatus").innerText="Stable weight received";document.getElementById("scaleStatus").className="status ok";}
 function testScaleData(){const w=extractWeight(document.getElementById("testScale").value);if(w===null)alert("Weight not found");else setWeight(w);}
-function manualWeight(){const w=prompt("Weight (kg):");if(w&&!isNaN(w))setWeight(parseFloat(w));}
+function manualWeight(){
+  openPin("⚖️","Manual Weight","Manager PIN enter කළ පසු පමණක් weight type කරන්න",6,pin=>{
+    if(pin===MANAGER_PASSWORD){setTimeout(openManualWeightInput,250);return true;}
+    return false;
+  });
+}
+function openManualWeightInput(){
+  const body=`<p style="text-align:center;font-weight:800;color:var(--g2)">Manual Weight enter කරන්න</p>
+    <input id="manualWeightInput" type="number" step="0.01" inputmode="decimal" placeholder="0.00 kg" style="font-size:24px;text-align:center;font-weight:900">`;
+  openCModal("⚖️","Manual Weight","Manager Approved",body,"✅ Set Weight","✕ Cancel",()=>{
+    const w=parseFloat(document.getElementById("manualWeightInput").value);
+    if(!w||isNaN(w)||w<=0){alert("Valid weight enter කරන්න");return false;}
+    setWeight(w);return true;
+  },"green");
+  setTimeout(()=>document.getElementById("manualWeightInput")?.focus(),150);
+}
 async function connectBluetooth(n){
   if(!navigator.bluetooth)return alert("Web Bluetooth support නැහැ.");
   try{
@@ -1408,7 +1454,7 @@ function initGoogleAuth(){
     accessToken=t.access_token;localStorage.setItem("googleAccessToken",accessToken);
     localStorage.setItem("driveConnected","1");
     setDriveStatus("Google Drive connected ✓","ok","Connected");
-    autoSyncSoon();refreshBackupStatus();
+    autoSyncSoon();scheduleAutoBackup(1500);refreshBackupStatus();
   }});return true;
 }
 function connectGoogleDrive(){
@@ -1472,15 +1518,29 @@ async function moveFileToFolder(fid,tid,cp=[]){
   if(old)url+=`&removeParents=${encodeURIComponent(old)}`;
   return await driveJsonRequest(url,{method:"PATCH"});
 }
+async function deleteDriveFileOrFolder(fid){
+  const res=await fetch("https://www.googleapis.com/drive/v3/files/"+fid,{method:"DELETE",headers:{Authorization:"Bearer "+accessToken}});
+  if(!res.ok&&res.status!==404)throw new Error(await res.text());
+}
+async function cleanupOldDriveDayFolders(mainId,days=30){
+  try{
+    const q="\'"+mainId+"\' in parents and mimeType=\'application/vnd.google-apps.folder\' and trashed=false";
+    const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name)");
+    const cut=new Date();cut.setDate(cut.getDate()-days);
+    for(const f of d.files||[]){
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(f.name))continue;
+      const fd=new Date(f.name+"T00:00:00");
+      if(fd<cut)await deleteDriveFileOrFolder(f.id);
+    }
+  }catch(e){console.warn("Old Drive cleanup skipped",e);}
+}
 function markDay(day,status){records=records.map(r=>r.businessDay===day?{...r,sync:status}:r);saveAll();renderReports(currentPage);}
 async function syncOneBusinessDay(day){
   const rows=records.filter(r=>r.businessDay===day);if(!rows.length)return;
   const main=await getOrCreateFolder(MAIN_FOLDER_NAME);
   const df=await getOrCreateFolder(day,main.id);
-  const fn=`tea_leaf_report_${day}.xlsx`,blob=buildWorkbookBlob(day);
-  let file=await findDriveFileInFolder(fn,df.id);
-  if(file){await updateXlsxOnDrive(file.id,blob);}
-  else{const aw=await findDriveFileAnywhere(fn);if(aw){await updateXlsxOnDrive(aw.id,blob);await moveFileToFolder(aw.id,df.id,aw.parents||[]);}else{await uploadNewXlsxToDrive(fn,df.id,blob);}}
+  for(const cid of customerIdsForDay(day))await uploadCustomerDayFiles(day,cid,df.id);
+  await cleanupOldDriveDayFolders(main.id,30);
   markDay(day,"Synced");
 }
 async function syncAllPendingDays(showAlert=false){
@@ -1538,6 +1598,8 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.se
 updateGreeting();
 initFactoryName();
 initIcon();
+initFactoryName();
+updateGreeting();
 renderReports(1);
 renderRoots();
 prepareCustomerForm();
@@ -1559,7 +1621,7 @@ if(_wasConnected){
     setTimeout(async()=>{
       if(navigator.onLine&&initGoogleAuth()){
         const ok=await ensureDriveTokenSilent();
-        if(ok){setDriveStatus("Google Drive connected ✓","ok","Connected");refreshBackupStatus();}
+        if(ok){setDriveStatus("Google Drive connected ✓","ok","Connected");refreshBackupStatus();autoSyncSoon();scheduleAutoBackup(2200);}
         else setDriveStatus("Drive – click Reconnect","warn","Reconnect");
       }
     },2000);
