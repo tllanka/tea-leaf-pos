@@ -33,7 +33,7 @@ body{font-family:var(--fb);color:var(--text);min-height:100vh;background:var(--b
     radial-gradient(ellipse 50% 80% at 50% 100%,rgba(245,200,66,.07),transparent);}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-thumb{background:rgba(26,122,82,.3);border-radius:99px}
-.app{max-width:1280px;margin:auto;padding:18px 18px 130px}
+.app{max-width:1280px;margin:auto;padding:18px 18px 190px}
 
 /* TOPBAR */
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;
@@ -203,7 +203,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 .feature-list li::before{content:"✓";color:var(--g3);font-weight:900;flex-shrink:0}
 
 /* DAY FINISH BUTTON */
-.day-finish-wrap{max-width:1280px;margin:0 auto;padding:0 18px 14px;}
+.day-finish-wrap{max-width:1280px;margin:0 auto;padding:0 0 14px;}
 .day-finish-btn{
   width:100%;border:none;border-radius:20px;padding:16px 24px;
   background:linear-gradient(135deg,#1e1b4b 0%,#4f46e5 50%,#7c3aed 100%);
@@ -221,7 +221,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 @keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(167,139,250,.6))}50%{filter:drop-shadow(0 0 12px rgba(167,139,250,1))}}
 
 /* FOOTER */
-.footer{text-align:center;padding:18px 10px 10px;border-top:1.5px solid rgba(26,122,82,.12)}
+.footer{text-align:center;padding:16px 10px 14px;border-top:1.5px solid rgba(26,122,82,.12);margin-bottom:8px}
 .footer-text{font-size:11.5px;color:var(--muted);font-weight:800;letter-spacing:.3px}
 .footer-brand{font-size:12px;font-weight:900;color:var(--g3);margin-top:2px}
 
@@ -301,7 +301,7 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
   .nav{position:fixed;left:6px;right:6px;bottom:8px;z-index:100;margin:0;box-shadow:0 16px 48px rgba(10,46,31,.22)}
 }
 @media(max-width:560px){
-  .app{padding:12px 12px 108px}
+  .app{padding:12px 12px calc(180px + env(safe-area-inset-bottom, 0px))}
   .topbar{margin:-12px -12px 14px;padding:16px}
   .logo{width:52px;height:52px;font-size:25px}
   .brand-text h1{font-size:17px}
@@ -609,13 +609,6 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
 
 </main>
 
-</div><!-- .app -->
-
-<div class="footer">
-  <div class="footer-text">© 2025 All Rights Reserved</div>
-  <div class="footer-brand">Designed by LK Weighing Solution – Ratnapura</div>
-</div>
-
 <!-- DAY FINISH BUTTON -->
 <div class="day-finish-wrap">
   <button class="day-finish-btn" onclick="dayFinish()">
@@ -624,6 +617,13 @@ tr:last-child td{border-bottom:none}tr:hover td{background:rgba(240,247,242,.5)}
     <span id="dayFinishHint" style="font-size:13px;opacity:.82;margin-left:4px">සුභ රාත්‍රියක් වේවා</span>
   </button>
 </div>
+
+<div class="footer">
+  <div class="footer-text">© 2025 All Rights Reserved</div>
+  <div class="footer-brand">Designed by LK Weighing Solution – Ratnapura</div>
+</div>
+
+</div><!-- .app -->
 
 <!-- SUCCESS POPUP -->
 <div class="success-overlay" id="successOverlay">
