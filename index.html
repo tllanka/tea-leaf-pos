@@ -870,15 +870,16 @@ function applyBackupJSON(json){
 
 /* ══════════ DRIVE BACKUP ══════════ */
 async function uploadJsonToDriveFolder(fn,fid,obj){
+  // One customer/date = one JSON file. Existing duplicate files are cleaned and the oldest one is updated.
   const blob=new Blob([JSON.stringify(obj,null,2)],{type:"application/json"});
-  const exFile=await findDriveFileInFolder(fn,fid);
+  const exFile=await findOrCleanDriveFileInFolder(fn,fid);
   if(exFile){
-    const res=await driveFetch("https://www.googleapis.com/upload/drive/v3/files/"+exFile.id+"?uploadType=media",{method:"PATCH",headers:{"Content-Type":"application/json"},body:blob});
+    const res=await driveFetch("https://www.googleapis.com/upload/drive/v3/files/"+exFile.id+"?uploadType=media&fields=id,name,parents",{method:"PATCH",headers:{"Content-Type":"application/json"},body:blob});
     if(!res.ok)throw new Error(await res.text());
   }else{
     const meta={name:fn,parents:[fid]};
     const form=new FormData();form.append("metadata",new Blob([JSON.stringify(meta)],{type:"application/json"}));form.append("file",blob,fn);
-    const res=await driveFetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",{method:"POST",body:form});
+    const res=await driveFetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,parents",{method:"POST",body:form});
     if(!res.ok)throw new Error(await res.text());
   }
 }
@@ -888,7 +889,7 @@ async function uploadCustomerDayFiles(day,cid,dayFolderId){
   await uploadJsonToDriveFolder(safe+".json",custFolder.id,buildCustomerReportObject(day,cid));
   const xlsxBlob=buildCustomerWorkbookBlob(day,cid);
   const xlsxName="tea_leaf_report_"+day+"_"+safe+".xlsx";
-  let xf=await findDriveFileInFolder(xlsxName,custFolder.id);
+  let xf=await findOrCleanDriveFileInFolder(xlsxName,custFolder.id);
   if(xf)await updateXlsxOnDrive(xf.id,xlsxBlob);
   else await uploadNewXlsxToDrive(xlsxName,custFolder.id,xlsxBlob);
 }
@@ -901,7 +902,7 @@ async function backupToDrive(interactive=false){
     const bkFolder=await getOrCreateFolder("backup",main.id);
     const day=businessDay();
     const fullBlob=new Blob([buildBackupJSON()],{type:"application/json"});
-    const ex=await findDriveFileInFolder("LKWeigh_full_backup.json",bkFolder.id);
+    const ex=await findOrCleanDriveFileInFolder("LKWeigh_full_backup.json",bkFolder.id);
     if(ex){
       await driveFetch("https://www.googleapis.com/upload/drive/v3/files/"+ex.id+"?uploadType=media",{method:"PATCH",headers:{"Content-Type":"application/json"},body:fullBlob});
     }else{
@@ -1655,10 +1656,24 @@ async function getOrCreateFolder(name,pid=null){
   cacheDriveFolder(name,pid,created.id);
   return created;
 }
-async function findDriveFileInFolder(name,pid){
+async function findDriveFilesInFolder(name,pid){
   const q=`name=\'${esc(name)}\' and \'${pid}\' in parents and trashed=false`;
-  const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents)");
-  return d.files&&d.files.length?d.files[0]:null;
+  const d=await driveJsonRequest("https://www.googleapis.com/drive/v3/files?q="+encodeURIComponent(q)+"&fields=files(id,name,parents,createdTime)&orderBy=createdTime");
+  return d.files||[];
+}
+async function findDriveFileInFolder(name,pid){
+  const files=await findDriveFilesInFolder(name,pid);
+  return files.length?files[0]:null;
+}
+async function findOrCleanDriveFileInFolder(name,pid){
+  const files=await findDriveFilesInFolder(name,pid);
+  if(!files.length)return null;
+  const keep=files[0];
+  // Google Drive allows multiple files with the same name. Delete extras so the app keeps updating one file only.
+  for(const extra of files.slice(1)){
+    try{await deleteDriveFileOrFolder(extra.id);}catch(e){console.warn("Duplicate Drive file cleanup skipped",extra.name,e);}
+  }
+  return keep;
 }
 async function findDriveFileAnywhere(name){
   const q=`name=\'${esc(name)}\' and trashed=false`;
@@ -1696,6 +1711,14 @@ async function cleanupOldDriveDayFolders(mainId,days=30){
       if(fd<cut)await deleteDriveFileOrFolder(f.id);
     }
   }catch(e){console.warn("Old Drive cleanup skipped",e);}
+}
+async function cleanupDuplicateCustomerFiles(day,cid,dayFolderId){
+  try{
+    const safe=safeName(cid);
+    const custFolder=await getOrCreateFolder(safe,dayFolderId);
+    await findOrCleanDriveFileInFolder(safe+".json",custFolder.id);
+    await findOrCleanDriveFileInFolder("tea_leaf_report_"+day+"_"+safe+".xlsx",custFolder.id);
+  }catch(e){console.warn("Customer duplicate cleanup skipped",e);}
 }
 function markDay(day,status){records=records.map(r=>r.businessDay===day?{...r,sync:status}:r);saveAll();renderReports(currentPage);}
 async function syncOneBusinessDay(day){
